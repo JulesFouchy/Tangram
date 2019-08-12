@@ -26,12 +26,12 @@ int main(int argc, char* argv[])
 	}
 
 	Renderer renderer;
-	//Shader backgroundShader( ;
+	Shader backgroundShader("res/shaders/vertex/standard.vert", "res/shaders/fragment/background.frag") ;
 
 	bool bQuit = false;
 	while (!bQuit) {
 
-
+		backgroundShader.bind();
 		renderer.drawFullQuad();
 
 		// Handle inputs

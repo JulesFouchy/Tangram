@@ -5,8 +5,6 @@
 #include <fstream>
 #include <iostream>
 
-Shader::Shader() {}
-
 Shader::Shader(const std::string& vertexShaderFilepath, const std::string& fragmentShaderFilepath) {
 	m_shaderId = glCreateProgram();
 	unsigned int vs = compileShader(GL_VERTEX_SHADER, parseFile(vertexShaderFilepath));
