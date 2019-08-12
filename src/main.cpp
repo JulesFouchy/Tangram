@@ -3,14 +3,19 @@
 #include "SDL_opengl.h"
 #include <iostream>
 
+#include "constants.hpp"
+
+#include "graphics/renderer.hpp"
+#include "graphics/shader.hpp"
+
 int main(int argc, char* argv[])
 {
 	SDL_Init(SDL_INIT_VIDEO);
 
 	SDL_Window* window = SDL_CreateWindow
-	("An SDL2 window", // window's title
+	("Tangram", // window's title
 		10, 25, // coordinates on the screen, in pixels, of the window's upper left corner
-		640, 480, // window's length and height in pixels  
+		WIN_WIDTH, WIN_HEIGHT, // window's length and height in pixels  
 		SDL_WINDOW_OPENGL);
 
 	SDL_GLContext context = SDL_GL_CreateContext(window);
@@ -20,9 +25,14 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
+	Renderer renderer;
+	//Shader backgroundShader( ;
 
 	bool bQuit = false;
 	while (!bQuit) {
+
+
+		renderer.drawFullQuad();
 
 		// Handle inputs
 		SDL_Event e;
