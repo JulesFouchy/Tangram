@@ -2,6 +2,8 @@
 
 #include "stb_image/stb_image.h"
 
+#include "spdlog/spdlog.h"
+
 void Image::show(float x, float y) {
 	glBindTexture(GL_TEXTURE_2D, rendererId);
 }
@@ -46,6 +48,7 @@ unsigned int Image::bytesPerPixel(PixelFormat format) {
 			return 1;
 			break;
 		default:
+			spdlog::warn("Unknown pixel format for {} !", filePath);
 			break;
 	}
 }
@@ -65,6 +68,7 @@ GLint Image::GLpixelInternalFormat(PixelFormat format) {
 			return GL_R8;
 			break;
 		default:
+			spdlog::warn("Unknown pixel format for {} !", filePath);
 			break;
 	}
 }
@@ -84,6 +88,7 @@ GLenum Image::GLpixelFormat(PixelFormat format) {
 		return GL_R;
 		break;
 	default:
+		spdlog::warn("Unknown pixel format for {} !", filePath);
 		break;
 	}
 }

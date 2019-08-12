@@ -1,7 +1,9 @@
 #include "GL/glew.h"
 #include "SDL.h"
 #include "SDL_opengl.h"
+
 #include <iostream>
+#include "spdlog/spdlog.h"
 
 #include "constants.hpp"
 
@@ -10,6 +12,8 @@
 
 int main(int argc, char* argv[])
 {
+	spdlog::set_pattern("%^[%T] %n: %v%$");
+
 	SDL_Init(SDL_INIT_VIDEO);
 
 	SDL_Window* window = SDL_CreateWindow
@@ -99,6 +103,6 @@ int main(int argc, char* argv[])
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 
-
+	
 	return 0;
 }
