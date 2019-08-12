@@ -10,6 +10,8 @@
 #include "graphics/renderer.hpp"
 #include "graphics/shader.hpp"
 
+#include "core/image.hpp"
+
 int main(int argc, char* argv[])
 {
 	spdlog::set_pattern("%^[%T] %n: %v%$");
@@ -31,12 +33,17 @@ int main(int argc, char* argv[])
 
 	Renderer renderer;
 	Shader backgroundShader("res/shaders/vertex/standard.vert", "res/shaders/fragment/background.frag") ;
+	Shader texShader("res/shaders/vertex/texture.vert", "res/shaders/fragment/texture_standard.frag");
+	Image image("res/img/test3.jpg");
 
 	bool bQuit = false;
 	while (!bQuit) {
 
 		backgroundShader.bind();
 		renderer.drawFullQuad();
+
+		texShader.bind();
+		image.show(0, 0);
 
 		// Handle inputs
 		SDL_Event e;

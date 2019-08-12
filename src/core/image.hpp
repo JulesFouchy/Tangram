@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+#include "graphics/shader.hpp"
+
 enum PixelFormat {
 	RGBA,
 	RGB,
@@ -31,4 +33,9 @@ private:
 	unsigned int bytesPerPixel(PixelFormat format);
 	GLint GLpixelInternalFormat(PixelFormat format);
 	GLenum GLpixelFormat(PixelFormat format);
+
+	//For rendering
+	unsigned int m_fullQuadVBid;
+	unsigned int m_fullQuadIBOid;
+	//static Shader standardShader;
 };

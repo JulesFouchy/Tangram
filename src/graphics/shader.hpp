@@ -19,6 +19,7 @@ public:
 	void setUniformMat4f(const std::string& uniformName, glm::mat4& mat);
 	void setUniform3f(const std::string& uniformName, glm::vec3 v);
 	void setUniform1f(const std::string& uniformName, float v);
+	void setUniform1i(const std::string& uniformName, int v);
 
 private:
 	unsigned int m_shaderId;

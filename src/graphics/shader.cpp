@@ -54,6 +54,10 @@ void Shader::setUniform1f(const std::string& uniformName, float v) {
 	glUniform1f(getUniformLocation(uniformName), v);
 }
 
+void Shader::setUniform1i(const std::string& uniformName, int v) {
+	glUniform1i(getUniformLocation(uniformName), v);
+}
+
 /* Utilities to open files and compile shaders */
 
 std::string Shader::parseFile(const std::string& filepath) {
