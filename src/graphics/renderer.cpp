@@ -5,10 +5,10 @@ Renderer::Renderer()
 	//Gen vertex buffer for full quad
 	float vertices[] = {
 		//Position
-		-1.0f, -1.0f,
-		-1.0f,  1.0f,
-		1.0f,  1.0f,
-		1.0f, -1.0f,
+		WINDOW_COORD_MIN_X, WINDOW_COORD_MIN_Y,
+		WINDOW_COORD_MIN_X, WINDOW_COORD_MAX_Y,
+		WINDOW_COORD_MAX_X, WINDOW_COORD_MAX_Y,
+		WINDOW_COORD_MAX_X, WINDOW_COORD_MIN_Y,
 	};
 	glGenBuffers(1, &m_fullQuadVBid);
 	glBindBuffer(GL_ARRAY_BUFFER, m_fullQuadVBid);

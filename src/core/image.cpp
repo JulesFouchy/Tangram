@@ -4,15 +4,27 @@
 
 #include "spdlog/spdlog.h"
 
-void Image::show(float x, float y) {
+#include "constants.hpp"
+
+Shader Image::standardShader = Shader("res/shaders/vertex/texture.vert", "res/shaders/fragment/texture_standard.frag");
+glm::mat4x4 Image::proj = glm::ortho(WINDOW_COORD_MIN_X, WINDOW_COORD_MAX_X, WINDOW_COORD_MIN_Y, WINDOW_COORD_MAX_Y);
+
+void Image::show(glm::vec2 center, float rotation, float scale, glm::mat4x4 view) {
 	//Bind texture
 	glBindTexture(GL_TEXTURE_2D, rendererId);
 	//Shader
-	/* TODO
-		have the shader as a static member of Image and bind it here
-	*/
-	//standardShader.bind();
-	//standardShader.setUniform1i("u_textureSlot", 0);
+	standardShader.bind();
+	standardShader.setUniform1i("u_textureSlot", 0);
+
+	//MVP
+	glm::mat4x4 model = glm::mat4x4(1.0f);
+	model = glm::translate(model, glm::vec3(center, 0.0f));
+	model = glm::rotate(model, rotation, glm::vec3(0.0, 0.0, 1.0));
+	model = glm::scale(model, glm::vec3(scale, scale, 1.0f));
+
+	glm::mat4x4 mvp = proj * view * model;
+	standardShader.setUniformMat4f("u_mvp", mvp);
+
 	//Draw quad
 	glBindBuffer(GL_ARRAY_BUFFER, m_fullQuadVBid);
 		//pos
@@ -30,11 +42,12 @@ void Image::show(float x, float y) {
 }
 
 Image::Image(const std::string& filePath)
-	: pixels(nullptr), width(0), height(0), pixelFormat(RGBA), filePath(filePath), rendererId(0)
+	: pixels(nullptr), width(0), height(0), aspectRatio(1.0f), pixelFormat(RGBA), filePath(filePath), rendererId(0)
 {
 	//Load file
 	stbi_set_flip_vertically_on_load(1);
 	pixels = stbi_load(filePath.c_str(), &width, &height, &BPP, bytesPerPixel(pixelFormat));
+	aspectRatio = (float) width / height;
 
 	//Gen texture
 	glGenTextures(1, &rendererId);
@@ -42,8 +55,8 @@ Image::Image(const std::string& filePath)
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GLpixelInternalFormat(pixelFormat), width, height, 0, GLpixelFormat(pixelFormat), GL_UNSIGNED_BYTE, pixels);
 
@@ -51,11 +64,11 @@ Image::Image(const std::string& filePath)
 
 	//Gen buffers to render a quad on the whole screen
 	float vertices[] = {
-		//Position      TexCoord
-		-1.0f, -1.0f,   0.0f, 0.0f,
-		-1.0f,  1.0f,   0.0f, 1.0f,
-	 	 1.0f,  1.0f,   1.0f, 1.0f,
-	 	 1.0f, -1.0f,   1.0f, 0.0f,
+		      //Position                           TexCoord
+		WINDOW_COORD_MIN_X, WINDOW_COORD_MIN_Y,   0.0f, 0.0f,
+		WINDOW_COORD_MIN_X, WINDOW_COORD_MAX_Y,   0.0f, 1.0f,
+		WINDOW_COORD_MAX_X, WINDOW_COORD_MAX_Y,   1.0f, 1.0f,
+		WINDOW_COORD_MAX_X, WINDOW_COORD_MIN_Y,   1.0f, 0.0f,
 	};
 	glGenBuffers(1, &m_fullQuadVBid);
 	glBindBuffer(GL_ARRAY_BUFFER, m_fullQuadVBid);
@@ -70,6 +83,11 @@ Image::Image(const std::string& filePath)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_fullQuadIBOid);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void Image::initialize() {
+	//Shaders must be compiled after openGl was initialized
+	standardShader.compile();
 }
 
 Image::~Image() {

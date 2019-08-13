@@ -4,6 +4,9 @@
 
 #include <iostream>
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
 #include "graphics/shader.hpp"
 
 enum PixelFormat {
@@ -18,12 +21,15 @@ public :
 	Image(const std::string& filePath);
 	~Image();
 
-	void show(float x, float y);
+	void show(glm::vec2 center, float rotation, float scale, glm::mat4x4 view);
+
+	static void initialize();
 
 private:
 	unsigned char* pixels;
 	int width;
 	int height;
+	float aspectRatio;
 	PixelFormat pixelFormat;
 	int BPP;
 
@@ -37,5 +43,6 @@ private:
 	//For rendering
 	unsigned int m_fullQuadVBid;
 	unsigned int m_fullQuadIBOid;
-	//static Shader standardShader;
+	static Shader standardShader;
+	static glm::mat4x4 proj;
 };

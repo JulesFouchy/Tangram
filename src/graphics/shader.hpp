@@ -12,6 +12,7 @@ public:
 	~Shader();
 
 	void bind();
+	void compile();
 
 	//Uniforms
 	std::unordered_map<std::string, int> m_UniformLocationCache;
@@ -23,7 +24,8 @@ public:
 
 private:
 	unsigned int m_shaderId;
-
+	std::string m_vertexShaderFilepath;
+	std::string m_fragmentShaderFilepath;
 	/* Utilities to open files and compile shaders */
 	std::string parseFile(const std::string& filepath);
 	unsigned int compileShader(unsigned int type, const std::string& source);

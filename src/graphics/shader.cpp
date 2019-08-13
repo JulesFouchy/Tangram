@@ -5,18 +5,10 @@
 #include <fstream>
 #include <iostream>
 
-Shader::Shader(const std::string& vertexShaderFilepath, const std::string& fragmentShaderFilepath) {
-	m_shaderId = glCreateProgram();
-	unsigned int vs = compileShader(GL_VERTEX_SHADER, parseFile(vertexShaderFilepath));
-	unsigned int fs = compileShader(GL_FRAGMENT_SHADER, parseFile(fragmentShaderFilepath));
+Shader::Shader(const std::string& vertexShaderFilepath, const std::string& fragmentShaderFilepath)
+	: m_shaderId(-1), m_vertexShaderFilepath(vertexShaderFilepath), m_fragmentShaderFilepath(fragmentShaderFilepath)
+{
 
-	glAttachShader(m_shaderId, vs);
-	glAttachShader(m_shaderId, fs);
-	glLinkProgram(m_shaderId);
-	glValidateProgram(m_shaderId);
-
-	glDeleteShader(vs);
-	glDeleteShader(fs);
 }
 
 Shader::~Shader() {
@@ -25,6 +17,20 @@ Shader::~Shader() {
 
 void Shader::bind() {
 	glUseProgram(m_shaderId);
+}
+
+void Shader::compile() {
+	m_shaderId = glCreateProgram();
+	unsigned int vs = compileShader(GL_VERTEX_SHADER, parseFile(m_vertexShaderFilepath));
+	unsigned int fs = compileShader(GL_FRAGMENT_SHADER, parseFile(m_fragmentShaderFilepath));
+
+	glAttachShader(m_shaderId, vs);
+	glAttachShader(m_shaderId, fs);
+	glLinkProgram(m_shaderId);
+	glValidateProgram(m_shaderId);
+
+	glDeleteShader(vs);
+	glDeleteShader(fs);
 }
 
 //Uniforms

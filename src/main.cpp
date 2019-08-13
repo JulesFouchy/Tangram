@@ -4,16 +4,20 @@
 
 #include <iostream>
 #include "spdlog/spdlog.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 #include "constants.hpp"
 
 #include "graphics/renderer.hpp"
 #include "graphics/shader.hpp"
-
+#include "UI/inputHandler.hpp"
 #include "core/image.hpp"
+#include "utilities/conversions.hpp"
 
 int main(int argc, char* argv[])
 {
+	InputHandler inputHandler;
 	spdlog::set_pattern("%^[%T] %n: %v%$");
 
 	SDL_Init(SDL_INIT_VIDEO);
@@ -31,19 +35,25 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
+	Image::initialize();
+
 	Renderer renderer;
 	Shader backgroundShader("res/shaders/vertex/standard.vert", "res/shaders/fragment/background.frag") ;
-	Shader texShader("res/shaders/vertex/texture.vert", "res/shaders/fragment/texture_standard.frag");
 	Image image("res/img/test3.jpg");
+	glm::mat4x4 view = glm::mat4x4(1.0f);
+	glm::vec2 viewTranslate = glm::vec2(0.0f);
 
 	bool bQuit = false;
 	while (!bQuit) {
 
+		if (inputHandler.spaceBarIsDown() && inputHandler.leftClicIsDown()) {
+			view = glm::translate(glm::mat4x4(1.0f), glm::vec3(viewTranslate + inputHandler.getMousePosition() - inputHandler.getMousePosWhenLeftClicDown(), 0.0f));
+		}
+
 		backgroundShader.bind();
 		renderer.drawFullQuad();
 
-		texShader.bind();
-		image.show(0, 0);
+		image.show(glm::vec2(0.2f),1.0f,0.2f,view);
 
 		// Handle inputs
 		SDL_Event e;
@@ -56,24 +66,34 @@ int main(int argc, char* argv[])
 
 			switch (e.type) {
 			case SDL_MOUSEBUTTONUP:
-				if (e.button.button == SDL_BUTTON_LEFT)
-					;
+				if (e.button.button == SDL_BUTTON_LEFT) {
+					inputHandler.onLeftClicUp();
+					if (inputHandler.spaceBarIsDown()) {
+						viewTranslate += inputHandler.getMousePosition() - inputHandler.getMousePosWhenLeftClicDown();
+					}
+				}
 				else if (e.button.button == SDL_BUTTON_RIGHT)
 					;
 				break;
 
 			case SDL_MOUSEBUTTONDOWN:
-				if (e.button.button == SDL_BUTTON_LEFT)
-					;
+				if (e.button.button == SDL_BUTTON_LEFT) {
+					int x, y;
+					SDL_GetMouseState(&x, &y);
+					inputHandler.onLeftClicDown(conv::screenCoordFromPixelCoord(x,y));
+				}
 				else if (e.button.button == SDL_BUTTON_RIGHT)
 					;
 				break;
 
 			case SDL_MOUSEMOTION:
+				int x, y;
+				SDL_GetMouseState(&x, &y);
+				inputHandler.onMouseMove(conv::screenCoordFromPixelCoord(x, y));
 				break;
 
 			case SDL_KEYDOWN:
-				std::cout << e.key.keysym.sym << std::endl;
+				inputHandler.onStandardKeyDown(e.key.keysym.sym);
 				if (e.key.keysym.sym == 'p') {
 
 				}
@@ -89,6 +109,10 @@ int main(int argc, char* argv[])
 				else if (e.key.keysym.scancode == SDL_SCANCODE_RIGHT) {
 					;
 				}
+				break;
+
+			case SDL_KEYUP:
+				inputHandler.onStandardKeyUp(e.key.keysym.sym);
 				break;
 
 			case SDL_MOUSEWHEEL:
