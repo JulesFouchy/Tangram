@@ -7,8 +7,7 @@
 
 class Shader {
 public:
-	Shader(); //To create it unitialized in window (because we can't do it in an initializer list beacuse we initialize glew/glfw in the body of the window constructor and creating shader must be done after this
-	Shader(const std::string& vertexShaderFilepath, const std::string& fragmentShaderFilepath);
+	Shader(const std::string& vertexShaderFilepath, const std::string& fragmentShaderFilepath, bool compileShader = true);
 	~Shader();
 
 	void bind();

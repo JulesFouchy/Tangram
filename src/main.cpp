@@ -39,7 +39,9 @@ int main(int argc, char* argv[])
 
 	Renderer renderer;
 	Shader backgroundShader("res/shaders/vertex/standard.vert", "res/shaders/fragment/background.frag") ;
+	glm::mat4x4 projMatrix = glm::ortho(WINDOW_COORD_MIN_X, WINDOW_COORD_MAX_X, WINDOW_COORD_MIN_Y, WINDOW_COORD_MAX_Y);
 	Image image("res/img/test3.jpg");
+	Image image2("res/img/test2.png");
 	glm::mat4x4 view = glm::mat4x4(1.0f);
 	glm::vec2 viewTranslate = glm::vec2(0.0f);
 
@@ -51,9 +53,11 @@ int main(int argc, char* argv[])
 		}
 
 		backgroundShader.bind();
+		backgroundShader.setUniformMat4f("u_mvp", projMatrix);
 		renderer.drawFullQuad();
 
-		image.show(glm::vec2(0.2f),1.0f,0.2f,view);
+		image.show(glm::vec2(0.2f), 1.0f, 0.2f, view);
+		image2.show(glm::vec2(0.0f), 0.0f, 1.0f, view);
 
 		// Handle inputs
 		SDL_Event e;

@@ -6,7 +6,7 @@
 
 #include "constants.hpp"
 
-Shader Image::standardShader = Shader("res/shaders/vertex/texture.vert", "res/shaders/fragment/texture_standard.frag");
+Shader Image::standardShader = Shader("res/shaders/vertex/texture.vert", "res/shaders/fragment/texture_standard.frag", false);
 glm::mat4x4 Image::proj = glm::ortho(WINDOW_COORD_MIN_X, WINDOW_COORD_MAX_X, WINDOW_COORD_MIN_Y, WINDOW_COORD_MAX_Y);
 
 void Image::show(glm::vec2 center, float rotation, float scale, glm::mat4x4 view) {
