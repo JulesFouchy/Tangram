@@ -16,8 +16,8 @@
 #include "utilities/conversions.hpp"
 
 #include "imgui/imgui.h"
-#include "imgui/examples/imgui_impl_sdl.h"
-#include "imgui/examples/imgui_impl_opengl3.h"
+#include "imgui/imgui_impl_sdl.h"
+#include "imgui/imgui_impl_opengl3.h"
 #include <stdio.h>
 
 int main(int argc, char* argv[])
