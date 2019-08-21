@@ -106,6 +106,7 @@ void Image::initialize() {
 }
 
 Image::~Image() {
+	spdlog::info("[Image Deleted] " + filePath);
 	glDeleteTextures(1, &rendererId);
 	if( pixels )
 		stbi_image_free(pixels);

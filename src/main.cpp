@@ -24,6 +24,8 @@
 
 #include "UI/fileBrowser.hpp"
 
+#include <vector>
+
 int main(int argc, char* argv[])
 {
 	InputHandler inputHandler;
@@ -107,6 +109,7 @@ int main(int argc, char* argv[])
 	Renderer renderer;
 	Shader backgroundShader("res/shaders/vertex/standard.vert", "res/shaders/fragment/background.frag") ;
 	glm::mat4x4 projMatrix = glm::ortho(Display::getMinX(), Display::getMaxX(), Display::getMinY(), Display::getMaxY());
+	std::vector<Image*> images;
 	Image image("res/img/test3.jpg");
 	Image image2("res/img/test2.png");
 	glm::mat4x4 view = glm::mat4x4(1.0f);
@@ -171,8 +174,11 @@ int main(int argc, char* argv[])
 		backgroundShader.setUniformMat4f("u_mvp", projMatrix);
 		renderer.drawFullQuad();*/
 
-		image2.show(glm::vec2(0.0f), 0.0f, 1.0f, view);
 		image.show(glm::vec2(0.2f), 0.0f, 1.0f, view);
+		image2.show(glm::vec2(0.0f), 0.0f, 1.0f, view);
+		for (int k = 0; k < images.size(); ++k) {
+			images[k]->show(glm::vec2(0.0f), 0.0f, 0.3f, view);
+		}
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		SDL_GL_SwapWindow(window);
@@ -219,8 +225,9 @@ int main(int argc, char* argv[])
 			case SDL_KEYDOWN:
 				inputHandler.onStandardKeyDown(e.key.keysym.sym);
 				if (e.key.keysym.sym == 'o') {
-					std::string filepath8 = openfilename();
-					spdlog::info(filepath8);
+					std::string imgFilepath = openfilename();
+					images.push_back(new Image(imgFilepath));
+					spdlog::info("[Opening image] " + imgFilepath);
 				}
 				else if (e.key.keysym.scancode == SDL_SCANCODE_UP) {
 					;
