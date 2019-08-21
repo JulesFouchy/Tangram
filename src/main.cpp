@@ -234,6 +234,7 @@ int main(int argc, char* argv[])
 				else if (e.key.keysym.sym == 's') {
 					std::string imgFilepath = savefilename();
 					if (!imgFilepath.empty()) {
+						image.save(imgFilepath);
 						spdlog::info("[Saved image] " + imgFilepath);
 					}
 				}

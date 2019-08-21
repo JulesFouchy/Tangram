@@ -1,6 +1,7 @@
 #include "image.hpp"
 
 #include "stb_image/stb_image.h"
+#include "stb_image/stb_image_write.h"
 
 #include "spdlog/spdlog.h"
 
@@ -39,6 +40,12 @@ void Image::show(glm::vec2 center, float rotation, float scale, glm::mat4x4 view
 	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//Draw call
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+}
+
+void Image::save(const std::string& filePath) {
+	stbi_flip_vertically_on_write(1);
+	stbi_write_jpg(filePath.c_str(), width, height, bytesPerPixel(pixelFormat), pixels, 100);
+	//stbi_write_png(filePath.c_str(), width, height, bytesPerPixel(pixelFormat), pixels, 0);
 }
 
 Image::Image(const std::string& filePath)

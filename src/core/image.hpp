@@ -23,6 +23,8 @@ public :
 
 	void show(glm::vec2 center, float rotation, float scale, glm::mat4x4 view);
 
+	void save(const std::string& filePath);
+
 	static void initialize();
 
 private:
