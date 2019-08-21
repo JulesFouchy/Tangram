@@ -22,6 +22,8 @@
 
 #include "utilities/display.hpp"
 
+#include "UI/fileBrowser.hpp"
+
 int main(int argc, char* argv[])
 {
 	InputHandler inputHandler;
@@ -49,7 +51,7 @@ int main(int argc, char* argv[])
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 	SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-	SDL_Window* window = SDL_CreateWindow("Tangram", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 837, window_flags);
+	SDL_Window* window = SDL_CreateWindow("Tangram", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
 	SDL_GLContext gl_context = SDL_GL_CreateContext(window);
 	SDL_GL_MakeCurrent(window, gl_context);
 	SDL_GL_SetSwapInterval(1); // Enable vsync
@@ -216,8 +218,9 @@ int main(int argc, char* argv[])
 
 			case SDL_KEYDOWN:
 				inputHandler.onStandardKeyDown(e.key.keysym.sym);
-				if (e.key.keysym.sym == 'p') {
-
+				if (e.key.keysym.sym == 'o') {
+					std::string filepath8 = openfilename();
+					spdlog::info(filepath8);
 				}
 				else if (e.key.keysym.scancode == SDL_SCANCODE_UP) {
 					;
