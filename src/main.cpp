@@ -226,8 +226,16 @@ int main(int argc, char* argv[])
 				inputHandler.onStandardKeyDown(e.key.keysym.sym);
 				if (e.key.keysym.sym == 'o') {
 					std::string imgFilepath = openfilename();
-					images.push_back(new Image(imgFilepath));
-					spdlog::info("[Opening image] " + imgFilepath);
+					if (!imgFilepath.empty()) {
+						images.push_back(new Image(imgFilepath));
+						spdlog::info("[Opened image] " + imgFilepath);
+					}
+				}
+				else if (e.key.keysym.sym == 's') {
+					std::string imgFilepath = savefilename();
+					if (!imgFilepath.empty()) {
+						spdlog::info("[Saved image] " + imgFilepath);
+					}
 				}
 				else if (e.key.keysym.scancode == SDL_SCANCODE_UP) {
 					;
