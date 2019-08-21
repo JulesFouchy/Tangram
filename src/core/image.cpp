@@ -4,10 +4,10 @@
 
 #include "spdlog/spdlog.h"
 
-#include "constants.hpp"
+#include "utilities/display.hpp"
 
 Shader Image::standardShader = Shader("res/shaders/vertex/texture.vert", "res/shaders/fragment/texture_standard.frag", false);
-glm::mat4x4 Image::proj = glm::ortho(WINDOW_COORD_MIN_X, WINDOW_COORD_MAX_X, WINDOW_COORD_MIN_Y, WINDOW_COORD_MAX_Y);
+glm::mat4x4 Image::proj;
 
 void Image::show(glm::vec2 center, float rotation, float scale, glm::mat4x4 view) {
 	//Bind texture
@@ -65,16 +65,16 @@ Image::Image(const std::string& filePath)
 	//Gen buffers to render a quad on the whole screen
 	float minX, maxX, minY, maxY;
 	if (width > height) {
-		minX = WINDOW_COORD_MIN_Y * aspectRatio;
-		maxX = WINDOW_COORD_MAX_Y * aspectRatio;
-		minY = WINDOW_COORD_MIN_Y;
-		maxY = WINDOW_COORD_MAX_Y;
+		minX = Display::getMinY() * aspectRatio;
+		maxX = Display::getMaxY() * aspectRatio;
+		minY = Display::getMinY();
+		maxY = Display::getMaxY();
 	}
 	else {
-		minX = WINDOW_COORD_MIN_Y;
-		maxX = WINDOW_COORD_MAX_Y;
-		minY = WINDOW_COORD_MIN_Y * aspectRatio;
-		maxY = WINDOW_COORD_MAX_Y * aspectRatio;
+		minX = Display::getMinY();
+		maxX = Display::getMaxY();
+		minY = Display::getMinY() * aspectRatio;
+		maxY = Display::getMaxY() * aspectRatio;
 	}
 	float vertices[] = {
 		//Position     TexCoord
@@ -101,6 +101,8 @@ Image::Image(const std::string& filePath)
 void Image::initialize() {
 	//Shaders must be compiled after openGl was initialized
 	standardShader.compile();
+	//Must initialize Display first
+	proj = glm::ortho(Display::getMinX(), Display::getMaxX(), Display::getMinY(), Display::getMaxY());
 }
 
 Image::~Image() {

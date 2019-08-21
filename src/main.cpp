@@ -20,6 +20,8 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include <stdio.h>
 
+#include "utilities/display.hpp"
+
 int main(int argc, char* argv[])
 {
 	InputHandler inputHandler;
@@ -47,10 +49,13 @@ int main(int argc, char* argv[])
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 	SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-	SDL_Window* window = SDL_CreateWindow("Tangram", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+	SDL_Window* window = SDL_CreateWindow("Tangram", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 837, window_flags);
 	SDL_GLContext gl_context = SDL_GL_CreateContext(window);
 	SDL_GL_MakeCurrent(window, gl_context);
 	SDL_GL_SetSwapInterval(1); // Enable vsync
+
+	//Initialize display
+	Display::initialize(window);
 
 	// Initialize OpenGL loader
 	bool err = glewInit() != GLEW_OK;
@@ -99,7 +104,7 @@ int main(int argc, char* argv[])
 
 	Renderer renderer;
 	Shader backgroundShader("res/shaders/vertex/standard.vert", "res/shaders/fragment/background.frag") ;
-	glm::mat4x4 projMatrix = glm::ortho(WINDOW_COORD_MIN_X, WINDOW_COORD_MAX_X, WINDOW_COORD_MIN_Y, WINDOW_COORD_MAX_Y);
+	glm::mat4x4 projMatrix = glm::ortho(Display::getMinX(), Display::getMaxX(), Display::getMinY(), Display::getMaxY());
 	Image image("res/img/test3.jpg");
 	Image image2("res/img/test2.png");
 	glm::mat4x4 view = glm::mat4x4(1.0f);
@@ -240,6 +245,13 @@ int main(int argc, char* argv[])
 				//	emitter.publish<evnt::ScaleView>(-1.0f);
 				//}
 				break;
+
+			case SDL_WINDOWEVENT:
+				switch (e.window.event) {
+				case SDL_WINDOWEVENT_RESIZED:
+					Display::onWindowResized();
+				break;
+				}
 			}
 		}
 

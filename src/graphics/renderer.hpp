@@ -4,8 +4,6 @@
 #include <SDL.h>
 #include "glm/glm.hpp"
 
-#include "constants.hpp"
-
 class Renderer {
 public:
 	Renderer();

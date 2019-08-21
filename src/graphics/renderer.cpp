@@ -1,14 +1,16 @@
 #include "renderer.hpp"
 
+#include "utilities/display.hpp"
+
 Renderer::Renderer()
 {
 	//Gen vertex buffer for full quad
 	float vertices[] = {
 		//Position
-		WINDOW_COORD_MIN_X, WINDOW_COORD_MIN_Y,
-		WINDOW_COORD_MIN_X, WINDOW_COORD_MAX_Y,
-		WINDOW_COORD_MAX_X, WINDOW_COORD_MAX_Y,
-		WINDOW_COORD_MAX_X, WINDOW_COORD_MIN_Y,
+		Display::getMinX(), Display::getMinY(),
+		Display::getMinX(), Display::getMaxY(),
+		Display::getMaxX(), Display::getMaxY(),
+		Display::getMaxX(), Display::getMinY(),
 	};
 	glGenBuffers(1, &m_fullQuadVBid);
 	glBindBuffer(GL_ARRAY_BUFFER, m_fullQuadVBid);
