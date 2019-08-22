@@ -11,7 +11,7 @@
 
 #include "graphics/immediateDrawing.hpp"
 #include "graphics/shader.hpp"
-#include "UI/inputHandler.hpp"
+#include "UI/input.hpp"
 #include "core/image.hpp"
 #include "utilities/conversions.hpp"
 
@@ -30,7 +30,7 @@
 
 int main(int argc, char* argv[])
 {
-	InputHandler inputHandler;
+	Input::initialize();
 	spdlog::set_pattern("%^[%T] %n: %v%$");
 
 	// Decide GL+GLSL versions
@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	Image::initialize();
-	DrawingBoard drawingBoard(16.0f / 9.0f);
+	DrawingBoard drawingBoard(9.0f / 16.0f);
 
 	ImmediateDrawing::initialize();
 	Shader backgroundShader("res/shaders/vertex/standard.vert", "res/shaders/fragment/background.frag") ;
@@ -117,16 +117,11 @@ int main(int argc, char* argv[])
 	Image image("res/img/test3.jpg");
 	Image image2("res/img/test2.png");
 	glm::mat4x4 view = glm::mat4x4(1.0f);
-	glm::vec2 viewTranslate = glm::vec2(0.0f);
 
 	bool bQuit = false;
 	while (!bQuit) {
 
-		if (inputHandler.spaceBarIsDown() && inputHandler.leftClicIsDown()) {
-			view = glm::translate(glm::mat4x4(1.0f), glm::vec3(viewTranslate + inputHandler.getMousePosition() - inputHandler.getMousePosWhenLeftClicDown(), 0.0f));
-			ImmediateDrawing::setViewProjMatrix(projMatrix * view);
-		}
-
+		drawingBoard.checkInputs();
 
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
@@ -205,10 +200,8 @@ int main(int argc, char* argv[])
 			switch (e.type) {
 			case SDL_MOUSEBUTTONUP:
 				if (e.button.button == SDL_BUTTON_LEFT) {
-					inputHandler.onLeftClicUp();
-					if (inputHandler.spaceBarIsDown()) {
-						viewTranslate += inputHandler.getMousePosition() - inputHandler.getMousePosWhenLeftClicDown();
-					}
+					Input::onLeftClicUp();
+					drawingBoard.onLeftClicUp();
 				}
 				else if (e.button.button == SDL_BUTTON_RIGHT)
 					;
@@ -218,7 +211,7 @@ int main(int argc, char* argv[])
 				if (e.button.button == SDL_BUTTON_LEFT) {
 					int x, y;
 					SDL_GetMouseState(&x, &y);
-					inputHandler.onLeftClicDown(conv::screenCoordFromPixelCoord(x,y));
+					Input::onLeftClicDown(conv::screenCoordFromPixelCoord(x,y));
 				}
 				else if (e.button.button == SDL_BUTTON_RIGHT)
 					;
@@ -227,11 +220,11 @@ int main(int argc, char* argv[])
 			case SDL_MOUSEMOTION:
 				int x, y;
 				SDL_GetMouseState(&x, &y);
-				inputHandler.onMouseMove(conv::screenCoordFromPixelCoord(x, y));
+				Input::onMouseMove(conv::screenCoordFromPixelCoord(x, y));
 				break;
 
 			case SDL_KEYDOWN:
-				inputHandler.onStandardKeyDown(e.key.keysym.sym);
+				Input::onStandardKeyDown(e.key.keysym.sym);
 				if (e.key.keysym.sym == 'o') {
 					std::string imgFilepath = openfilename();
 					if (!imgFilepath.empty()) {
@@ -261,7 +254,10 @@ int main(int argc, char* argv[])
 				break;
 
 			case SDL_KEYUP:
-				inputHandler.onStandardKeyUp(e.key.keysym.sym);
+				Input::onStandardKeyUp(e.key.keysym.sym);
+				if (e.key.keysym.sym == ' ') {
+					drawingBoard.onSpaceBarUp();
+				}
 				break;
 
 			case SDL_MOUSEWHEEL:
