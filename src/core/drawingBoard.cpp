@@ -4,7 +4,7 @@
 
 #include "UI/input.hpp"
 
-DrawingBoard::DrawingBoard(float whRatio) : m_whRatio(whRatio), m_scale(0.9f), m_translate(glm::vec2(0.0f)), m_prevTranslate(glm::vec2(0.0f)), m_zoomInFactor(0.2f){
+DrawingBoard::DrawingBoard(float whRatio) : m_whRatio(whRatio), m_scale(0.9f), m_translate(glm::vec2(0.0f)), m_prevTranslate(glm::vec2(0.0f)), m_zoomInFactor(0.8f){
 
 }
 
@@ -42,4 +42,12 @@ void DrawingBoard::onSpaceBarUp() {
 		m_prevTranslate += Input::getMousePosition() - Input::getMousePosWhenLeftClicDown();
 		m_translate = m_prevTranslate;
 	}
+}
+
+void DrawingBoard::zoomIn() {
+	m_scale *= m_zoomInFactor;
+}
+
+void DrawingBoard::zoomOut() {
+	m_scale /= m_zoomInFactor;
 }

@@ -12,7 +12,7 @@ public:
 	void onLeftClicUp();
 	void onSpaceBarUp();
 
-	void zoomIm();
+	void zoomIn();
 	void zoomOut();
 
 private:

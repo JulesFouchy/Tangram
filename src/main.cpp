@@ -261,12 +261,11 @@ int main(int argc, char* argv[])
 				break;
 
 			case SDL_MOUSEWHEEL:
-				//emitter.publish<evnt::MouseScrolled>((int)e.motion.x);
-				//if (e.motion.x > 0.0f) {
-				//	emitter.publish<evnt::ScaleView>(1.0f);
-				//} else {
-				//	emitter.publish<evnt::ScaleView>(-1.0f);
-				//}
+				if (e.motion.x < 0.0f) {
+					drawingBoard.zoomIn();
+				} else {
+					drawingBoard.zoomOut();
+				}
 				break;
 
 			case SDL_WINDOWEVENT:
