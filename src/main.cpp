@@ -24,6 +24,8 @@
 
 #include "UI/fileBrowser.hpp"
 
+#include "core/drawingBoard.hpp"
+
 #include <vector>
 
 int main(int argc, char* argv[])
@@ -105,6 +107,7 @@ int main(int argc, char* argv[])
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	Image::initialize();
+	DrawingBoard drawingBoard(16.0f / 9.0f);
 
 	ImmediateDrawing::initialize();
 	Shader backgroundShader("res/shaders/vertex/standard.vert", "res/shaders/fragment/background.frag") ;
@@ -139,7 +142,7 @@ int main(int argc, char* argv[])
 		{
 			static int counter = 0;
 
-			ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+			ImGui::Begin("Hello Debug!");                          // Create a window called "Hello, world!" and append into it.
 
 			ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
 			ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
@@ -153,6 +156,7 @@ int main(int argc, char* argv[])
 			ImGui::SameLine();
 			ImGui::Text("counter = %d", counter);
 
+			ImGui::Text("Display window w/h-ratio : %.2f", Display::getRatio());
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
 		}
@@ -176,13 +180,13 @@ int main(int argc, char* argv[])
 		/*backgroundShader.bind();
 		backgroundShader.setUniformMat4f("u_mvp", projMatrix);
 		renderer.drawFullQuad();*/
-
-		image.show(glm::vec2(0.2f), 0.0f, 1.0f, view);
+		drawingBoard.show();
+		/*image.show(glm::vec2(0.2f), 0.0f, 1.0f, view);
 		image2.show(glm::vec2(0.0f), 0.0f, 1.0f, view);
 		for (int k = 0; k < images.size(); ++k) {
 			images[k]->show(glm::vec2(0.0f), 0.0f, 0.3f, view);
 		}
-		ImmediateDrawing::rect(0.0f, f-0.5f, 1.0f, 1.0f);
+		ImmediateDrawing::rect(0.0f, f-0.5f, 1.0f, 1.0f);*/
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		SDL_GL_SwapWindow(window);
@@ -273,6 +277,9 @@ int main(int argc, char* argv[])
 				switch (e.window.event) {
 				case SDL_WINDOWEVENT_RESIZED:
 					Display::onWindowResized();
+					ImmediateDrawing::genBuffers();
+					projMatrix = glm::ortho(Display::getMinX(), Display::getMaxX(), Display::getMinY(), Display::getMaxY());
+					ImmediateDrawing::setViewProjMatrix(projMatrix * view);
 				break;
 				}
 			}

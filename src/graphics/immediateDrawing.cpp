@@ -10,12 +10,7 @@ glm::mat4x4 ImmediateDrawing::m_viewProjMatrix;
 glm::vec4 ImmediateDrawing::m_color(0.0f, 0.0f, 0.0f, 1.0f);
 Shader ImmediateDrawing::m_flatColorShader("res/shaders/vertex/standard.vert", "res/shaders/fragment/flatColor.frag", false);
 
-void ImmediateDrawing::initialize()
-{
-	//View matrix
-	m_viewProjMatrix = glm::mat4x4(1.0f);
-	//Compile shader
-	m_flatColorShader.compile();
+void ImmediateDrawing::genBuffers() {
 	//Gen vertex buffer for full quad
 	float vertices[] = {
 		//Position
@@ -39,12 +34,26 @@ void ImmediateDrawing::initialize()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
+void ImmediateDrawing::initialize()
+{
+	//View matrix
+	m_viewProjMatrix = glm::mat4x4(1.0f);
+	//Compile shader
+	m_flatColorShader.compile();
+	//
+	genBuffers();
+}
+
 ImmediateDrawing::~ImmediateDrawing() {
 
 }
 
 void ImmediateDrawing::setViewProjMatrix(glm::mat4x4 viewProjMatrix) {
 	m_viewProjMatrix = viewProjMatrix;
+}
+
+void ImmediateDrawing::setColor(float r, float g, float b, float a) {
+	m_color = glm::vec4(r, g, b, a);
 }
 
 void ImmediateDrawing::rect(float x, float y, float w, float h){
@@ -61,4 +70,11 @@ void ImmediateDrawing::rect(float x, float y, float w, float h){
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_fullQuadIBOid);
 	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+}
+
+void ImmediateDrawing::rectOutline(float x, float y, float w, float h, float thickness) {
+	rect(x-w/2-thickness/2, y, thickness, h);
+	rect(x+w/2+thickness/ 2, y, thickness, h);
+	rect(x , y-h/2-thickness/2, w, thickness);
+	rect(x, y+h/2+thickness/2, w, thickness);
 }
