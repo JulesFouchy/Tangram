@@ -9,7 +9,7 @@
 
 #include "constants.hpp"
 
-#include "graphics/renderer.hpp"
+#include "graphics/immediateDrawing.hpp"
 #include "graphics/shader.hpp"
 #include "UI/inputHandler.hpp"
 #include "core/image.hpp"
@@ -106,9 +106,10 @@ int main(int argc, char* argv[])
 
 	Image::initialize();
 
-	Renderer renderer;
+	ImmediateDrawing::initialize();
 	Shader backgroundShader("res/shaders/vertex/standard.vert", "res/shaders/fragment/background.frag") ;
 	glm::mat4x4 projMatrix = glm::ortho(Display::getMinX(), Display::getMaxX(), Display::getMinY(), Display::getMaxY());
+	ImmediateDrawing::setViewProjMatrix(projMatrix);
 	std::vector<Image*> images;
 	Image image("res/img/test3.jpg");
 	Image image2("res/img/test2.png");
@@ -120,7 +121,9 @@ int main(int argc, char* argv[])
 
 		if (inputHandler.spaceBarIsDown() && inputHandler.leftClicIsDown()) {
 			view = glm::translate(glm::mat4x4(1.0f), glm::vec3(viewTranslate + inputHandler.getMousePosition() - inputHandler.getMousePosWhenLeftClicDown(), 0.0f));
+			ImmediateDrawing::setViewProjMatrix(projMatrix * view);
 		}
+
 
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
@@ -131,9 +134,9 @@ int main(int argc, char* argv[])
 		if (show_demo_window)
 			ImGui::ShowDemoWindow(&show_demo_window);
 
+		static float f = 0.0f;
 		// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
 		{
-			static float f = 0.0f;
 			static int counter = 0;
 
 			ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
@@ -179,6 +182,7 @@ int main(int argc, char* argv[])
 		for (int k = 0; k < images.size(); ++k) {
 			images[k]->show(glm::vec2(0.0f), 0.0f, 0.3f, view);
 		}
+		ImmediateDrawing::rect(0.0f, f-0.5f, 1.0f, 1.0f);
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		SDL_GL_SwapWindow(window);
