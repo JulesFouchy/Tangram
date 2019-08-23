@@ -12,7 +12,7 @@ public:
 	static glm::vec2 getMousePosition();
 	static bool leftClicIsDown();
 	static bool spaceBarIsDown();
-	static glm::vec2 getMousePosWhenLeftClicDown();
+	static glm::vec2 getMousePosWhenLeftClicAndSpaceBarDown();
 
 	static void onMouseMove(glm::vec2 mousePos);
 	static void onLeftClicDown(glm::vec2 mousePos);
@@ -24,5 +24,5 @@ private:
 	static glm::vec2 m_mousePos;
 	static bool m_leftClicIsDown;
 	static bool m_spaceBarIsDown;
-	static glm::vec2 m_mousePosWhenLeftClicDown;
+	static glm::vec2 m_mousePosWhenLeftClicAndSpaceBarDown;
 };

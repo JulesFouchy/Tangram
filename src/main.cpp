@@ -214,6 +214,7 @@ int main(int argc, char* argv[])
 				break;
 
 			case SDL_KEYDOWN:
+				//spdlog::info(e.key.keysym.sym);
 				Input::onStandardKeyDown(e.key.keysym.sym);
 				if (e.key.keysym.sym == 'o') {
 					std::string imgFilepath = openfilename();
@@ -226,6 +227,9 @@ int main(int argc, char* argv[])
 						spdlog::info("[Saving image] " + imgFilepath);
 						drawingBoard.save(2500000,imgFilepath);
 					}
+				}
+				else if (e.key.keysym.sym == '0' || e.key.keysym.sym == 1073741922) {
+					drawingBoard.resetTransform();
 				}
 				else if (e.key.keysym.scancode == SDL_SCANCODE_UP) {
 					;

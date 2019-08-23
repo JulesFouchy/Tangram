@@ -104,7 +104,7 @@ void DrawingBoard::addLayer(std::string imgFilePath) {
 void DrawingBoard::checkInputs() {
 	//Moving by holding space + clic'n'dragging
 	if (Input::spaceBarIsDown() && Input::leftClicIsDown()) {
-		m_translation = m_prevTranslation + Input::getMousePosition() - Input::getMousePosWhenLeftClicDown();
+		m_translation = m_prevTranslation + Input::getMousePosition() - Input::getMousePosWhenLeftClicAndSpaceBarDown();
 		computeTransformMatrix();
 	}
 }
@@ -112,7 +112,7 @@ void DrawingBoard::checkInputs() {
 void DrawingBoard::onLeftClicUp() {
 	//Moving by holding space + clic'n'dragging
 	if (Input::spaceBarIsDown()) {
-		m_prevTranslation += Input::getMousePosition() - Input::getMousePosWhenLeftClicDown();
+		m_prevTranslation += Input::getMousePosition() - Input::getMousePosWhenLeftClicAndSpaceBarDown();
 		m_translation = m_prevTranslation;
 		computeTransformMatrix();
 	}
@@ -121,7 +121,7 @@ void DrawingBoard::onLeftClicUp() {
 void DrawingBoard::onSpaceBarUp() {
 	//Moving by holding space + clic'n'dragging
 	if (Input::leftClicIsDown()) {
-		m_prevTranslation += Input::getMousePosition() - Input::getMousePosWhenLeftClicDown();
+		m_prevTranslation += Input::getMousePosition() - Input::getMousePosWhenLeftClicAndSpaceBarDown();
 		m_translation = m_prevTranslation;
 		computeTransformMatrix();
 	}
