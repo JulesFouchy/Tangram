@@ -111,6 +111,8 @@ int main(int argc, char* argv[])
 	Image::initialize();
 	DrawingBoard drawingBoard(1.5f);
 
+	drawingBoard.addLayer("res/img/test3.jpg");
+
 	ImmediateDrawing::initialize();
 	glm::mat4x4 projMatrix = glm::ortho(Display::getMinX(), Display::getMaxX(), Display::getMinY(), Display::getMaxY());
 	ImmediateDrawing::setViewProjMatrix(projMatrix);
@@ -253,10 +255,11 @@ int main(int argc, char* argv[])
 				break;
 
 			case SDL_MOUSEWHEEL:
+				glm::vec2 mouse = Input::getMousePosition();
 				if (e.motion.x < 0.0f) {
-					drawingBoard.zoomIn();
+					drawingBoard.zoomIn(Input::getMousePosition());
 				} else {
-					drawingBoard.zoomOut();
+					drawingBoard.zoomOut(Input::getMousePosition());
 				}
 				break;
 

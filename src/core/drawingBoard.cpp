@@ -67,6 +67,7 @@ void DrawingBoard::save(int approxNbPixels, std::string filePath) {
 
 void DrawingBoard::setTranslation(glm::vec2 translation) {
 	m_translation = translation;
+	m_prevTranslation = translation;
 	computeTransformMatrix();
 }
 void DrawingBoard::translate(glm::vec2 translation) {
@@ -78,6 +79,22 @@ void DrawingBoard::setScale(float scale) {
 }
 void DrawingBoard::scale(float scale) {
 	setScale(m_scale * scale);
+}
+void DrawingBoard::scale(float scale, glm::vec2 origin) {
+	setTranslation(scale*m_translation + (1-scale)*origin);
+	setScale(m_scale * scale);
+}
+void DrawingBoard::zoomIn() {
+	scale(m_zoomInFactor);
+}
+void DrawingBoard::zoomIn(glm::vec2 origin) {
+	scale(m_zoomInFactor, origin);
+}
+void DrawingBoard::zoomOut() {
+	scale(1.0f / m_zoomInFactor);
+}
+void DrawingBoard::zoomOut(glm::vec2 origin) {
+	scale(1.0f / m_zoomInFactor, origin);
 }
 void DrawingBoard::setRotation(float rotation) {
 	m_rotation = rotation;
@@ -125,12 +142,4 @@ void DrawingBoard::onSpaceBarUp() {
 		m_translation = m_prevTranslation;
 		computeTransformMatrix();
 	}
-}
-
-void DrawingBoard::zoomIn() {
-	scale(m_zoomInFactor);
-}
-
-void DrawingBoard::zoomOut() {
-	scale(1.0f/m_zoomInFactor);
 }

@@ -26,10 +26,13 @@ public:
 	void translate(glm::vec2 translation);
 	void setScale(float scale);
 	void scale(float scale);
+	void scale(float scale, glm::vec2 origin);
+	void zoomIn();
+	void zoomIn(glm::vec2 origin);
+	void zoomOut();
+	void zoomOut(glm::vec2 origin);
 	void setRotation(float rotation);
 	void rotate(float rotation);
-	void zoomIn();
-	void zoomOut();
 	void resetTransform();
 
 private:
