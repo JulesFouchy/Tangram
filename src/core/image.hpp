@@ -45,5 +45,4 @@ private:
 	unsigned int m_fullQuadVBid;
 	unsigned int m_fullQuadIBOid;
 	static Shader standardShader;
-	static glm::mat4x4 proj;
 };

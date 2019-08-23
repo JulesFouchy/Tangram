@@ -220,10 +220,8 @@ int main(int argc, char* argv[])
 				Input::onStandardKeyDown(e.key.keysym.sym);
 				if (e.key.keysym.sym == 'o') {
 					std::string imgFilepath = openfilename();
-					if (!imgFilepath.empty()) {
+					if (!imgFilepath.empty())
 						drawingBoard.addLayer(imgFilepath);
-						//images.push_back(new Image(imgFilepath));
-					}
 				}
 				else if (e.key.keysym.sym == 's') {
 					std::string imgFilepath = savefilename();

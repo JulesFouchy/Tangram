@@ -3,14 +3,11 @@
 #include "stb_image/stb_image.h"
 #include "stb_image/stb_image_write.h"
 
-#include "spdlog/spdlog.h"
-
 #include "utilities/display.hpp"
 
-#include "glm/gtc/matrix_transform.hpp"
+#include "spdlog/spdlog.h"
 
 Shader Image::standardShader = Shader("res/shaders/vertex/texture.vert", "res/shaders/fragment/texture_standard.frag", false);
-glm::mat4x4 Image::proj;
 
 void Image::show(glm::mat4x4 transform) {
 	//Bind texture
@@ -25,7 +22,7 @@ void Image::show(glm::mat4x4 transform) {
 	model = glm::rotate(model, rotation, glm::vec3(0.0, 0.0, 1.0));
 	model = glm::scale(model, glm::vec3(scale, scale, 1.0f));*/
 
-	glm::mat4x4 mvp = proj * transform;
+	glm::mat4x4 mvp = Display::getProjMat() * transform;
 	standardShader.setUniformMat4f("u_mvp", mvp);
 
 	//Draw quad
@@ -61,7 +58,6 @@ Image::Image(const std::string& filePath)
 	if (!pixels)
 		spdlog::warn("Couldn't open " + filePath);
 	aspectRatio = (float) width / height;
-
 	//Gen texture
 	glGenTextures(1, &rendererId);
 	glBindTexture(GL_TEXTURE_2D,rendererId);
@@ -114,8 +110,6 @@ Image::Image(const std::string& filePath)
 void Image::initialize() {
 	//Shaders must be compiled after openGl was initialized
 	standardShader.compile();
-	//Must initialize Display first
-	proj = glm::ortho(Display::getMinX(), Display::getMaxX(), Display::getMinY(), Display::getMaxY());
 }
 
 Image::~Image() {
