@@ -10,7 +10,7 @@
 Shader Image::standardShader = Shader("res/shaders/vertex/texture.vert", "res/shaders/fragment/texture_standard.frag", false);
 glm::mat4x4 Image::proj;
 
-void Image::show(glm::vec2 center, float rotation, float scale, glm::mat4x4 view) {
+void Image::show(glm::vec2 center, float scale, float rotation) {
 	//Bind texture
 	glBindTexture(GL_TEXTURE_2D, rendererId);
 	//Shader
@@ -23,7 +23,7 @@ void Image::show(glm::vec2 center, float rotation, float scale, glm::mat4x4 view
 	model = glm::rotate(model, rotation, glm::vec3(0.0, 0.0, 1.0));
 	model = glm::scale(model, glm::vec3(scale, scale, 1.0f));
 
-	glm::mat4x4 mvp = proj * view * model;
+	glm::mat4x4 mvp = proj * model;
 	standardShader.setUniformMat4f("u_mvp", mvp);
 
 	//Draw quad
@@ -117,7 +117,7 @@ void Image::initialize() {
 }
 
 Image::~Image() {
-	spdlog::info("[Image Deleted] " + filePath);
+	spdlog::info("[Image Destructed] " + filePath);
 	glDeleteTextures(1, &rendererId);
 	if( pixels )
 		stbi_image_free(pixels);

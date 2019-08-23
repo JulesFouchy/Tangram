@@ -21,7 +21,7 @@ public :
 	Image(const std::string& filePath);
 	~Image();
 
-	void show(glm::vec2 center, float rotation, float scale, glm::mat4x4 view);
+	void show(glm::vec2 center = glm::vec2(0.0f), float scale = 1.0f, float rotation = 0.0f);
 
 	void save(const std::string& filePath);
 

@@ -4,7 +4,7 @@
 
 #include "UI/input.hpp"
 
-DrawingBoard::DrawingBoard(float whRatio) : m_whRatio(whRatio), m_scale(0.9f), m_translate(glm::vec2(0.0f)), m_prevTranslate(glm::vec2(0.0f)), m_zoomInFactor(0.8f){
+DrawingBoard::DrawingBoard(float whRatio) : m_whRatio(whRatio), m_scale(1.0f), m_translate(glm::vec2(0.0f)), m_prevTranslate(glm::vec2(0.0f)), m_zoomInFactor(0.8f){
 
 }
 
@@ -13,12 +13,19 @@ DrawingBoard::~DrawingBoard() {
 }
 
 void DrawingBoard::show() {
+	for (int k = 0; k < layers.size(); ++k) {
+		layers[k]->show(m_translate, m_scale);
+	}
 	showFrame();
 }
 
 void DrawingBoard::showFrame() {
 	ImmediateDrawing::setColor(0.0f, 0.0f, 0.0f, 1.0f);
 	ImmediateDrawing::rectOutline(m_translate.x, m_translate.y, m_scale * m_whRatio, m_scale, 0.002f);
+}
+
+void DrawingBoard::addLayer(std::string imgFilePath) {
+	layers.push_back(new Layer(imgFilePath));
 }
 
 void DrawingBoard::checkInputs() {

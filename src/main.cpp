@@ -115,7 +115,6 @@ int main(int argc, char* argv[])
 	std::vector<Image*> images;
 	Image image("res/img/test3.jpg");
 	Image image2("res/img/test2.png");
-	glm::mat4x4 view = glm::mat4x4(1.0f);
 
 	bool bQuit = false;
 	while (!bQuit) {
@@ -175,10 +174,10 @@ int main(int argc, char* argv[])
 		backgroundShader.setUniformMat4f("u_mvp", projMatrix);
 		renderer.drawFullQuad();*/
 		drawingBoard.show();
-		image.show(glm::vec2(0.2f), 0.0f, 1.0f, view);
-		image2.show(glm::vec2(0.0f), 0.0f, 1.0f, view);
+		//image.show(glm::vec2(0.2f));
+		//image2.show();
 		for (int k = 0; k < images.size(); ++k) {
-			images[k]->show(glm::vec2(0.0f), 0.0f, 0.3f, view);
+			images[k]->show(glm::vec2(0.0f), 0.3f);
 		}
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -226,7 +225,8 @@ int main(int argc, char* argv[])
 				if (e.key.keysym.sym == 'o') {
 					std::string imgFilepath = openfilename();
 					if (!imgFilepath.empty()) {
-						images.push_back(new Image(imgFilepath));
+						drawingBoard.addLayer(imgFilepath);
+						//images.push_back(new Image(imgFilepath));
 					}
 				}
 				else if (e.key.keysym.sym == 's') {
@@ -271,7 +271,7 @@ int main(int argc, char* argv[])
 					Display::onWindowResized();
 					ImmediateDrawing::genBuffers();
 					projMatrix = glm::ortho(Display::getMinX(), Display::getMaxX(), Display::getMinY(), Display::getMaxY());
-					ImmediateDrawing::setViewProjMatrix(projMatrix * view);
+					ImmediateDrawing::setViewProjMatrix(projMatrix);
 				break;
 				}
 			}

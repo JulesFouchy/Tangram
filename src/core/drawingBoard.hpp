@@ -1,12 +1,17 @@
 #pragma once
 
 #include "glm/glm.hpp"
+#include <vector>
+
+#include "layer.hpp"
 
 class DrawingBoard {
 public:
 	DrawingBoard(float whRatio);
 	~DrawingBoard();
 	void show();
+
+	void addLayer(std::string imgFilePath);
 
 	void checkInputs();
 	void onLeftClicUp();
@@ -17,6 +22,8 @@ public:
 
 private:
 	void showFrame();
+private:
+	std::vector<Layer*> layers;
 private:
 	float m_whRatio;
 	float m_scale;
