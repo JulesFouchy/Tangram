@@ -20,6 +20,7 @@ public :
 	Image(const std::string& filePath);
 	~Image();
 
+	void show(glm::mat4x4 transform, glm::mat4x4 projection);
 	void show(glm::mat4x4 transform);
 
 	void save(const std::string& filePath);

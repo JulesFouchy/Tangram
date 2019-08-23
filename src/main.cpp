@@ -172,9 +172,6 @@ int main(int argc, char* argv[])
 
 		drawingBoard.setRotation(dbRot);
 		drawingBoard.show();
-		if (drawingBoard.layers.size() > 0) {
-			drawingBoard.layers[0]->setRotation(imRot);
-		}
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		SDL_GL_SwapWindow(window);
@@ -226,7 +223,8 @@ int main(int argc, char* argv[])
 				else if (e.key.keysym.sym == 's') {
 					std::string imgFilepath = savefilename();
 					if (!imgFilepath.empty()) {
-						//spdlog::info("[Saved image] " + imgFilepath);
+						spdlog::info("[Saving image] " + imgFilepath);
+						drawingBoard.save(2500000,imgFilepath);
 					}
 				}
 				else if (e.key.keysym.scancode == SDL_SCANCODE_UP) {

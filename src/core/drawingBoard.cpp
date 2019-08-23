@@ -7,6 +7,11 @@
 #include "UI/input.hpp"
 #include "utilities/display.hpp"
 
+#include "spdlog/spdlog.h"
+
+
+#include "stb_image/stb_image_write.h"
+
 DrawingBoard::DrawingBoard(float whRatio) 
 	: m_whRatio(whRatio), m_translation(glm::vec2(0.0f)), m_prevTranslation(glm::vec2(0.0f)), m_scale(0.9f), m_zoomInFactor(0.8f),
 	m_rotation(0.0f), m_transform(glm::mat4x4(1.0f))
@@ -25,10 +30,39 @@ void DrawingBoard::show() {
 	showFrame();
 }
 
+void DrawingBoard::showForSaving() {
+	for (int k = 0; k < layers.size(); ++k) {
+		layers[k]->show(m_transform, glm::ortho(-0.5f * m_whRatio, 0.5f * m_whRatio, -0.5f, 0.5f));
+	}
+}
+
 void DrawingBoard::showFrame() {
 	ImmediateDrawing::setColor(0.0f, 0.0f, 0.0f, 1.0f);
-	ImmediateDrawing::setViewProjMatrix(glm::ortho(Display::getMinX(), Display::getMaxX(), Display::getMinY(), Display::getMaxY()) * m_transform);
+	ImmediateDrawing::setViewProjMatrix(Display::getProjMat() * m_transform);
 	ImmediateDrawing::rectOutline(0.0f, 0.0f, m_whRatio, 1.0f, 0.002f);
+}
+
+void DrawingBoard::save(int approxNbPixels, std::string filePath) {
+	//Compute output width and height
+	float w = sqrt(approxNbPixels * m_whRatio);
+	float h = w / m_whRatio;
+	int width = floor(w);
+	int height = floor(h);
+	//Bind frameBuffer to render and save
+	FrameBuffer saveBuffer(width, height);
+	saveBuffer.bind();
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	resetTransform();
+	glViewport(0, 0, width, height);
+	showForSaving();
+	//
+	unsigned char* data = new unsigned char[4*width*height];
+	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	stbi_flip_vertically_on_write(1);
+	stbi_write_png(filePath.c_str(), width, height, 4, data, 0);
+	//
+	saveBuffer.unbind();
 }
 
 void DrawingBoard::setTranslation(glm::vec2 translation) {
@@ -56,6 +90,11 @@ void DrawingBoard::computeTransformMatrix() {
 	m_transform = glm::translate(glm::mat4x4(1.0f), glm::vec3(m_translation, 0.0f));
 	m_transform = glm::rotate(m_transform, m_rotation, glm::vec3(0.0, 0.0, 1.0));
 	m_transform = glm::scale(m_transform, glm::vec3(m_scale, m_scale, 1.0f));
+}
+void DrawingBoard::resetTransform() {
+	setTranslation(glm::vec2(0.0f));
+	setScale(1.0f);
+	setRotation(0.0f);
 }
 
 void DrawingBoard::addLayer(std::string imgFilePath) {

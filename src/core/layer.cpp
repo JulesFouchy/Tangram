@@ -2,6 +2,8 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
+#include "utilities/display.hpp"
+
 Layer::Layer(std::string imgFilePath, std::string layerName)
 	:	m_image(imgFilePath), m_name(layerName), 
 		m_translation(glm::vec2(0.0f)), m_scale(1.0f), m_rotation(0.0f), m_transform(glm::mat4x4(1.0f))
@@ -13,8 +15,12 @@ Layer::~Layer() {
 
 }
 
+void Layer::show(glm::mat4x4 transform, glm::mat4x4 projection) {
+	m_image.show( transform * m_transform, projection);
+}
+
 void Layer::show(glm::mat4x4 transform) {
-	m_image.show( transform * m_transform );
+	show(transform, Display::getProjMat());
 }
 
 void Layer::setTranslation(glm::vec2 translation) {

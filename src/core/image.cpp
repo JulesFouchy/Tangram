@@ -6,10 +6,11 @@
 #include "utilities/display.hpp"
 
 #include "spdlog/spdlog.h"
+#include "glm/gtc/matrix_transform.hpp"
 
 Shader Image::standardShader = Shader("res/shaders/vertex/texture.vert", "res/shaders/fragment/texture_standard.frag", false);
 
-void Image::show(glm::mat4x4 transform) {
+void Image::show(glm::mat4x4 transform, glm::mat4x4 projection) {
 	//Bind texture
 	glBindTexture(GL_TEXTURE_2D, rendererId);
 	//Shader
@@ -21,8 +22,8 @@ void Image::show(glm::mat4x4 transform) {
 	model = glm::translate(model, glm::vec3(center, 0.0f));
 	model = glm::rotate(model, rotation, glm::vec3(0.0, 0.0, 1.0));
 	model = glm::scale(model, glm::vec3(scale, scale, 1.0f));*/
-
-	glm::mat4x4 mvp = Display::getProjMat() * transform;
+	
+	glm::mat4x4 mvp = projection * transform;
 	standardShader.setUniformMat4f("u_mvp", mvp);
 
 	//Draw quad
@@ -39,6 +40,10 @@ void Image::show(glm::mat4x4 transform) {
 	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//Draw call
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+}
+
+void Image::show(glm::mat4x4 transform) {
+	show(transform, Display::getProjMat());
 }
 
 void Image::save(const std::string& filePath) {

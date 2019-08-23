@@ -5,12 +5,16 @@
 
 #include "layer.hpp"
 
+#include "graphics/frameBuffer.hpp"
+
 class DrawingBoard {
 public:
 	DrawingBoard(float whRatio);
 	~DrawingBoard();
 
 	void show();
+	void showForSaving();
+	void save(int approxNbPixels, std::string filePath);
 
 	void addLayer(std::string imgFilePath);
 
@@ -26,10 +30,11 @@ public:
 	void rotate(float rotation);
 	void zoomIn();
 	void zoomOut();
+	void resetTransform();
 
 private:
 	void showFrame();
-public:
+private:
 	std::vector<Layer*> layers;
 private:
 	float m_whRatio;
