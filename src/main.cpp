@@ -13,14 +13,15 @@
 #include "graphics/shader.hpp"
 #include "UI/input.hpp"
 #include "core/image.hpp"
-#include "utilities/conversions.hpp"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include <stdio.h>
 
+#include "utilities/conversions.hpp"
 #include "utilities/display.hpp"
+#include "utilities/timestamp.hpp"
 
 #include "UI/fileBrowser.hpp"
 
@@ -178,6 +179,8 @@ int main(int argc, char* argv[])
 
 		SDL_GL_SwapWindow(window);
 
+		//Must be done between other updates and input polling, otherwise the fact that we had a double-clic is reset before it can be processed
+		Input::update();
 		// Handle inputs
 		SDL_Event e;
 		while (SDL_PollEvent(&e)) {

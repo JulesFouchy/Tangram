@@ -124,6 +124,10 @@ void DrawingBoard::checkInputs() {
 		m_translation = m_prevTranslation + Input::getMousePosition() - Input::getMousePosWhenLeftClicAndSpaceBarDown();
 		computeTransformMatrix();
 	}
+	//Center the point we double-clic on
+	if (Input::bDoubleLeftClic) {
+		translate(-Input::getMousePosition());
+	}
 }
 
 void DrawingBoard::onLeftClicUp() {
