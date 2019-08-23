@@ -71,20 +71,12 @@ Image::Image(const std::string& filePath)
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	//Gen buffers to render a quad on the whole screen
-	float minX, maxX, minY, maxY;
-	if (width > height) {
-		minX = Display::getMinY() * aspectRatio;
-		maxX = Display::getMaxY() * aspectRatio;
-		minY = Display::getMinY();
-		maxY = Display::getMaxY();
-	}
-	else {
-		minX = Display::getMinY();
-		maxX = Display::getMaxY();
-		minY = Display::getMinY() * aspectRatio;
-		maxY = Display::getMaxY() * aspectRatio;
-	}
+	//Gen buffers
+	float minX = Display::getMinY() * aspectRatio;
+	float maxX = Display::getMaxY() * aspectRatio;
+	float minY = Display::getMinY();
+	float maxY = Display::getMaxY();
+
 	float vertices[] = {
 		//Position     TexCoord
 		minX, minY,   0.0f, 0.0f,
