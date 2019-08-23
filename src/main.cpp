@@ -105,6 +105,8 @@ int main(int argc, char* argv[])
 	bool show_demo_window = false;
 	bool show_another_window = false;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+	float dbRot = 0.0f;
+	float imRot = 0.0f;
 
 	Image::initialize();
 	DrawingBoard drawingBoard(1.5f);
@@ -112,9 +114,6 @@ int main(int argc, char* argv[])
 	ImmediateDrawing::initialize();
 	glm::mat4x4 projMatrix = glm::ortho(Display::getMinX(), Display::getMaxX(), Display::getMinY(), Display::getMaxY());
 	ImmediateDrawing::setViewProjMatrix(projMatrix);
-	std::vector<Image*> images;
-	Image image("res/img/test3.jpg");
-	Image image2("res/img/test2.png");
 
 	bool bQuit = false;
 	while (!bQuit) {
@@ -141,7 +140,8 @@ int main(int argc, char* argv[])
 			ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
 			ImGui::Checkbox("Another Window", &show_another_window);
 
-			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::SliderFloat("dbRot", &dbRot, 0.0f, 6.28f);
+			ImGui::SliderFloat("imRot", &imRot, 0.0f, 6.28f);
 			ImGui::ColorEdit3("clear color", (float*)& clear_color); // Edit 3 floats representing a color
 
 			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
@@ -170,14 +170,10 @@ int main(int argc, char* argv[])
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		/*backgroundShader.bind();
-		backgroundShader.setUniformMat4f("u_mvp", projMatrix);
-		renderer.drawFullQuad();*/
+		drawingBoard.setRotation(dbRot);
 		drawingBoard.show();
-		//image.show(glm::vec2(0.2f));
-		//image2.show();
-		for (int k = 0; k < images.size(); ++k) {
-			images[k]->show(glm::vec2(0.0f), 0.3f);
+		if (drawingBoard.layers.size() > 0) {
+			drawingBoard.layers[0]->setRotation(imRot);
 		}
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -232,8 +228,7 @@ int main(int argc, char* argv[])
 				else if (e.key.keysym.sym == 's') {
 					std::string imgFilepath = savefilename();
 					if (!imgFilepath.empty()) {
-						image.save(imgFilepath);
-						spdlog::info("[Saved image] " + imgFilepath);
+						//spdlog::info("[Saved image] " + imgFilepath);
 					}
 				}
 				else if (e.key.keysym.scancode == SDL_SCANCODE_UP) {

@@ -7,10 +7,12 @@
 
 #include "utilities/display.hpp"
 
+#include "glm/gtc/matrix_transform.hpp"
+
 Shader Image::standardShader = Shader("res/shaders/vertex/texture.vert", "res/shaders/fragment/texture_standard.frag", false);
 glm::mat4x4 Image::proj;
 
-void Image::show(glm::vec2 center, float scale, float rotation) {
+void Image::show(glm::mat4x4 transform) {
 	//Bind texture
 	glBindTexture(GL_TEXTURE_2D, rendererId);
 	//Shader
@@ -18,12 +20,12 @@ void Image::show(glm::vec2 center, float scale, float rotation) {
 	standardShader.setUniform1i("u_textureSlot", 0);
 
 	//MVP
-	glm::mat4x4 model = glm::mat4x4(1.0f);
+	/*glm::mat4x4 model = glm::mat4x4(1.0f);
 	model = glm::translate(model, glm::vec3(center, 0.0f));
 	model = glm::rotate(model, rotation, glm::vec3(0.0, 0.0, 1.0));
-	model = glm::scale(model, glm::vec3(scale, scale, 1.0f));
+	model = glm::scale(model, glm::vec3(scale, scale, 1.0f));*/
 
-	glm::mat4x4 mvp = proj * model;
+	glm::mat4x4 mvp = proj * transform;
 	standardShader.setUniformMat4f("u_mvp", mvp);
 
 	//Draw quad

@@ -5,7 +5,6 @@
 #include <iostream>
 
 #include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
 
 #include "graphics/shader.hpp"
 
@@ -21,7 +20,7 @@ public :
 	Image(const std::string& filePath);
 	~Image();
 
-	void show(glm::vec2 center = glm::vec2(0.0f), float scale = 1.0f, float rotation = 0.0f);
+	void show(glm::mat4x4 transform);
 
 	void save(const std::string& filePath);
 

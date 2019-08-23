@@ -7,7 +7,15 @@ class Layer {
 public:
 	Layer(std::string imgFilePath, std::string layerName = "New layer");
 	~Layer();
-	void show(glm::vec2 translation = glm::vec2(0.0f), float scale = 1.0f, float rotation = 0.0f);
+
+	void show(glm::mat4x4 transform);
+
+	void setTranslation(glm::vec2 translation);
+	void translate(glm::vec2 translation);
+	void setScale(float scale);
+	void scale(float scale);
+	void setRotation(float rotation);
+	void rotate(float rotation);
 
 private:
 	Image m_image;
@@ -16,4 +24,6 @@ private:
 	glm::vec2 m_translation;
 	float m_scale;
 	float m_rotation;
+	glm::mat4x4 m_transform;
+	void computeTransformMatrix();
 };
