@@ -1,4 +1,4 @@
-#include "inputHandler.hpp"
+#include "input.hpp"
 
 #include "spdlog/spdlog.h"
 

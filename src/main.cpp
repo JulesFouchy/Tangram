@@ -102,15 +102,14 @@ int main(int argc, char* argv[])
 	//IM_ASSERT(font != NULL);
 
 	// Our state
-	bool show_demo_window = true;
+	bool show_demo_window = false;
 	bool show_another_window = false;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	Image::initialize();
-	DrawingBoard drawingBoard(9.0f / 16.0f);
+	DrawingBoard drawingBoard(1.5f);
 
 	ImmediateDrawing::initialize();
-	Shader backgroundShader("res/shaders/vertex/standard.vert", "res/shaders/fragment/background.frag") ;
 	glm::mat4x4 projMatrix = glm::ortho(Display::getMinX(), Display::getMaxX(), Display::getMinY(), Display::getMaxY());
 	ImmediateDrawing::setViewProjMatrix(projMatrix);
 	std::vector<Image*> images;
@@ -176,12 +175,11 @@ int main(int argc, char* argv[])
 		backgroundShader.setUniformMat4f("u_mvp", projMatrix);
 		renderer.drawFullQuad();*/
 		drawingBoard.show();
-		/*image.show(glm::vec2(0.2f), 0.0f, 1.0f, view);
+		image.show(glm::vec2(0.2f), 0.0f, 1.0f, view);
 		image2.show(glm::vec2(0.0f), 0.0f, 1.0f, view);
 		for (int k = 0; k < images.size(); ++k) {
 			images[k]->show(glm::vec2(0.0f), 0.0f, 0.3f, view);
 		}
-		ImmediateDrawing::rect(0.0f, f-0.5f, 1.0f, 1.0f);*/
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		SDL_GL_SwapWindow(window);
@@ -229,7 +227,6 @@ int main(int argc, char* argv[])
 					std::string imgFilepath = openfilename();
 					if (!imgFilepath.empty()) {
 						images.push_back(new Image(imgFilepath));
-						spdlog::info("[Opened image] " + imgFilepath);
 					}
 				}
 				else if (e.key.keysym.sym == 's') {

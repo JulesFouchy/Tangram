@@ -51,9 +51,13 @@ void Image::save(const std::string& filePath) {
 Image::Image(const std::string& filePath)
 	: pixels(nullptr), width(0), height(0), aspectRatio(1.0f), pixelFormat(RGBA), filePath(filePath), rendererId(0)
 {
+	//
+	spdlog::info("[Opening image] " + filePath);
 	//Load file
 	stbi_set_flip_vertically_on_load(1);
 	pixels = stbi_load(filePath.c_str(), &width, &height, &BPP, bytesPerPixel(pixelFormat));
+	if (!pixels)
+		spdlog::warn("Couldn't open " + filePath);
 	aspectRatio = (float) width / height;
 
 	//Gen texture

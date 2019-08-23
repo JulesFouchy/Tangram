@@ -78,7 +78,7 @@ void Shader::setUniform1i(const std::string& uniformName, int v) {
 std::string Shader::parseFile(const std::string& filepath) {
 	std::ifstream stream(filepath);
 	if (!stream) {
-		std::cout << "Failed to open file " << filepath.c_str() << std::endl;
+		spdlog::warn("Failed to open file " + filepath);
 		return "";
 	}
 
@@ -104,8 +104,8 @@ unsigned int Shader::compileShader(unsigned int type, const std::string& source)
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 		char* message = (char*)alloca(length * sizeof(char));
 		glGetShaderInfoLog(id, length, &length, message);
-		std::cout << "Failed to compile " << (type == GL_FRAGMENT_SHADER ? "fragment" : "vertex") << "shader" << std::endl;
-		std::cout << message << std::endl;
+		spdlog::warn("Failed to compile {} {}", (type == GL_FRAGMENT_SHADER ? "fragment" : "vertex") , "shader");
+		spdlog::warn(message);
 		glDeleteShader(id);
 		return 0;
 	}
