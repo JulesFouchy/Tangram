@@ -118,6 +118,9 @@ int main(int argc, char* argv[])
 	glm::mat4x4 projMatrix = glm::ortho(Display::getMinX(), Display::getMaxX(), Display::getMinY(), Display::getMaxY());
 	ImmediateDrawing::setViewProjMatrix(projMatrix);
 
+	SDL_Cursor* handCursor;
+	handCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
+
 	bool bQuit = false;
 	while (!bQuit) {
 
@@ -178,6 +181,9 @@ int main(int argc, char* argv[])
 		drawingBoard.getActivLayer()->checkInputs(drawingBoard.transform.getMatrix());
 		drawingBoard.show();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		if(drawingBoard.getActivLayer()->m_transform.mouseIsHovering(drawingBoard.transform.getMatrix()))
+			SDL_SetCursor(handCursor);
 
 		SDL_GL_SwapWindow(window);
 
