@@ -178,7 +178,7 @@ int main(int argc, char* argv[])
 
 		drawingBoard.transform.setRotation(dbRot);
 		drawingBoard.getActivLayer()->m_transform.setRotation(imRot);
-		drawingBoard.getActivLayer()->checkInputs(drawingBoard.transform.getMatrix());
+		drawingBoard.getActivLayer()->checkInputs(drawingBoard.transform.getInverseMatrix());
 		drawingBoard.show();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

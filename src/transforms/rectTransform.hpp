@@ -12,7 +12,7 @@ public:
 	bool mouseIsHovering();
 	bool mouseIsHovering(glm::mat4x4 viewMatrix);
 
-	void checkInputs(glm::mat4x4 viewMatrix = glm::mat4x4(1.0f));
+	void checkInputs(glm::mat4x4 inverseViewMatrix = glm::mat4x4(1.0f));
 	void onLeftClicDown() override;
 	void onLeftClicDown(glm::mat4x4 viewTransform);
 	void onSpaceBarDown() override;
@@ -30,17 +30,17 @@ public:
 	void setRotation(float rotation);
 	void rotate(float rotation);
 	void reset();
-	void setMatrix(glm::mat4x4 matrix);
 
 private:
 	float m_aspectRatio;
 	glm::vec2 m_translation;
 	float m_scale;
 	float m_rotation;
-	void computeTransformMatrix();
 protected:
+	void computeMatrix() override;
+	void computeInverseMatrix() override;
 	bool bDraggingTranslation;
 	glm::vec2 m_mousePosWhenDraggingStarted;
 	glm::vec2 m_translationWhenDraggingStarted;
-	void checkDraggingTranslation(glm::mat4x4 viewMatrix = glm::mat4x4(1.0f));
+	void checkDraggingTranslation(glm::mat4x4 inverseViewMatrix = glm::mat4x4(1.0f));
 };

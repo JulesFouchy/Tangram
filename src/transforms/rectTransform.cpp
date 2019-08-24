@@ -13,7 +13,8 @@ RectTransform::RectTransform(float aspectRatio)
 	: m_aspectRatio(aspectRatio), m_translation(glm::vec2(0.0f)), m_scale(1.0f), m_rotation(0.0f),
 	bDraggingTranslation(false), m_mousePosWhenDraggingStarted(glm::vec2(0.0f)), m_translationWhenDraggingStarted(glm::vec2(0.0f))
 {
-	computeTransformMatrix();
+	computeMatrix();
+	computeInverseMatrix();
 }
 RectTransform::~RectTransform(){
 }
@@ -28,14 +29,16 @@ bool RectTransform::mouseIsHovering(glm::mat4x4 viewTransform) {
 
 void RectTransform::setTranslation(glm::vec2 translation) {
 	m_translation = translation;
-	computeTransformMatrix();
+	bMatrixMustBeRecomputed = true;
+	bInverseMatrixMustBeRecomputed = true;
 }
 void RectTransform::translate(glm::vec2 translation) {
 	setTranslation(m_translation + translation);
 }
 void RectTransform::setScale(float scale) {
 	m_scale = scale;
-	computeTransformMatrix();
+	bMatrixMustBeRecomputed = true;
+	bInverseMatrixMustBeRecomputed = true;
 }
 void RectTransform::scale(float scale) {
 	setScale(m_scale * scale);
@@ -46,33 +49,48 @@ void RectTransform::scale(float scale, glm::vec2 origin) {
 }
 void RectTransform::setRotation(float rotation) {
 	m_rotation = rotation;
-	computeTransformMatrix();
+	bMatrixMustBeRecomputed = true;
+	bInverseMatrixMustBeRecomputed = true;
 }
 void RectTransform::rotate(float rotation) {
 	setRotation(m_rotation + rotation);
 }
-void RectTransform::computeTransformMatrix() {
-	m_matrix = glm::translate(glm::mat4x4(1.0f), glm::vec3(m_translation, 0.0f));
-	m_matrix = glm::rotate(m_matrix, m_rotation, glm::vec3(0.0, 0.0, 1.0));
-	m_matrix = glm::scale(m_matrix, glm::vec3(m_scale, m_scale, 1.0f));
+void RectTransform::computeMatrix() {
+	if (!bInverseMatrixMustBeRecomputed) {
+		m_matrix = glm::inverse(m_inverseMatrix);
+	}
+	else {
+		m_matrix = glm::translate(glm::mat4x4(1.0f), glm::vec3(m_translation, 0.0f));
+		m_matrix = glm::rotate(m_matrix, m_rotation, glm::vec3(0.0, 0.0, 1.0));
+		m_matrix = glm::scale(m_matrix, glm::vec3(m_scale, m_scale, 1.0f));
+	}
+	bMatrixMustBeRecomputed = false;
+}
+void RectTransform::computeInverseMatrix() {
+	if (!bMatrixMustBeRecomputed) {
+		m_inverseMatrix = glm::inverse(m_matrix);
+	}
+	else {
+		m_inverseMatrix = glm::scale(glm::mat4x4(1.0f), glm::vec3(1.0f/m_scale, 1.0f/m_scale, 1.0f));
+		m_inverseMatrix = glm::rotate(m_inverseMatrix, -m_rotation, glm::vec3(0.0, 0.0, 1.0));
+		m_inverseMatrix = glm::translate(m_inverseMatrix, -glm::vec3(m_translation, 0.0f));
+	}
+	bInverseMatrixMustBeRecomputed = false;
 }
 void RectTransform::reset() {
 	setTranslation(glm::vec2(0.0f));
 	setScale(1.0f);
 	setRotation(0.0f);
 }
-void RectTransform::setMatrix(glm::mat4x4 matrix) {
-	m_matrix = matrix;
+
+
+void RectTransform::checkInputs(glm::mat4x4 inverseViewMatrix) {
+	checkDraggingTranslation(inverseViewMatrix);
 }
 
-
-void RectTransform::checkInputs(glm::mat4x4 viewMatrix) {
-	checkDraggingTranslation(viewMatrix);
-}
-
-void RectTransform::checkDraggingTranslation(glm::mat4x4 viewMatrix) {
+void RectTransform::checkDraggingTranslation(glm::mat4x4 inverseViewMatrix) {
 	if (bDraggingTranslation) {
-		glm::vec4 dl = glm::inverse(viewMatrix) * glm::vec4(Input::getMousePosition() - m_mousePosWhenDraggingStarted,0.0f,0.0f);
+		glm::vec4 dl = inverseViewMatrix * glm::vec4(Input::getMousePosition() - m_mousePosWhenDraggingStarted,0.0f,0.0f);
 		setTranslation(m_translationWhenDraggingStarted + glm::vec2(dl.x,dl.y));
 	}
 }
