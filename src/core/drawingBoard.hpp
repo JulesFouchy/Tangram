@@ -20,10 +20,15 @@ public:
 
 	void addLayer(std::string imgFilePath);
 
+	Layer* getActivLayer();
+	void setActivLayer(int layerIndex);
+
 public:
 	ViewTransform transform;
 private:
-	void showFrame();
+	int m_activLayerIndex;
 private:
+	void showFrame();
+public:
 	std::vector<Layer*> layers;
 };

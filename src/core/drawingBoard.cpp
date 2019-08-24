@@ -12,7 +12,7 @@
 #include "stb_image/stb_image_write.h"
 
 DrawingBoard::DrawingBoard(float whRatio) 
-	: transform(whRatio)
+	: transform(whRatio), m_activLayerIndex(-1)
 {
 
 }
@@ -67,4 +67,12 @@ void DrawingBoard::save(int approxNbPixels, std::string filePath) {
 
 void DrawingBoard::addLayer(std::string imgFilePath) {
 	layers.push_back(new Layer(imgFilePath));
+	setActivLayer(layers.size() - 1);
+}
+
+Layer* DrawingBoard::getActivLayer() {
+	return layers[m_activLayerIndex];
+}
+void DrawingBoard::setActivLayer(int layerIndex) {
+	m_activLayerIndex = layerIndex;
 }

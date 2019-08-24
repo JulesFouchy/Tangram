@@ -6,6 +6,9 @@
 
 #include "spdlog/spdlog.h"
 
+#include <algorithm>
+
+#include "glm/gtc/matrix_inverse.hpp"
 RectTransform::RectTransform(float aspectRatio)
 	: m_aspectRatio(aspectRatio), m_translation(glm::vec2(0.0f)), m_scale(1.0f), m_rotation(0.0f),
 	bDraggingTranslation(false), m_mousePosWhenDraggingStarted(glm::vec2(0.0f)), m_translationWhenDraggingStarted(glm::vec2(0.0f))
@@ -13,6 +16,14 @@ RectTransform::RectTransform(float aspectRatio)
 	computeTransformMatrix();
 }
 RectTransform::~RectTransform(){
+}
+
+bool RectTransform::mouseIsHovering() {
+	return mouseIsHovering(glm::mat4x4(1.0f));
+}
+bool RectTransform::mouseIsHovering(glm::mat4x4 viewTransform) {
+	glm::vec4 dl = glm::inverse(viewTransform * glm::scale(getMatrix(), glm::vec3(getAspectRatio(), 1.0f, 1.0f))) * glm::vec4(Input::getMousePosition(), 0.0f, 1.0f);
+	return std::max(abs(dl.x), abs(dl.y)) < 0.5f;
 }
 
 void RectTransform::setTranslation(glm::vec2 translation) {
@@ -62,19 +73,28 @@ void RectTransform::checkDraggingTranslation() {
 	}
 }
 void RectTransform::startDraggingTranslation() {
-	bDraggingTranslation = true;
-	m_mousePosWhenDraggingStarted = Input::getMousePosition();
-	m_translationWhenDraggingStarted = m_translation;
+	if (!bDraggingTranslation) {
+		bDraggingTranslation = true;
+		m_mousePosWhenDraggingStarted = Input::getMousePosition();
+		m_translationWhenDraggingStarted = m_translation;
+	}
 }
 void RectTransform::endDraggingTranslation() {
 	bDraggingTranslation = false;
 }
 
 void RectTransform::onLeftClicDown() {
+	if (mouseIsHovering())
+		startDraggingTranslation();
+}
+void RectTransform::onLeftClicDown(glm::mat4x4 viewTransform) {
+	if (mouseIsHovering(viewTransform))
+		startDraggingTranslation();
 }
 void RectTransform::onSpaceBarDown() {
 }
 void RectTransform::onLeftClicUp() {
+	endDraggingTranslation();
 }
 void RectTransform::onSpaceBarUp() {
 }

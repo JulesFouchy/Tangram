@@ -9,8 +9,12 @@ public:
 
 	inline float getAspectRatio() { return m_aspectRatio; };
 
+	bool mouseIsHovering();
+	bool mouseIsHovering(glm::mat4x4 viewMatrix);
+
 	void checkInputs();
 	void onLeftClicDown() override;
+	void onLeftClicDown(glm::mat4x4 viewTransform);
 	void onSpaceBarDown() override;
 	void onLeftClicUp() override;
 	void onSpaceBarUp() override;

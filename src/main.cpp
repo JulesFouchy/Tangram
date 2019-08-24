@@ -113,7 +113,6 @@ int main(int argc, char* argv[])
 	DrawingBoard drawingBoard(1.5f);
 
 	drawingBoard.addLayer("res/img/test3.jpg");
-	drawingBoard.transform.translate({ 0.5f,0.0f });
 
 	ImmediateDrawing::initialize();
 	glm::mat4x4 projMatrix = glm::ortho(Display::getMinX(), Display::getMaxX(), Display::getMinY(), Display::getMaxY());
@@ -175,6 +174,8 @@ int main(int argc, char* argv[])
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		drawingBoard.transform.setRotation(dbRot);
+		drawingBoard.getActivLayer()->m_transform.setRotation(imRot);
+		drawingBoard.getActivLayer()->checkInputs();
 		drawingBoard.show();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -198,6 +199,7 @@ int main(int argc, char* argv[])
 				if (e.button.button == SDL_BUTTON_LEFT) {
 					Input::onLeftClicUp();
 					drawingBoard.transform.onLeftClicUp();
+					drawingBoard.getActivLayer()->m_transform.onLeftClicUp();
 				}
 				else if (e.button.button == SDL_BUTTON_RIGHT)
 					;
@@ -209,6 +211,7 @@ int main(int argc, char* argv[])
 					SDL_GetMouseState(&x, &y);
 					Input::onLeftClicDown(conv::screenCoordFromPixelCoord(x,y));
 					drawingBoard.transform.onLeftClicDown();
+					drawingBoard.getActivLayer()->m_transform.onLeftClicDown(drawingBoard.transform.getMatrix());
 				}
 				else if (e.button.button == SDL_BUTTON_RIGHT)
 					;

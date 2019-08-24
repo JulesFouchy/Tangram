@@ -34,25 +34,21 @@ void ViewTransform::checkInputs() {
 
 void ViewTransform::onLeftClicDown() {
 	//Moving by holding space + clic'n'dragging
-	if (Input::spaceBarIsDown() && !bDraggingTranslation) {
+	if (Input::spaceBarIsDown()) {
 		startDraggingTranslation();
 	}
 }
 void ViewTransform::onSpaceBarDown() {
 	//Moving by holding space + clic'n'dragging
-	if (Input::leftClicIsDown() && !bDraggingTranslation) {
+	if (Input::leftClicIsDown()) {
 		startDraggingTranslation();
 	}
 }
 void ViewTransform::onLeftClicUp() {
 	//Moving by holding space + clic'n'dragging
-	if (Input::spaceBarIsDown()) {
-		endDraggingTranslation();
-	}
+	endDraggingTranslation();
 }
 void ViewTransform::onSpaceBarUp() {
 	//Moving by holding space + clic'n'dragging
-	if (Input::leftClicIsDown()) {
-		endDraggingTranslation();
-	}
+	endDraggingTranslation();
 }

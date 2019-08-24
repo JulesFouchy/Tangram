@@ -25,6 +25,8 @@ public :
 
 	void save(const std::string& filePath);
 
+	inline float getAspectRatio() { return aspectRatio ;}
+
 	static void initialize();
 
 private:
