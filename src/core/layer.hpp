@@ -13,7 +13,7 @@ public:
 	void show(glm::mat4x4 viewTransform, glm::mat4x4 projection);
 	void show(glm::mat4x4 viewTransform);
 
-	void checkInputs();
+	void checkInputs(glm::mat4x4 viewMatrix);
 
 private:
 	Image m_image;

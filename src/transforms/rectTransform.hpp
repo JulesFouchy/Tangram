@@ -12,7 +12,7 @@ public:
 	bool mouseIsHovering();
 	bool mouseIsHovering(glm::mat4x4 viewMatrix);
 
-	void checkInputs();
+	void checkInputs(glm::mat4x4 viewMatrix = glm::mat4x4(1.0f));
 	void onLeftClicDown() override;
 	void onLeftClicDown(glm::mat4x4 viewTransform);
 	void onSpaceBarDown() override;
@@ -30,6 +30,7 @@ public:
 	void setRotation(float rotation);
 	void rotate(float rotation);
 	void reset();
+	void setMatrix(glm::mat4x4 matrix);
 
 private:
 	float m_aspectRatio;
@@ -41,5 +42,5 @@ protected:
 	bool bDraggingTranslation;
 	glm::vec2 m_mousePosWhenDraggingStarted;
 	glm::vec2 m_translationWhenDraggingStarted;
-	void checkDraggingTranslation();
+	void checkDraggingTranslation(glm::mat4x4 viewMatrix = glm::mat4x4(1.0f));
 };

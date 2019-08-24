@@ -61,15 +61,19 @@ void RectTransform::reset() {
 	setScale(1.0f);
 	setRotation(0.0f);
 }
-
-
-void RectTransform::checkInputs() {
-	checkDraggingTranslation();
+void RectTransform::setMatrix(glm::mat4x4 matrix) {
+	m_matrix = matrix;
 }
 
-void RectTransform::checkDraggingTranslation() {
+
+void RectTransform::checkInputs(glm::mat4x4 viewMatrix) {
+	checkDraggingTranslation(viewMatrix);
+}
+
+void RectTransform::checkDraggingTranslation(glm::mat4x4 viewMatrix) {
 	if (bDraggingTranslation) {
-		setTranslation(m_translationWhenDraggingStarted + Input::getMousePosition() - m_mousePosWhenDraggingStarted);
+		glm::vec4 dl = glm::inverse(viewMatrix) * glm::vec4(Input::getMousePosition() - m_mousePosWhenDraggingStarted,0.0f,0.0f);
+		setTranslation(m_translationWhenDraggingStarted + glm::vec2(dl.x,dl.y));
 	}
 }
 void RectTransform::startDraggingTranslation() {
