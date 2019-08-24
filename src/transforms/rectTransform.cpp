@@ -4,6 +4,8 @@
 
 #include "UI/input.hpp"
 
+#include "spdlog/spdlog.h"
+
 RectTransform::RectTransform(float aspectRatio)
 	: m_aspectRatio(aspectRatio), m_translation(glm::vec2(0.0f)), m_scale(1.0f), m_rotation(0.0f),
 	bDraggingTranslation(false), m_mousePosWhenDraggingStarted(glm::vec2(0.0f)), m_translationWhenDraggingStarted(glm::vec2(0.0f))
@@ -69,26 +71,10 @@ void RectTransform::endDraggingTranslation() {
 }
 
 void RectTransform::onLeftClicDown() {
-	//Moving by holding space + clic'n'dragging
-	if (Input::spaceBarIsDown()) {
-		startDraggingTranslation();
-	}
 }
 void RectTransform::onSpaceBarDown() {
-	//Moving by holding space + clic'n'dragging
-	if (Input::leftClicIsDown()) {
-		startDraggingTranslation();
-	}
 }
 void RectTransform::onLeftClicUp() {
-	//Moving by holding space + clic'n'dragging
-	if (Input::spaceBarIsDown()) {
-		endDraggingTranslation();
-	}
 }
 void RectTransform::onSpaceBarUp() {
-	//Moving by holding space + clic'n'dragging
-	if (Input::leftClicIsDown()) {
-		endDraggingTranslation();
-	}
 }

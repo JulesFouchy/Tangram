@@ -34,13 +34,13 @@ void ViewTransform::checkInputs() {
 
 void ViewTransform::onLeftClicDown() {
 	//Moving by holding space + clic'n'dragging
-	if (Input::spaceBarIsDown()) {
+	if (Input::spaceBarIsDown() && !bDraggingTranslation) {
 		startDraggingTranslation();
 	}
 }
 void ViewTransform::onSpaceBarDown() {
 	//Moving by holding space + clic'n'dragging
-	if (Input::leftClicIsDown()) {
+	if (Input::leftClicIsDown() && !bDraggingTranslation) {
 		startDraggingTranslation();
 	}
 }

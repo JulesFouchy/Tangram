@@ -113,6 +113,7 @@ int main(int argc, char* argv[])
 	DrawingBoard drawingBoard(1.5f);
 
 	drawingBoard.addLayer("res/img/test3.jpg");
+	drawingBoard.transform.translate({ 0.5f,0.0f });
 
 	ImmediateDrawing::initialize();
 	glm::mat4x4 projMatrix = glm::ortho(Display::getMinX(), Display::getMaxX(), Display::getMinY(), Display::getMaxY());
