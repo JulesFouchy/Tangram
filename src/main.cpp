@@ -111,6 +111,7 @@ int main(int argc, char* argv[])
 
 	Image::initialize();
 	DrawingBoard drawingBoard(1.5f);
+	drawingBoard.transform.setScale(0.9f);
 
 	drawingBoard.addLayer("res/img/test3.jpg");
 

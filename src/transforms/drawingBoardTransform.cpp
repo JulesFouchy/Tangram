@@ -7,7 +7,6 @@
 ViewTransform::ViewTransform(float aspectRatio)
 	: RectTransform(aspectRatio), m_zoomInFactor(0.8f)
 {
-	setScale(0.9f);
 }
 
 
