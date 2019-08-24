@@ -11,6 +11,8 @@ public:
 	void show(glm::mat4x4 transform, glm::mat4x4 projection);
 	void show(glm::mat4x4 transform);
 
+	void checkInputs();
+
 	void setTranslation(glm::vec2 translation);
 	void translate(glm::vec2 translation);
 	void setScale(float scale);

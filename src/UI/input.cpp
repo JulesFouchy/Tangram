@@ -2,19 +2,21 @@
 
 #include "spdlog/spdlog.h"
 
+#include "SDL.h"
+
+#include "utilities/conversions.hpp"
+
 bool Input::bDoubleLeftClic;
-glm::vec2 Input::m_mousePos;
 bool Input::m_leftClicIsDown;
 bool Input::m_spaceBarIsDown;
-glm::vec2 Input::m_mousePosWhenLeftClicAndSpaceBarDown;
+glm::vec2 Input::m_mousePosWhenLastLeftClic;
 Timestamp Input::timeSinceLastLeftClic;
 
 void Input::initialize() {
 	bDoubleLeftClic = false;
-	m_mousePos = glm::vec2(0.0f);
 	m_leftClicIsDown = false;
 	m_spaceBarIsDown = false;
-	m_mousePosWhenLeftClicAndSpaceBarDown = glm::vec2(0.0f);
+	m_mousePosWhenLastLeftClic = glm::vec2(0.0f);
 }
 
 void Input::update() {
@@ -26,7 +28,9 @@ Input::~Input() {
 }
 
 glm::vec2 Input::getMousePosition() {
-	return m_mousePos;
+	int x, y;
+	SDL_GetMouseState(&x, &y);
+	return conv::screenCoordFromPixelCoord(x, y);
 }
 bool Input::leftClicIsDown() {
 	return m_leftClicIsDown;
@@ -34,21 +38,18 @@ bool Input::leftClicIsDown() {
 bool Input::spaceBarIsDown() {
 	return m_spaceBarIsDown;
 }
-glm::vec2 Input::getMousePosWhenLeftClicAndSpaceBarDown(){
-	return m_mousePosWhenLeftClicAndSpaceBarDown;
+glm::vec2 Input::getMousePosWhenLastLeftClic(){
+	return m_mousePosWhenLastLeftClic;
 }
 
-void Input::onMouseMove(glm::vec2 mousePos) {
-	m_mousePos = mousePos;
-}
 void Input::onLeftClicDown(glm::vec2 mousePos) {
 	m_leftClicIsDown = true;
-	if (spaceBarIsDown()) {
-		m_mousePosWhenLeftClicAndSpaceBarDown = mousePos;
-	}
-	if (timeSinceLastLeftClic.getAge() < 0.1f) {
+	//Check for double clic
+	if (timeSinceLastLeftClic.getAge() < 0.1f
+		&& glm::length(m_mousePosWhenLastLeftClic-mousePos) < 0.05f) {
 		onDoubleLeftClic(mousePos);
 	}
+	m_mousePosWhenLastLeftClic = mousePos;
 }
 void Input::onDoubleLeftClic(glm::vec2 mousePos) {
 	bDoubleLeftClic = true;
@@ -59,9 +60,6 @@ void Input::onLeftClicUp() {
 }
 void Input::onStandardKeyDown(char key) {
 	if (key == ' ') {
-		if (!m_spaceBarIsDown && leftClicIsDown()) {
-			m_mousePosWhenLeftClicAndSpaceBarDown = m_mousePos;
-		}
 		m_spaceBarIsDown = true;
 	}
 }

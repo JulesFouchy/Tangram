@@ -121,7 +121,7 @@ int main(int argc, char* argv[])
 	bool bQuit = false;
 	while (!bQuit) {
 
-		drawingBoard.checkInputs();
+		drawingBoard.transform.checkInputs();
 
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
@@ -173,7 +173,7 @@ int main(int argc, char* argv[])
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		drawingBoard.setRotation(dbRot);
+		drawingBoard.transform.setRotation(dbRot);
 		drawingBoard.show();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -196,7 +196,7 @@ int main(int argc, char* argv[])
 			case SDL_MOUSEBUTTONUP:
 				if (e.button.button == SDL_BUTTON_LEFT) {
 					Input::onLeftClicUp();
-					drawingBoard.onLeftClicUp();
+					drawingBoard.transform.onLeftClicUp();
 				}
 				else if (e.button.button == SDL_BUTTON_RIGHT)
 					;
@@ -207,6 +207,7 @@ int main(int argc, char* argv[])
 					int x, y;
 					SDL_GetMouseState(&x, &y);
 					Input::onLeftClicDown(conv::screenCoordFromPixelCoord(x,y));
+					drawingBoard.transform.onLeftClicDown();
 				}
 				else if (e.button.button == SDL_BUTTON_RIGHT)
 					;
@@ -215,7 +216,7 @@ int main(int argc, char* argv[])
 			case SDL_MOUSEMOTION:
 				int x, y;
 				SDL_GetMouseState(&x, &y);
-				Input::onMouseMove(conv::screenCoordFromPixelCoord(x, y));
+				//Input::onMouseMove(conv::screenCoordFromPixelCoord(x, y));
 				break;
 
 			case SDL_KEYDOWN:
@@ -234,7 +235,10 @@ int main(int argc, char* argv[])
 					}
 				}
 				else if (e.key.keysym.sym == '0' || e.key.keysym.sym == 1073741922) {
-					drawingBoard.resetTransform();
+					drawingBoard.transform.reset();
+				}
+				else if (e.key.keysym.sym == ' ') {
+					drawingBoard.transform.onSpaceBarDown();
 				}
 				else if (e.key.keysym.scancode == SDL_SCANCODE_UP) {
 					;
@@ -253,16 +257,16 @@ int main(int argc, char* argv[])
 			case SDL_KEYUP:
 				Input::onStandardKeyUp(e.key.keysym.sym);
 				if (e.key.keysym.sym == ' ') {
-					drawingBoard.onSpaceBarUp();
+					drawingBoard.transform.onSpaceBarUp();
 				}
 				break;
 
 			case SDL_MOUSEWHEEL:
 				glm::vec2 mouse = Input::getMousePosition();
 				if (e.motion.x < 0.0f) {
-					drawingBoard.zoomIn(Input::getMousePosition());
+					drawingBoard.transform.zoomIn(Input::getMousePosition());
 				} else {
-					drawingBoard.zoomOut(Input::getMousePosition());
+					drawingBoard.transform.zoomOut(Input::getMousePosition());
 				}
 				break;
 

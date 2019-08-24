@@ -23,6 +23,10 @@ void Layer::show(glm::mat4x4 transform) {
 	show(transform, Display::getProjMat());
 }
 
+void Layer::checkInputs() {
+
+}
+
 void Layer::setTranslation(glm::vec2 translation) {
 	m_translation = translation;
 	computeTransformMatrix();
