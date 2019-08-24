@@ -1,29 +1,29 @@
-#include "DrawingBoardTransform.hpp"
+#include "drawingBoardTransform.hpp"
 
 #include "UI/input.hpp"
 
 #include "spdlog/spdlog.h"
 
-ViewTransform::ViewTransform(float aspectRatio)
+DrawingBoardTransform::DrawingBoardTransform(float aspectRatio)
 	: RectTransform(aspectRatio), m_zoomInFactor(0.8f)
 {
 }
 
 
-void ViewTransform::zoomIn() {
+void DrawingBoardTransform::zoomIn() {
 	scale(m_zoomInFactor);
 }
-void ViewTransform::zoomIn(glm::vec2 origin) {
+void DrawingBoardTransform::zoomIn(glm::vec2 origin) {
 	scale(m_zoomInFactor, origin);
 }
-void ViewTransform::zoomOut() {
+void DrawingBoardTransform::zoomOut() {
 	scale(1.0f / m_zoomInFactor);
 }
-void ViewTransform::zoomOut(glm::vec2 origin) {
+void DrawingBoardTransform::zoomOut(glm::vec2 origin) {
 	scale(1.0f / m_zoomInFactor, origin);
 }
 
-void ViewTransform::checkInputs() {
+void DrawingBoardTransform::checkInputs() {
 	checkDraggingTranslation();
 	//Center the point we double-clic on
 	if (Input::bDoubleLeftClic) {
@@ -31,23 +31,23 @@ void ViewTransform::checkInputs() {
 	}
 }
 
-void ViewTransform::onLeftClicDown() {
+void DrawingBoardTransform::onLeftClicDown() {
 	//Moving by holding space + clic'n'dragging
 	if (Input::spaceBarIsDown()) {
 		startDraggingTranslation();
 	}
 }
-void ViewTransform::onSpaceBarDown() {
+void DrawingBoardTransform::onSpaceBarDown() {
 	//Moving by holding space + clic'n'dragging
 	if (Input::leftClicIsDown()) {
 		startDraggingTranslation();
 	}
 }
-void ViewTransform::onLeftClicUp() {
+void DrawingBoardTransform::onLeftClicUp() {
 	//Moving by holding space + clic'n'dragging
 	endDraggingTranslation();
 }
-void ViewTransform::onSpaceBarUp() {
+void DrawingBoardTransform::onSpaceBarUp() {
 	//Moving by holding space + clic'n'dragging
 	endDraggingTranslation();
 }

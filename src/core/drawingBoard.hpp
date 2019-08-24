@@ -7,7 +7,7 @@
 
 #include "graphics/frameBuffer.hpp"
 
-#include "transforms/DrawingBoardTransform.hpp"
+#include "transforms/drawingBoardTransform.hpp"
 
 class DrawingBoard {
 public:
@@ -24,7 +24,7 @@ public:
 	void setActivLayer(int layerIndex);
 
 public:
-	ViewTransform transform;
+	DrawingBoardTransform transform;
 private:
 	int m_activLayerIndex;
 private:
