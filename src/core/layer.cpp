@@ -3,6 +3,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "utilities/display.hpp"
+#include "utilities/maths.hpp"
 
 #include "graphics/immediateDrawing.hpp"
 
@@ -16,6 +17,14 @@ Layer::~Layer() {
 }
 
 void Layer::show(glm::mat4x4 projection) {
+	float scale = m_transform.getScale();
+	glm::vec2 translation = m_transform.getTranslation();
+	float dbRatio = m_drawingBoard->transform.getAspectRatio();
+	float ratio = m_transform.getAspectRatio();
+	mX = Maths::clamp( 0.5 + (-0.5*dbRatio - translation.x) / ratio, 0.0f, 1.0f) ;
+	MX = Maths::clamp( 0.5 + ( 0.5 * dbRatio - translation.x) / ratio, 0.0f, 1.0f);
+	mY = Maths::clamp( 0.5f - 0.5f/scale - translation.y/scale, 0.0f, 1.0f);
+	MY = Maths::clamp( 0.5f + 0.5f / scale - translation.y / scale, 0.0f, 1.0f);
 	m_image.show(m_drawingBoard->transform.getMatrix() * m_transform.getMatrix(), projection, mX, MX, mY, MY);
 	//frame
 	ImmediateDrawing::setColor(0.0f, 0.0f, 0.0f, 1.0f);

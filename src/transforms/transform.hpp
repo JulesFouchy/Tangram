@@ -18,11 +18,14 @@ public:
 
 	void setTranslation(glm::vec2 translation);
 	void translate(glm::vec2 translation);
+	inline glm::vec2 getTranslation() { return m_translation; }
 	void setScale(float scale);
 	void scale(float scale);
 	void scale(float scale, glm::vec2 origin);
+	inline float getScale() { return m_scale; };
 	void setRotation(float rotation);
 	void rotate(float rotation);
+	inline float getRotation() { return m_rotation; }
 	void reset();
 protected:
 	Transform();

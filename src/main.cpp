@@ -149,10 +149,10 @@ int main(int argc, char* argv[])
 			ImGui::SliderFloat("dbRot", &dbRot, 0.0f, 6.28f);
 			ImGui::SliderFloat("imRot", &imRot, 0.0f, 6.28f);
 
-			ImGui::SliderFloat("minX", &(drawingBoard.getActivLayer()->mX), 0.0f, 1.0f);
+			/*ImGui::SliderFloat("minX", &(drawingBoard.getActivLayer()->mX), 0.0f, 1.0f);
 			ImGui::SliderFloat("maxX", &(drawingBoard.getActivLayer()->MX), 0.0f, 1.0f);
 			ImGui::SliderFloat("minY", &(drawingBoard.getActivLayer()->mY), 0.0f, 1.0f);
-			ImGui::SliderFloat("maxY", &(drawingBoard.getActivLayer()->MY), 0.0f, 1.0f);
+			ImGui::SliderFloat("maxY", &(drawingBoard.getActivLayer()->MY), 0.0f, 1.0f);*/
 
 			ImGui::ColorEdit3("clear color", (float*)& clear_color); // Edit 3 floats representing a color
 
