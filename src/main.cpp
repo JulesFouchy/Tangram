@@ -204,8 +204,7 @@ int main(int argc, char* argv[])
 			case SDL_MOUSEBUTTONUP:
 				if (e.button.button == SDL_BUTTON_LEFT) {
 					Input::onLeftClicUp();
-					drawingBoard.transform.onLeftClicUp();
-					drawingBoard.getActivLayer()->m_transform.onLeftClicUp();
+					drawingBoard.onLeftClicUp();
 				}
 				else if (e.button.button == SDL_BUTTON_RIGHT)
 					;
@@ -216,16 +215,15 @@ int main(int argc, char* argv[])
 					int x, y;
 					SDL_GetMouseState(&x, &y);
 					Input::onLeftClicDown(conv::screenCoordFromPixelCoord(x,y));
-					drawingBoard.transform.onLeftClicDown();
-					drawingBoard.getActivLayer()->m_transform.onLeftClicDown(drawingBoard.transform.getMatrix());
+					drawingBoard.onLeftClicDown();
 				}
 				else if (e.button.button == SDL_BUTTON_RIGHT)
 					;
 				break;
 
 			case SDL_MOUSEMOTION:
-				int x, y;
-				SDL_GetMouseState(&x, &y);
+				//int x, y;
+				//SDL_GetMouseState(&x, &y);
 				//Input::onMouseMove(conv::screenCoordFromPixelCoord(x, y));
 				break;
 

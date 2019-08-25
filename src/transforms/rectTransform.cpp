@@ -28,18 +28,28 @@ void RectTransform::checkInputs(glm::mat4x4 inverseViewMatrix) {
 	checkDraggingTranslation(inverseViewMatrix);
 }
 
-void RectTransform::onLeftClicDown() {
-	if (mouseIsHovering())
+bool RectTransform::onLeftClicDown() {
+	if (mouseIsHovering()) {
 		startDraggingTranslation();
+		return true;
+	}
+	return false;
 }
-void RectTransform::onLeftClicDown(glm::mat4x4 viewTransform) {
-	if (mouseIsHovering(viewTransform))
+bool RectTransform::onLeftClicDown(glm::mat4x4 viewTransform) {
+	if (mouseIsHovering(viewTransform)) {
 		startDraggingTranslation();
+		return true;
+	}
+	return false;
 }
-void RectTransform::onSpaceBarDown() {
+bool RectTransform::onSpaceBarDown() {
+	return false;
 }
-void RectTransform::onLeftClicUp() {
+bool RectTransform::onLeftClicUp() {
+	bool handled = bDraggingTranslation;
 	endDraggingTranslation();
+	return handled;
 }
-void RectTransform::onSpaceBarUp() {
+bool RectTransform::onSpaceBarUp() {
+	return false;
 }

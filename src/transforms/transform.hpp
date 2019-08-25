@@ -8,10 +8,10 @@ public:
 	const glm::mat4x4& getInverseMatrix();
 	void setMatrix(glm::mat4x4 matrix);
 public:
-	virtual void onLeftClicDown() = 0;
-	virtual void onSpaceBarDown() = 0;
-	virtual void onLeftClicUp() = 0;
-	virtual void onSpaceBarUp() = 0;
+	virtual bool onLeftClicDown() = 0;
+	virtual bool onSpaceBarDown() = 0;
+	virtual bool onLeftClicUp() = 0;
+	virtual bool onSpaceBarUp() = 0;
 
 	void startDraggingTranslation();
 	void endDraggingTranslation();

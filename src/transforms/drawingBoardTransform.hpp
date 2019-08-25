@@ -12,10 +12,10 @@ public:
 	void zoomOut(glm::vec2 origin);
 
 	void checkInputs();
-	void onLeftClicDown() override;
-	void onSpaceBarDown() override;
-	void onLeftClicUp() override;
-	void onSpaceBarUp() override;
+	bool onLeftClicDown() override;
+	bool onSpaceBarDown() override;
+	bool onLeftClicUp() override;
+	bool onSpaceBarUp() override;
 
 private:
 	float m_zoomInFactor;

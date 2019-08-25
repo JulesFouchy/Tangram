@@ -76,3 +76,15 @@ Layer* DrawingBoard::getActivLayer() {
 void DrawingBoard::setActivLayer(int layerIndex) {
 	m_activLayerIndex = layerIndex;
 }
+
+void DrawingBoard::onLeftClicDown() {
+	if (!transform.onLeftClicDown()) {
+		getActivLayer()->m_transform.onLeftClicDown(transform.getMatrix());
+	}
+}
+
+void DrawingBoard::onLeftClicUp() {
+	if (!transform.onLeftClicUp()) {
+		getActivLayer()->m_transform.onLeftClicUp();
+	}
+}

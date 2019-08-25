@@ -31,23 +31,31 @@ void DrawingBoardTransform::checkInputs() {
 	}
 }
 
-void DrawingBoardTransform::onLeftClicDown() {
+bool DrawingBoardTransform::onLeftClicDown() {
 	//Moving by holding space + clic'n'dragging
 	if (Input::spaceBarIsDown()) {
 		startDraggingTranslation();
+		return true;
 	}
+	return false;
 }
-void DrawingBoardTransform::onSpaceBarDown() {
+bool DrawingBoardTransform::onSpaceBarDown() {
 	//Moving by holding space + clic'n'dragging
 	if (Input::leftClicIsDown()) {
 		startDraggingTranslation();
+		return true;
 	}
+	return false;
 }
-void DrawingBoardTransform::onLeftClicUp() {
+bool DrawingBoardTransform::onLeftClicUp() {
 	//Moving by holding space + clic'n'dragging
+	bool handled = bDraggingTranslation;
 	endDraggingTranslation();
+	return handled;
 }
-void DrawingBoardTransform::onSpaceBarUp() {
+bool DrawingBoardTransform::onSpaceBarUp() {
 	//Moving by holding space + clic'n'dragging
+	bool handled = bDraggingTranslation;
 	endDraggingTranslation();
+	return handled;
 }

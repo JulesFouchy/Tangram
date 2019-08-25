@@ -25,6 +25,9 @@ public:
 	Layer* getActivLayer();
 	void setActivLayer(int layerIndex);
 
+	void onLeftClicDown();
+	void onLeftClicUp();
+
 public:
 	DrawingBoardTransform transform;
 private:
