@@ -20,8 +20,8 @@ public :
 	Image(const std::string& filePath);
 	~Image();
 
-	void show(glm::mat4x4 transform, glm::mat4x4 projection);
-	void show(glm::mat4x4 transform);
+	void show(glm::mat4x4 transform, glm::mat4x4 projection, float texCoordMinX = 0.0f, float texCoordMaxX = 1.0f, float texCoordMinY = 0.0f, float texCoordMaxY = 1.0f);
+	void show(glm::mat4x4 transform, float texCoordMinX = 0.0f, float texCoordMaxX = 1.0f, float texCoordMinY = 0.0f, float texCoordMaxY = 1.0f);
 
 	void save(const std::string& filePath);
 
@@ -45,7 +45,9 @@ private:
 	GLenum GLpixelFormat(PixelFormat format);
 
 	//For rendering
-	unsigned int m_fullQuadVBid;
-	unsigned int m_fullQuadIBOid;
+	unsigned int m_quadVBid;
+	unsigned int m_quadIBOid;
 	static Shader standardShader;
+private:
+	void computeAndSendVertexBuffer(float texCoordMinX = 0.0f, float texCoordMaxX = 1.0f, float texCoordMinY = 0.0f, float texCoordMaxY = 1.0f);
 };
