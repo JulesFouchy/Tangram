@@ -12,7 +12,8 @@
 Shader Image::standardShader = Shader("res/shaders/vertex/texture.vert", "res/shaders/fragment/texture_standard.frag", false);
 
 Image::Image(const std::string& filePath)
-	: pixels(nullptr), width(0), height(0), aspectRatio(1.0f), pixelFormat(RGBA), filePath(filePath), rendererId(0)
+	: pixels(nullptr), width(0), height(0), aspectRatio(1.0f), pixelFormat(RGBA), filePath(filePath), rendererId(0),
+		lastTexCoordMinX(0.0f), lastTexCoordMaxX(1.0f), lastTexCoordMinY(0.0f), lastTexCoordMaxY(1.0f)
 {
 	//
 	spdlog::info("[Opening image] " + filePath);
@@ -70,6 +71,11 @@ void Image::computeAndSendVertexBuffer(float texCoordMinX, float texCoordMaxX, f
 	glBindBuffer(GL_ARRAY_BUFFER, m_quadVBid);
 	glBufferData(GL_ARRAY_BUFFER, 4 * 4 * sizeof(float), vertices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//
+	lastTexCoordMinX = texCoordMinX;
+	lastTexCoordMaxX = texCoordMaxX;
+	lastTexCoordMinY = texCoordMinY;
+	lastTexCoordMaxY = texCoordMaxY;
 }
 
 void Image::initialize() {
@@ -86,7 +92,10 @@ Image::~Image() {
 
 void Image::show(glm::mat4x4 transform, glm::mat4x4 projection, float texCoordMinX, float texCoordMaxX, float texCoordMinY, float texCoordMaxY) {
 	//Recompute vertex buffer
-	computeAndSendVertexBuffer(texCoordMinX, texCoordMaxX, texCoordMinY, texCoordMaxY);
+	if (0.0001f < abs(texCoordMinX - lastTexCoordMinX) + abs(texCoordMaxX - lastTexCoordMaxX) + abs(texCoordMinY - lastTexCoordMinY) + abs(texCoordMaxY - lastTexCoordMaxY)) {
+		computeAndSendVertexBuffer(texCoordMinX, texCoordMaxX, texCoordMinY, texCoordMaxY);
+		spdlog::info("recomputed vertex buffer of {}", filePath);
+	}
 	//Bind texture
 	glBindTexture(GL_TEXTURE_2D, rendererId);
 	//Shader

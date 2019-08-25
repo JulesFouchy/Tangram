@@ -48,6 +48,11 @@ private:
 	unsigned int m_quadVBid;
 	unsigned int m_quadIBOid;
 	static Shader standardShader;
+	//
+	float lastTexCoordMinX;
+	float lastTexCoordMaxX;
+	float lastTexCoordMinY;
+	float lastTexCoordMaxY;
 private:
 	void computeAndSendVertexBuffer(float texCoordMinX = 0.0f, float texCoordMaxX = 1.0f, float texCoordMinY = 0.0f, float texCoordMaxY = 1.0f);
 };

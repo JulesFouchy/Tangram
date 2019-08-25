@@ -16,7 +16,7 @@ Layer::~Layer() {
 }
 
 void Layer::show(glm::mat4x4 projection) {
-	m_image.show(m_drawingBoard->transform.getMatrix() * m_transform.getMatrix(), projection, 0.5f, 1.0f, 0.5f, 1.0f);
+	m_image.show(m_drawingBoard->transform.getMatrix() * m_transform.getMatrix(), projection, mX, MX, mY, MY);
 	//frame
 	ImmediateDrawing::setColor(0.0f, 0.0f, 0.0f, 1.0f);
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat() * m_drawingBoard->transform.getMatrix() * m_transform.getMatrix());
