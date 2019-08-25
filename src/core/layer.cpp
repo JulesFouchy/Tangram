@@ -23,7 +23,7 @@ void Layer::show() {
 	show(Display::getProjMat());
 }
 
-void Layer::checkInputs(glm::mat4x4 viewMatrix) {
-	m_transform.checkInputs(viewMatrix);
+void Layer::checkInputs() {
+	m_transform.checkInputs(m_drawingBoard->transform.getInverseMatrix());
 }
 

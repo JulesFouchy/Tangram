@@ -16,7 +16,7 @@ public:
 	void show(glm::mat4x4 projection);
 	void show();
 
-	void checkInputs(glm::mat4x4 viewMatrix);
+	void checkInputs();
 
 private:
 	Image m_image;
