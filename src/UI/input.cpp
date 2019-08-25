@@ -42,16 +42,16 @@ glm::vec2 Input::getMousePosWhenLastLeftClic(){
 	return m_mousePosWhenLastLeftClic;
 }
 
-void Input::onLeftClicDown(glm::vec2 mousePos) {
+void Input::onLeftClicDown() {
 	m_leftClicIsDown = true;
-	//Check for double clic
-	if (timeSinceLastLeftClic.getAge() < 0.1f
-		&& glm::length(m_mousePosWhenLastLeftClic-mousePos) < 0.05f) {
-		onDoubleLeftClic(mousePos);
-	}
+	glm::vec2 mousePos = getMousePosition();
 	m_mousePosWhenLastLeftClic = mousePos;
+	//Check for double clic
+	if (timeSinceLastLeftClic.getAge() < 0.1f && glm::length(m_mousePosWhenLastLeftClic-mousePos) < 0.05f){
+		onDoubleLeftClic();
+	}
 }
-void Input::onDoubleLeftClic(glm::vec2 mousePos) {
+void Input::onDoubleLeftClic() {
 	bDoubleLeftClic = true;
 }
 void Input::onLeftClicUp() {

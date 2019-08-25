@@ -17,12 +17,12 @@ public:
 	static bool spaceBarIsDown();
 	static glm::vec2 getMousePosWhenLastLeftClic();
 
-	static void onLeftClicDown(glm::vec2 mousePos);
+	static void onLeftClicDown();
 	static void onLeftClicUp();
 	static void onStandardKeyDown(char key);
 	static void onStandardKeyUp(char key);
 private:
-	static void onDoubleLeftClic(glm::vec2 mousePos);
+	static void onDoubleLeftClic();
 
 public:
 	static bool bDoubleLeftClic;

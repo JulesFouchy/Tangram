@@ -212,9 +212,7 @@ int main(int argc, char* argv[])
 
 			case SDL_MOUSEBUTTONDOWN:
 				if (e.button.button == SDL_BUTTON_LEFT) {
-					int x, y;
-					SDL_GetMouseState(&x, &y);
-					Input::onLeftClicDown(conv::screenCoordFromPixelCoord(x,y));
+					Input::onLeftClicDown();
 					drawingBoard.onLeftClicDown();
 				}
 				else if (e.button.button == SDL_BUTTON_RIGHT)
