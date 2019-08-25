@@ -116,8 +116,7 @@ int main(int argc, char* argv[])
 	drawingBoard.addLayer("res/img/test3.jpg");
 
 	ImmediateDrawing::initialize();
-	glm::mat4x4 projMatrix = glm::ortho(Display::getMinX(), Display::getMaxX(), Display::getMinY(), Display::getMaxY());
-	ImmediateDrawing::setViewProjMatrix(projMatrix);
+	ImmediateDrawing::setViewProjMatrix(Display::getProjMat());
 
 	SDL_Cursor* handCursor;
 	handCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
@@ -286,8 +285,7 @@ int main(int argc, char* argv[])
 				case SDL_WINDOWEVENT_RESIZED:
 					Display::onWindowResized();
 					ImmediateDrawing::genBuffers();
-					projMatrix = glm::ortho(Display::getMinX(), Display::getMaxX(), Display::getMinY(), Display::getMaxY());
-					ImmediateDrawing::setViewProjMatrix(projMatrix);
+					ImmediateDrawing::setViewProjMatrix(Display::getProjMat());
 				break;
 				}
 			}

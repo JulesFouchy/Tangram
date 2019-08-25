@@ -9,6 +9,8 @@
 
 #include "transforms/drawingBoardTransform.hpp"
 
+class Layer;
+
 class DrawingBoard {
 public:
 	DrawingBoard(float whRatio);

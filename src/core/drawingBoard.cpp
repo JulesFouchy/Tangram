@@ -23,14 +23,14 @@ DrawingBoard::~DrawingBoard() {
 
 void DrawingBoard::show() {
 	for (int k = 0; k < layers.size(); ++k) {
-		layers[k]->show(transform.getMatrix());
+		layers[k]->show();
 	}
 	showFrame();
 }
 
 void DrawingBoard::showForSaving() {
 	for (int k = 0; k < layers.size(); ++k) {
-		layers[k]->show(transform.getMatrix(), glm::ortho(-0.5f * transform.getAspectRatio(), 0.5f * transform.getAspectRatio(), -0.5f, 0.5f));
+		layers[k]->show(glm::ortho(-0.5f * transform.getAspectRatio(), 0.5f * transform.getAspectRatio(), -0.5f, 0.5f));
 	}
 }
 
@@ -66,7 +66,7 @@ void DrawingBoard::save(int approxNbPixels, std::string filePath) {
 
 
 void DrawingBoard::addLayer(std::string imgFilePath) {
-	layers.push_back(new Layer(imgFilePath));
+	layers.push_back(new Layer(imgFilePath, this));
 	setActivLayer(layers.size() - 1);
 }
 
