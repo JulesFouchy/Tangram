@@ -21,14 +21,16 @@ void Layer::show(glm::mat4x4 projection) {
 	glm::vec2 translation = m_transform.getTranslation();
 	float dbRatio = m_drawingBoard->transform.getAspectRatio();
 	float ratio = m_transform.getAspectRatio();
-	mX = Maths::clamp( 0.5 + (-0.5*dbRatio - translation.x) / ratio, 0.0f, 1.0f) ;
-	MX = Maths::clamp( 0.5 + ( 0.5 * dbRatio - translation.x) / ratio, 0.0f, 1.0f);
-	mY = Maths::clamp( 0.5f - 0.5f/scale - translation.y/scale, 0.0f, 1.0f);
-	MY = Maths::clamp( 0.5f + 0.5f / scale - translation.y / scale, 0.0f, 1.0f);
-	m_image.show(m_drawingBoard->transform.getMatrix() * m_transform.getMatrix(), projection, mX, MX, mY, MY);
-	//frame
+	mX = 0.0f;//Maths::clamp( 0.5 + (-0.5*dbRatio - translation.x) / ratio, 0.0f, 1.0f) ;
+	MX = 1.0f;// Maths::clamp(0.5 + (0.5 * dbRatio - translation.x) / ratio, 0.0f, 1.0f);
+	mY = 0.0f;// Maths::clamp(0.5f - 0.5f / scale - translation.y / scale, 0.0f, 1.0f);
+	MY = 1.0f;// Maths::clamp(0.5f + 0.5f / scale - translation.y / scale, 0.0f, 1.0f);
+	m_image.show(m_transform.getMatrix(), projection);
+}
+
+void Layer::showFrame(const glm::mat4x4& viewMatrix) {
 	ImmediateDrawing::setColor(0.0f, 0.0f, 0.0f, 1.0f);
-	ImmediateDrawing::setViewProjMatrix(Display::getProjMat() * m_drawingBoard->transform.getMatrix() * m_transform.getMatrix());
+	ImmediateDrawing::setViewProjMatrix(Display::getProjMat() * viewMatrix * m_transform.getMatrix());
 	ImmediateDrawing::rectOutline(0.0f, 0.0f, m_transform.getAspectRatio(), 1.0f, 0.002f);
 }
 

@@ -12,7 +12,7 @@
 #include "stb_image/stb_image_write.h"
 
 DrawingBoard::DrawingBoard(float whRatio) 
-	: transform(whRatio), m_activLayerIndex(-1)
+	: transform(whRatio), m_activLayerIndex(-1), renderBuffer(Display::getHeight() * whRatio, Display::getHeight())
 {
 
 }
@@ -22,15 +22,23 @@ DrawingBoard::~DrawingBoard() {
 }
 
 void DrawingBoard::show() {
+	renderBuffer.bind();
+	renderBuffer.clear();
+		for (int k = 0; k < layers.size(); ++k) {
+			layers[k]->show(transform.getProjectionMatrix());
+		}
+	renderBuffer.unbind();
+
+	renderBuffer.m_texture.show(transform.getMatrix());
 	for (int k = 0; k < layers.size(); ++k) {
-		layers[k]->show();
+		layers[k]->showFrame(transform.getMatrix());
 	}
 	showFrame();
 }
 
 void DrawingBoard::showForSaving() {
 	for (int k = 0; k < layers.size(); ++k) {
-		layers[k]->show(glm::ortho(-0.5f * transform.getAspectRatio(), 0.5f * transform.getAspectRatio(), -0.5f, 0.5f));
+		layers[k]->show(transform.getProjectionMatrix());
 	}
 }
 
@@ -49,10 +57,7 @@ void DrawingBoard::save(int approxNbPixels, std::string filePath) {
 	//Bind frameBuffer to render and save
 	FrameBuffer saveBuffer(width, height);
 	saveBuffer.bind();
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	transform.reset();
-	glViewport(0, 0, width, height);
+	saveBuffer.clear();
 	showForSaving();
 	//
 	unsigned char* data = new unsigned char[4*width*height];

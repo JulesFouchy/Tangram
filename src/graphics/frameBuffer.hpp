@@ -1,6 +1,6 @@
 #pragma once
 
-#include "graphics/shader.hpp"
+#include "texture2D.hpp"
 
 class FrameBuffer {
 public: 
@@ -9,8 +9,13 @@ public:
 
 	void bind();
 	void unbind();
+	void bindTexture();
 
-private:
+	void clear();
+
+public:
 	unsigned int m_frameBufferId;
-	unsigned int m_textureId;
+	Texture2D m_texture;
+private:
+	int prevViewportSettings[4];
 };

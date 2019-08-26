@@ -11,8 +11,9 @@
 
 #include "graphics/immediateDrawing.hpp"
 #include "graphics/shader.hpp"
+#include "graphics/texture2D.hpp"
+#include "graphics/loadedImage.hpp"
 #include "UI/input.hpp"
-#include "core/image.hpp"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_sdl.h"
@@ -109,7 +110,7 @@ int main(int argc, char* argv[])
 	float dbRot = 0.0f;
 	float imRot = 0.0f;
 
-	Image::initialize();
+	Texture2D::Initialize();
 	DrawingBoard drawingBoard(1.5f);
 	drawingBoard.transform.setScale(0.9f);
 

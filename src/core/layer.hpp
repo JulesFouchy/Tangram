@@ -2,7 +2,7 @@
 
 #include "glm/glm.hpp"
 
-#include "image.hpp"
+#include "graphics/loadedImage.hpp"
 #include "drawingBoard.hpp"
 #include "transforms/rectTransform.hpp"
 
@@ -20,11 +20,12 @@ public:
 
 	void show(glm::mat4x4 projection);
 	void show();
+	void showFrame(const glm::mat4x4& viewMatrix);
 
 	void checkInputs();
 
 private:
-	Image m_image;
+	LoadedImage m_image;
 	DrawingBoard* m_drawingBoard;
 	std::string m_name;
 public:

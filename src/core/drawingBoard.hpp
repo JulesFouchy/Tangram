@@ -36,4 +36,6 @@ private:
 	void showFrame();
 public:
 	std::vector<Layer*> layers;
+private:
+	FrameBuffer renderBuffer;
 };

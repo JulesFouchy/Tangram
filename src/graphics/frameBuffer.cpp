@@ -6,19 +6,15 @@
 
 #include "utilities/display.hpp"
 
-FrameBuffer::FrameBuffer(int width, int height) {
+FrameBuffer::FrameBuffer(int width, int height)
+{
 	//Gen framebuffer
 	glGenFramebuffers(1, &m_frameBufferId);
 	glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferId);
 	//Gen texture
-	glGenTextures(1, &m_textureId);
-	glBindTexture(GL_TEXTURE_2D, m_textureId);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	m_texture.Initialize(width, height, 4);
 	//Attach texture to framebuffer
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_textureId, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture.m_textureID, 0);
 	//Check for completeness
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
@@ -28,13 +24,24 @@ FrameBuffer::FrameBuffer(int width, int height) {
 
 FrameBuffer::~FrameBuffer() {
 	glDeleteFramebuffers(1, &m_frameBufferId);
-	glDeleteTextures(1, &m_textureId);
 }
 
 void FrameBuffer::bind() {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferId);
+	glGetIntegerv(GL_VIEWPORT, prevViewportSettings);
+	glViewport(0, 0, m_texture.m_width, m_texture.m_height);
 }
 
 void FrameBuffer::unbind() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(prevViewportSettings[0], prevViewportSettings[1], prevViewportSettings[2], prevViewportSettings[3]);
+}
+
+void FrameBuffer::bindTexture() {
+	m_texture.bind();
+}
+
+void FrameBuffer::clear() {
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 }

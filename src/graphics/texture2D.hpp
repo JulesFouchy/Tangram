@@ -15,34 +15,39 @@ enum PixelFormat {
 	A
 };
 
-class Image {
-public :
-	Image(const std::string& filePath);
-	~Image();
+class Texture2D {
+public:
+	void Initialize(int width, int height, int BPP, unsigned char* pixels = nullptr);
+	~Texture2D();
 
 	void show(glm::mat4x4 transform, glm::mat4x4 projection, float texCoordMinX = 0.0f, float texCoordMaxX = 1.0f, float texCoordMinY = 0.0f, float texCoordMaxY = 1.0f);
 	void show(glm::mat4x4 transform, float texCoordMinX = 0.0f, float texCoordMaxX = 1.0f, float texCoordMinY = 0.0f, float texCoordMaxY = 1.0f);
 
+	void bind();
+
 	void save(const std::string& filePath);
 
-	inline float getAspectRatio() { return aspectRatio ;}
+	inline float getAspectRatio() { return m_aspectRatio; }
 
-	static void initialize();
+	static void Initialize();
 
-private:
-	unsigned char* pixels;
-	int width;
-	int height;
-	float aspectRatio;
-	PixelFormat pixelFormat;
-	int BPP;
+protected:
+	Texture2D();
+	friend class FrameBuffer;
+protected:
+	std::string m_debugName;
+	unsigned char* m_pixels;
+	int m_width;
+	int m_height;
+	float m_aspectRatio;
+	PixelFormat m_pixelFormat;
+	int m_BPP;
 
-	std::string filePath;
-	unsigned int rendererId;
+	unsigned int m_textureID;
 
-	unsigned int bytesPerPixel(PixelFormat format);
-	GLint GLpixelInternalFormat(PixelFormat format);
-	GLenum GLpixelFormat(PixelFormat format);
+	static unsigned int bytesPerPixel(PixelFormat format);
+	static GLint GLpixelInternalFormat(PixelFormat format);
+	static GLenum GLpixelFormat(PixelFormat format);
 
 	//For rendering
 	unsigned int m_quadVBid;
