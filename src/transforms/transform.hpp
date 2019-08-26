@@ -11,9 +11,6 @@ public:
 
 	void startDraggingTranslation();
 	void startDraggingScale();
-private:
-	void startDragging();
-public:
 	void checkDragging();
 	bool endDragging();
 
@@ -45,6 +42,7 @@ protected:
 	bool bDraggingScale;
 	glm::vec2 m_mousePosWhenDraggingStarted;
 	glm::vec2 m_translationWhenDraggingStarted;
+	float m_scaleWhenDraggingStarted;
 protected:
 	Transform();
 };

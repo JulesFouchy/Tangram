@@ -12,25 +12,24 @@ Transform::Transform() :
 	m_translation(glm::vec2(0.0f)), m_scale(1.0f), m_rotation(0.0f),
 	m_matrix(glm::mat4x4(1.0f)), m_inverseMatrix(glm::mat4x4(1.0f)),
 	bMatrixMustBeRecomputed(false), bInverseMatrixMustBeRecomputed(false),
-	bDraggingTranslation(false), bDraggingScale(false), m_mousePosWhenDraggingStarted(glm::vec2(0.0f)), m_translationWhenDraggingStarted(glm::vec2(0.0f))
+	bDraggingTranslation(false), bDraggingScale(false), m_mousePosWhenDraggingStarted(glm::vec2(0.0f)), m_translationWhenDraggingStarted(glm::vec2(0.0f)),
+	m_scaleWhenDraggingStarted(1.0f)
 {
 }
 
 void Transform::startDraggingTranslation() {
 	if (!bDraggingTranslation) {
 		bDraggingTranslation = true;
-		startDragging();
+		m_mousePosWhenDraggingStarted = Input::getMousePosition();
+		m_translationWhenDraggingStarted = m_translation;
 	}
 }
 void Transform::startDraggingScale() {
 	if (!bDraggingScale) {
 		bDraggingScale = true;
-		startDragging();
+		m_mousePosWhenDraggingStarted = Input::getMousePosition();
+		m_scaleWhenDraggingStarted = m_scale;
 	}
-}
-void Transform::startDragging() {
-	m_mousePosWhenDraggingStarted = Input::getMousePosition();
-	m_translationWhenDraggingStarted = m_translation;
 }
 void Transform::checkDragging() {
 	glm::vec4 dl = DrawingBoard::transform.getInverseMatrix() * glm::vec4(Input::getMousePosition() - m_mousePosWhenDraggingStarted, 0.0f, 0.0f);
