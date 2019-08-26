@@ -32,9 +32,6 @@
 
 int main(int argc, char* argv[])
 {
-	Input::initialize();
-	Log::Initialize();
-
 	// Decide GL+GLSL versions
 #if __APPLE__
 	// GL 3.2 Core + GLSL 150
@@ -110,13 +107,16 @@ int main(int argc, char* argv[])
 	float dbRot = 0.0f;
 	float imRot = 0.0f;
 
+	Input::Initialize();
+	Log::Initialize();
+
 	Texture2D::Initialize();
 	DrawingBoard::Initialize(1.5f);
 	DrawingBoard::transform.setScale(0.9f);
 
 	DrawingBoard::addLayer("res/img/test3.jpg");
 
-	ImmediateDrawing::initialize();
+	ImmediateDrawing::Initialize();
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat());
 
 	SDL_Cursor* handCursor;
@@ -125,8 +125,10 @@ int main(int argc, char* argv[])
 	bool bQuit = false;
 	while (!bQuit) {
 
-		DrawingBoard::transform.checkInputs();
-		DrawingBoard::layers.computeHoveredLayerAndMouseRelPos();
+		//spdlog::warn("[Begin Frame]");
+
+		DrawingBoard::update();
+		DrawingBoard::layers.update();
 		//spdlog::info("{} {}",(int)DrawingBoard::layers.m_mousePosRelToHoveredLayer, (int)DrawingBoard::layers.m_hoveredLayer);
 
 		// Start the Dear ImGui frame
@@ -185,11 +187,10 @@ int main(int argc, char* argv[])
 
 		DrawingBoard::transform.setRotation(dbRot);
 		DrawingBoard::layers.getActivLayer()->m_transform.setRotation(imRot);
-		DrawingBoard::layers.getActivLayer()->checkInputs();
 		DrawingBoard::show();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-		//Must be done between other updates and input polling, otherwise the fact that we had a double-clic is reset before it can be processed
+		//
 		Input::update();
 		// Handle inputs
 		SDL_Event e;
@@ -247,7 +248,7 @@ int main(int argc, char* argv[])
 					DrawingBoard::transform.reset();
 				}
 				else if (e.key.keysym.sym == ' ') {
-					DrawingBoard::transform.onSpaceBarDown();
+					DrawingBoard::onSpaceBarDown();
 				}
 				else if (e.key.keysym.scancode == SDL_SCANCODE_UP) {
 					;
@@ -266,7 +267,7 @@ int main(int argc, char* argv[])
 			case SDL_KEYUP:
 				Input::onStandardKeyUp(e.key.keysym.sym);
 				if (e.key.keysym.sym == ' ') {
-					DrawingBoard::transform.onSpaceBarUp();
+					DrawingBoard::onSpaceBarUp();
 				}
 				break;
 
@@ -291,6 +292,7 @@ int main(int argc, char* argv[])
 		}
 
 		SDL_GL_SwapWindow(window);
+		//spdlog::warn("[End Frame]");
 
 	}
 

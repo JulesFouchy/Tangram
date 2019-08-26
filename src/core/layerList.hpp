@@ -9,6 +9,8 @@ public:
 	LayerList();
 	~LayerList();
 
+	void update();
+
 	void show();
 	void showFrames();
 
@@ -16,12 +18,19 @@ public:
 	Layer* getActivLayer();
 	void setActivLayer(int layerIndex);
 
+	void onLeftClicDown();
+	void onLeftClicUp();
+
+	inline bool isHandlingAnInput() { return m_isHandlingAnInput; };
+
 public:
 	std::vector<Layer*> layers;
-public:
+private:
+	bool m_isHandlingAnInput;
+private:
 	void computeHoveredLayerAndMouseRelPos();
 public:
-	int m_activLayerIndex;
+	Layer* m_activLayer;
 	Layer* m_hoveredLayer;
 	MousePositionRelativeToRect m_mousePosRelToHoveredLayer;
 };

@@ -8,13 +8,10 @@ public:
 	const glm::mat4x4& getInverseMatrix();
 	void setMatrix(glm::mat4x4 matrix);
 public:
-	virtual bool onLeftClicDown() = 0;
-	virtual bool onSpaceBarDown() = 0;
-	virtual bool onLeftClicUp() = 0;
-	virtual bool onSpaceBarUp() = 0;
 
 	void startDraggingTranslation();
-	void endDraggingTranslation();
+	void checkDraggingTranslation();
+	bool endDraggingTranslation();
 
 	void setTranslation(glm::vec2 translation);
 	void translate(glm::vec2 translation);
@@ -27,8 +24,7 @@ public:
 	void rotate(float rotation);
 	inline float getRotation() { return m_rotation; }
 	void reset();
-protected:
-	Transform();
+
 private:
 	glm::vec2 m_translation;
 	float m_scale;
@@ -44,5 +40,6 @@ protected:
 	bool bDraggingTranslation;
 	glm::vec2 m_mousePosWhenDraggingStarted;
 	glm::vec2 m_translationWhenDraggingStarted;
-	void checkDraggingTranslation(glm::mat4x4 inverseViewMatrix = glm::mat4x4(1.0f));
+protected:
+	Transform();
 };

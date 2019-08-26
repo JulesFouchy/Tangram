@@ -25,12 +25,6 @@ public:
 
 	MousePositionRelativeToRect getMouseRelativePosition();
 
-	void checkInputs(glm::mat4x4 inverseViewMatrix = glm::mat4x4(1.0f));
-	bool onLeftClicDown() override;
-	bool onSpaceBarDown() override;
-	bool onLeftClicUp() override;
-	bool onSpaceBarUp() override;
-
 private:
 	float m_aspectRatio;
 	glm::mat4x4 m_projectionMatrix;

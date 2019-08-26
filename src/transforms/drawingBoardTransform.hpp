@@ -11,11 +11,7 @@ public:
 	void zoomOut();
 	void zoomOut(glm::vec2 origin);
 
-	void checkInputs();
-	bool onLeftClicDown() override;
-	bool onSpaceBarDown() override;
-	bool onLeftClicUp() override;
-	bool onSpaceBarUp() override;
+	void checkDraggingTranslation();
 
 private:
 	float m_zoomInFactor;

@@ -4,6 +4,10 @@
 
 #include "UI/input.hpp"
 
+#include "core/drawingBoard.hpp"
+
+#include "UI/log.hpp"
+
 Transform::Transform() :
 	m_translation(glm::vec2(0.0f)), m_scale(1.0f), m_rotation(0.0f),
 	m_matrix(glm::mat4x4(1.0f)), m_inverseMatrix(glm::mat4x4(1.0f)),
@@ -85,9 +89,9 @@ void Transform::reset() {
 	setRotation(0.0f);
 }
 
-void Transform::checkDraggingTranslation(glm::mat4x4 inverseViewMatrix) {
+void Transform::checkDraggingTranslation() {
 	if (bDraggingTranslation) {
-		glm::vec4 dl = inverseViewMatrix * glm::vec4(Input::getMousePosition() - m_mousePosWhenDraggingStarted, 0.0f, 0.0f);
+		glm::vec4 dl = DrawingBoard::transform.getInverseMatrix() * glm::vec4(Input::getMousePosition() - m_mousePosWhenDraggingStarted, 0.0f, 0.0f);
 		setTranslation(m_translationWhenDraggingStarted + glm::vec2(dl.x, dl.y));
 	}
 }
@@ -98,6 +102,8 @@ void Transform::startDraggingTranslation() {
 		m_translationWhenDraggingStarted = m_translation;
 	}
 }
-void Transform::endDraggingTranslation() {
+bool Transform::endDraggingTranslation() {
+	bool handled = bDraggingTranslation;
 	bDraggingTranslation = false;
+	return handled;
 }

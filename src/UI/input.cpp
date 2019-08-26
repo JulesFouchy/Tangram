@@ -6,21 +6,20 @@
 
 #include "utilities/conversions.hpp"
 
-bool Input::bDoubleLeftClic;
+#include "core/drawingBoard.hpp"
+
 bool Input::m_leftClicIsDown;
 bool Input::m_spaceBarIsDown;
 glm::vec2 Input::m_mousePosWhenLastLeftClic;
 Timestamp Input::timeSinceLastLeftClic;
 
-void Input::initialize() {
-	bDoubleLeftClic = false;
+void Input::Initialize() {
 	m_leftClicIsDown = false;
 	m_spaceBarIsDown = false;
 	m_mousePosWhenLastLeftClic = glm::vec2(0.0f);
 }
 
 void Input::update() {
-	bDoubleLeftClic = false;
 }
 
 Input::~Input() {
@@ -52,7 +51,7 @@ void Input::onLeftClicDown() {
 	}
 }
 void Input::onDoubleLeftClic() {
-	bDoubleLeftClic = true;
+	DrawingBoard::onDoubleLeftClic();
 }
 void Input::onLeftClicUp() {
 	m_leftClicIsDown = false;

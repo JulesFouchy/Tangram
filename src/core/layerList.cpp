@@ -3,12 +3,18 @@
 #include "drawingBoard.hpp"
 
 LayerList::LayerList()
-	: m_activLayerIndex(-1)
+	: m_activLayer(nullptr), m_hoveredLayer(nullptr), m_mousePosRelToHoveredLayer(OUTSIDE)
 {
 }
 
 LayerList::~LayerList() {
 
+}
+
+void LayerList::update() {
+	computeHoveredLayerAndMouseRelPos();
+	if(m_activLayer)
+		m_activLayer->m_transform.checkDraggingTranslation();
 }
 
 void LayerList::show() {
@@ -29,10 +35,10 @@ void LayerList::addLayer(std::string imgFilePath) {
 }
 
 Layer* LayerList::getActivLayer() {
-	return layers[m_activLayerIndex];
+	return m_activLayer;
 }
 void LayerList::setActivLayer(int layerIndex) {
-	m_activLayerIndex = layerIndex;
+	m_activLayer = layers[layerIndex];
 }
 
 void LayerList::computeHoveredLayerAndMouseRelPos() {
@@ -44,4 +50,23 @@ void LayerList::computeHoveredLayerAndMouseRelPos() {
 			break;
 		}
 	}
+}
+
+void LayerList::onLeftClicDown() {
+	if (m_hoveredLayer) {
+		m_activLayer = m_hoveredLayer;
+		m_isHandlingAnInput = true;
+
+		switch (m_mousePosRelToHoveredLayer) {
+		case INSIDE:
+			m_hoveredLayer->m_transform.startDraggingTranslation();
+		break;
+
+		}
+	}
+}
+
+void LayerList::onLeftClicUp() {
+	m_activLayer->m_transform.endDraggingTranslation();
+	m_isHandlingAnInput = false;
 }

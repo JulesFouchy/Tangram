@@ -75,26 +75,3 @@ MousePositionRelativeToRect RectTransform::getMouseRelativePosition() {
 	break;
 	}
 }
-
-void RectTransform::checkInputs(glm::mat4x4 inverseViewMatrix) {
-	checkDraggingTranslation(inverseViewMatrix);
-}
-
-bool RectTransform::onLeftClicDown() {
-	if (getMouseRelativePosition() == INSIDE) {
-		startDraggingTranslation();
-		return true;
-	}
-	return false;
-}
-bool RectTransform::onSpaceBarDown() {
-	return false;
-}
-bool RectTransform::onLeftClicUp() {
-	bool handled = bDraggingTranslation;
-	endDraggingTranslation();
-	return handled;
-}
-bool RectTransform::onSpaceBarUp() {
-	return false;
-}

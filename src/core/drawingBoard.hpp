@@ -20,8 +20,13 @@ public:
 
 	static void addLayer(const std::string imgFilePath);
 
+	static void update();
+
+	static void onDoubleLeftClic();
 	static void onLeftClicDown();
 	static void onLeftClicUp();
+	static void onSpaceBarDown();
+	static void onSpaceBarUp();
 
 public:
 	static DrawingBoardTransform transform;

@@ -8,7 +8,7 @@ class Input {
 
 public:
 	Input() = delete;
-	static void initialize();
+	static void Initialize();
 	~Input();
 	static void update();
 
@@ -19,13 +19,9 @@ public:
 
 	static void onLeftClicDown();
 	static void onLeftClicUp();
+	static void onDoubleLeftClic();
 	static void onStandardKeyDown(char key);
 	static void onStandardKeyUp(char key);
-private:
-	static void onDoubleLeftClic();
-
-public:
-	static bool bDoubleLeftClic;
 private:
 	static bool m_leftClicIsDown;
 	static bool m_spaceBarIsDown;

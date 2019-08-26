@@ -15,8 +15,6 @@ public:
 	void show();
 	void showFrame();
 
-	void checkInputs();
-
 private:
 	LoadedImage m_image;
 	std::string m_name;

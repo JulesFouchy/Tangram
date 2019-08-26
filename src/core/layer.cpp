@@ -27,8 +27,3 @@ void Layer::showFrame() {
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat() * DrawingBoard::transform.getMatrix() * m_transform.getMatrix());
 	ImmediateDrawing::rectOutline(0.0f, 0.0f, m_transform.getAspectRatio(), 1.0f, 0.002f);
 }
-
-void Layer::checkInputs() {
-	m_transform.checkInputs(DrawingBoard::transform.getInverseMatrix());
-}
-

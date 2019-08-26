@@ -6,6 +6,7 @@
 
 #include "utilities/display.hpp"
 
+#include "UI/input.hpp"
 #include "UI/log.hpp"
 
 #include "stb_image/stb_image_write.h"
@@ -66,14 +67,36 @@ void DrawingBoard::addLayer(const std::string imgFilePath) {
 	layers.addLayer(imgFilePath);
 }
 
+void DrawingBoard::update() {
+	transform.checkDraggingTranslation();
+}
+
+void DrawingBoard::onDoubleLeftClic() {
+	//Center the point we doucle-clicked on
+	transform.translate(-Input::getMousePosition());
+}
+
 void DrawingBoard::onLeftClicDown() {
-	if (!transform.onLeftClicDown()) {
-		layers.getActivLayer()->m_transform.onLeftClicDown();
+	if (Input::spaceBarIsDown() && !layers.isHandlingAnInput()) {
+		transform.startDraggingTranslation();
+	}
+	else{
+		layers.onLeftClicDown();
 	}
 }
 
 void DrawingBoard::onLeftClicUp() {
-	if (!transform.onLeftClicUp()) {
-		layers.getActivLayer()->m_transform.onLeftClicUp();
+	if (!transform.endDraggingTranslation()) {
+		layers.onLeftClicUp();
 	}
+}
+
+void DrawingBoard::onSpaceBarDown() {
+	if (Input::leftClicIsDown() && !layers.isHandlingAnInput()) {
+		transform.startDraggingTranslation();
+	}
+}
+
+void DrawingBoard::onSpaceBarUp() {
+	transform.endDraggingTranslation();
 }

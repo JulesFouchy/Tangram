@@ -34,7 +34,7 @@ void ImmediateDrawing::genBuffers() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void ImmediateDrawing::initialize()
+void ImmediateDrawing::Initialize()
 {
 	//View matrix
 	m_viewProjMatrix = glm::mat4x4(1.0f);

@@ -7,7 +7,7 @@
 class ImmediateDrawing {
 public:
 	ImmediateDrawing() = delete;
-	static void initialize();
+	static void Initialize();
 	static void genBuffers();
 	~ImmediateDrawing();
 
