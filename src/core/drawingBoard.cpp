@@ -8,25 +8,24 @@
 
 #include "UI/log.hpp"
 
-
 #include "stb_image/stb_image_write.h"
 
-DrawingBoard::DrawingBoard(float whRatio) 
-	: transform(whRatio), renderBuffer(Display::getHeight() * whRatio, Display::getHeight())
+DrawingBoardTransform DrawingBoard::transform(1.0f);
+LayerList DrawingBoard::layers;
+FrameBuffer* DrawingBoard::renderBuffer;
+
+void DrawingBoard::Initialize(float whRatio) 
 {
-
-}
-
-DrawingBoard::~DrawingBoard() {
-
+	transform = DrawingBoardTransform(whRatio);
+	renderBuffer = new FrameBuffer(Display::getHeight() * whRatio, Display::getHeight());
 }
 
 void DrawingBoard::show() {
-	renderBuffer.bind();
-	renderBuffer.clear();
+	renderBuffer->bind();
+	renderBuffer->clear();
 		layers.show();
-	renderBuffer.unbind();
-	renderBuffer.m_texture.show(transform.getMatrix());
+	renderBuffer->unbind();
+	renderBuffer->m_texture.show(transform.getMatrix());
 
 	layers.showFrames();
 
@@ -64,7 +63,7 @@ void DrawingBoard::save(int approxNbPixels, std::string filePath) {
 }
 
 void DrawingBoard::addLayer(const std::string imgFilePath) {
-	layers.addLayer(imgFilePath, this);
+	layers.addLayer(imgFilePath);
 }
 
 void DrawingBoard::onLeftClicDown() {

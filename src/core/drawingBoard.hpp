@@ -12,24 +12,26 @@
 
 class DrawingBoard {
 public:
-	DrawingBoard(float whRatio);
-	~DrawingBoard();
+	static void Initialize(float whRatio);
 
-	void show();
-	void showForSaving();
-	void save(int approxNbPixels, std::string filePath);
+	static void show();
+	static void showForSaving();
+	static void save(int approxNbPixels, std::string filePath);
 
-	void addLayer(const std::string imgFilePath);
+	static void addLayer(const std::string imgFilePath);
 
-	void onLeftClicDown();
-	void onLeftClicUp();
+	static void onLeftClicDown();
+	static void onLeftClicUp();
 
 public:
-	DrawingBoardTransform transform;
+	static DrawingBoardTransform transform;
 private:
-	void showFrame();
+	static void showFrame();
 public:
-	LayerList layers;
+	static LayerList layers;
 private:
-	FrameBuffer renderBuffer;
+	static FrameBuffer* renderBuffer;
+private:
+	DrawingBoard() = default;
+	~DrawingBoard() = default;
 };

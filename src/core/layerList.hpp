@@ -1,10 +1,21 @@
 #pragma once
 
-#include "drawingBoard.hpp"
+#include "layer.hpp"
+
 #include <vector>
 
-class DrawingBoard;
-class Layer;
+enum MousePositionRelativeToLayer {
+	OUTSIDE,
+	INSIDE,
+	RIGHT,
+	TOP_RIGHT,
+	TOP,
+	TOP_LEFT,
+	LEFT,
+	BOT_LEFT,
+	BOT,
+	BOT_RIGHT
+};
 
 class LayerList {
 public:
@@ -14,12 +25,16 @@ public:
 	void show();
 	void showFrames();
 
-	void addLayer(std::string imgFilePath, DrawingBoard* dbPointer);
+	void addLayer(std::string imgFilePath);
 	Layer* getActivLayer();
 	void setActivLayer(int layerIndex);
 
 public:
 	std::vector<Layer*> layers;
 private:
+	void computeHoveredLayerAndMouseRelPos();
+private:
 	int m_activLayerIndex;
+	Layer* hoveredLayer;
+	MousePositionRelativeToLayer mousePosRelToHoveredLayer;
 };

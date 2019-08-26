@@ -3,14 +3,11 @@
 #include "glm/glm.hpp"
 
 #include "graphics/loadedImage.hpp"
-#include "drawingBoard.hpp"
 #include "transforms/rectTransform.hpp"
-
-class DrawingBoard;
 
 class Layer {
 public:
-	Layer(std::string imgFilePath, DrawingBoard* drawingBoard, std::string layerName = "New layer");
+	Layer(std::string imgFilePath, std::string layerName = "New layer");
 	~Layer();
 
 	void show();
@@ -20,7 +17,6 @@ public:
 
 private:
 	LoadedImage m_image;
-	DrawingBoard* m_drawingBoard;
 	std::string m_name;
 public:
 	RectTransform m_transform;

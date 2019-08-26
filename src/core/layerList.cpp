@@ -1,4 +1,4 @@
-#include "drawingBoard.hpp"
+#include "layerList.hpp"
 
 LayerList::LayerList()
 	: m_activLayerIndex(-1)
@@ -21,8 +21,8 @@ void LayerList::showFrames() {
 	}
 }
 
-void LayerList::addLayer(std::string imgFilePath, DrawingBoard* dbPointer) {
-	layers.push_back(new Layer(imgFilePath, dbPointer));
+void LayerList::addLayer(std::string imgFilePath) {
+	layers.push_back(new Layer(imgFilePath));
 	setActivLayer(layers.size() - 1);
 }
 
@@ -31,4 +31,8 @@ Layer* LayerList::getActivLayer() {
 }
 void LayerList::setActivLayer(int layerIndex) {
 	m_activLayerIndex = layerIndex;
+}
+
+void LayerList::computeHoveredLayerAndMouseRelPos() {
+
 }

@@ -8,8 +8,9 @@
 
 FrameBuffer::FrameBuffer(int width, int height)
 {
-	//Gen framebuffer
+	//Gen Buffer
 	glGenFramebuffers(1, &m_frameBufferId);
+	//
 	glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferId);
 	//Gen texture
 	m_texture.Initialize(width, height, 4);

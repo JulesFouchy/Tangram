@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
 	SDL_Window* window = SDL_CreateWindow("Tangram", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
 	SDL_GLContext gl_context = SDL_GL_CreateContext(window);
 	SDL_GL_MakeCurrent(window, gl_context);
-	//SDL_GL_SetSwapInterval(1); // Enable vsync
+	SDL_GL_SetSwapInterval(1); // Enable vsync
 
 	//Initialize display
 	Display::initialize(window);
@@ -111,10 +111,10 @@ int main(int argc, char* argv[])
 	float imRot = 0.0f;
 
 	Texture2D::Initialize();
-	DrawingBoard drawingBoard(1.5f);
-	drawingBoard.transform.setScale(0.9f);
+	DrawingBoard::Initialize(1.5f);
+	DrawingBoard::transform.setScale(0.9f);
 
-	drawingBoard.addLayer("res/img/test3.jpg");
+	DrawingBoard::addLayer("res/img/test3.jpg");
 
 	ImmediateDrawing::initialize();
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat());
@@ -125,7 +125,7 @@ int main(int argc, char* argv[])
 	bool bQuit = false;
 	while (!bQuit) {
 
-		drawingBoard.transform.checkInputs();
+		DrawingBoard::transform.checkInputs();
 
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
@@ -178,16 +178,14 @@ int main(int argc, char* argv[])
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		drawingBoard.transform.setRotation(dbRot);
-		drawingBoard.layers.getActivLayer()->m_transform.setRotation(imRot);
-		drawingBoard.layers.getActivLayer()->checkInputs();
-		drawingBoard.show();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-		if(drawingBoard.layers.getActivLayer()->m_transform.mouseIsHovering(drawingBoard.transform.getMatrix()))
+		if (DrawingBoard::layers.getActivLayer()->m_transform.mouseIsHovering(DrawingBoard::transform.getMatrix()))
 			SDL_SetCursor(handCursor);
 
-		SDL_GL_SwapWindow(window);
+		DrawingBoard::transform.setRotation(dbRot);
+		DrawingBoard::layers.getActivLayer()->m_transform.setRotation(imRot);
+		DrawingBoard::layers.getActivLayer()->checkInputs();
+		DrawingBoard::show();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		//Must be done between other updates and input polling, otherwise the fact that we had a double-clic is reset before it can be processed
 		Input::update();
@@ -206,7 +204,7 @@ int main(int argc, char* argv[])
 			case SDL_MOUSEBUTTONUP:
 				if (e.button.button == SDL_BUTTON_LEFT) {
 					Input::onLeftClicUp();
-					drawingBoard.onLeftClicUp();
+					DrawingBoard::onLeftClicUp();
 				}
 				else if (e.button.button == SDL_BUTTON_RIGHT){
 				}
@@ -215,7 +213,7 @@ int main(int argc, char* argv[])
 			case SDL_MOUSEBUTTONDOWN:
 				if (e.button.button == SDL_BUTTON_LEFT) {
 					Input::onLeftClicDown();
-					drawingBoard.onLeftClicDown();
+					DrawingBoard::onLeftClicDown();
 				}
 				else if (e.button.button == SDL_BUTTON_RIGHT) {
 				}
@@ -233,21 +231,21 @@ int main(int argc, char* argv[])
 				if (e.key.keysym.sym == 'o') {
 					std::string imgFilepath = openfilename();
 					if (!imgFilepath.empty())
-						drawingBoard.addLayer(imgFilepath);
+						DrawingBoard::addLayer(imgFilepath);
 				}
 				else if (e.key.keysym.sym == 's') {
 					std::string imgFilepath = savefilename();
 					if (!imgFilepath.empty()) {
 						spdlog::info("[Saving image] " + imgFilepath);
-						drawingBoard.save(2500000,imgFilepath);
+						DrawingBoard::save(2500000,imgFilepath);
 						Log::separationLine();
 					}
 				}
 				else if (e.key.keysym.sym == '0' || e.key.keysym.sym == 1073741922) {
-					drawingBoard.transform.reset();
+					DrawingBoard::transform.reset();
 				}
 				else if (e.key.keysym.sym == ' ') {
-					drawingBoard.transform.onSpaceBarDown();
+					DrawingBoard::transform.onSpaceBarDown();
 				}
 				else if (e.key.keysym.scancode == SDL_SCANCODE_UP) {
 					;
@@ -266,16 +264,16 @@ int main(int argc, char* argv[])
 			case SDL_KEYUP:
 				Input::onStandardKeyUp(e.key.keysym.sym);
 				if (e.key.keysym.sym == ' ') {
-					drawingBoard.transform.onSpaceBarUp();
+					DrawingBoard::transform.onSpaceBarUp();
 				}
 				break;
 
 			case SDL_MOUSEWHEEL:
 				glm::vec2 mouse = Input::getMousePosition();
 				if (e.motion.x < 0.0f) {
-					drawingBoard.transform.zoomIn(Input::getMousePosition());
+					DrawingBoard::transform.zoomIn(Input::getMousePosition());
 				} else {
-					drawingBoard.transform.zoomOut(Input::getMousePosition());
+					DrawingBoard::transform.zoomOut(Input::getMousePosition());
 				}
 				break;
 
@@ -289,6 +287,8 @@ int main(int argc, char* argv[])
 				}
 			}
 		}
+
+		SDL_GL_SwapWindow(window);
 
 	}
 
