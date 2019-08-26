@@ -3,7 +3,7 @@
 #include "drawingBoard.hpp"
 
 LayerList::LayerList()
-	: m_activLayer(nullptr), m_hoveredLayer(nullptr), m_mousePosRelToHoveredLayer(OUTSIDE)
+	: m_activLayer(nullptr), m_hoveredLayer(nullptr), m_mousePosRelToHoveredLayer(OUTSIDE), m_bIsHandlingAnInput(false)
 {
 }
 
@@ -14,7 +14,7 @@ LayerList::~LayerList() {
 void LayerList::update() {
 	computeHoveredLayerAndMouseRelPos();
 	if(m_activLayer)
-		m_activLayer->m_transform.checkDraggingTranslation();
+		m_activLayer->m_transform.checkDragging();
 }
 
 void LayerList::show() {
@@ -53,20 +53,21 @@ void LayerList::computeHoveredLayerAndMouseRelPos() {
 }
 
 void LayerList::onLeftClicDown() {
-	if (m_hoveredLayer) {
+	if (m_hoveredLayer)
+	{
 		m_activLayer = m_hoveredLayer;
-		m_isHandlingAnInput = true;
-
+		m_bIsHandlingAnInput = true;
 		switch (m_mousePosRelToHoveredLayer) {
 		case INSIDE:
 			m_hoveredLayer->m_transform.startDraggingTranslation();
 		break;
-
+		default:
+			m_hoveredLayer->m_transform.startDraggingScale();
 		}
 	}
 }
 
 void LayerList::onLeftClicUp() {
-	m_activLayer->m_transform.endDraggingTranslation();
-	m_isHandlingAnInput = false;
+	m_activLayer->m_transform.endDragging();
+	m_bIsHandlingAnInput = false;
 }

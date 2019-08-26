@@ -8,6 +8,7 @@
 class Layer {
 friend class LayerList;
 friend class DrawingBoard;
+
 public:
 	Layer(std::string imgFilePath, std::string layerName = "New layer");
 	~Layer();

@@ -12,8 +12,40 @@ Transform::Transform() :
 	m_translation(glm::vec2(0.0f)), m_scale(1.0f), m_rotation(0.0f),
 	m_matrix(glm::mat4x4(1.0f)), m_inverseMatrix(glm::mat4x4(1.0f)),
 	bMatrixMustBeRecomputed(false), bInverseMatrixMustBeRecomputed(false),
-	bDraggingTranslation(false), m_mousePosWhenDraggingStarted(glm::vec2(0.0f)), m_translationWhenDraggingStarted(glm::vec2(0.0f))
+	bDraggingTranslation(false), bDraggingScale(false), m_mousePosWhenDraggingStarted(glm::vec2(0.0f)), m_translationWhenDraggingStarted(glm::vec2(0.0f))
 {
+}
+
+void Transform::startDraggingTranslation() {
+	if (!bDraggingTranslation) {
+		bDraggingTranslation = true;
+		startDragging();
+	}
+}
+void Transform::startDraggingScale() {
+	if (!bDraggingScale) {
+		bDraggingScale = true;
+		startDragging();
+	}
+}
+void Transform::startDragging() {
+	m_mousePosWhenDraggingStarted = Input::getMousePosition();
+	m_translationWhenDraggingStarted = m_translation;
+}
+void Transform::checkDragging() {
+	glm::vec4 dl = DrawingBoard::transform.getInverseMatrix() * glm::vec4(Input::getMousePosition() - m_mousePosWhenDraggingStarted, 0.0f, 0.0f);
+	if (bDraggingTranslation) {
+		setTranslation(m_translationWhenDraggingStarted + glm::vec2(dl.x, dl.y));
+	}
+	if (bDraggingScale) {
+		setScale(0.5f);
+	}
+}
+bool Transform::endDragging() {
+	bool handled = bDraggingTranslation || bDraggingScale;
+	bDraggingTranslation = false;
+	bDraggingScale = false;
+	return handled;
 }
 
 void Transform::setMatrix(glm::mat4x4 matrix) {
@@ -87,23 +119,4 @@ void Transform::reset() {
 	setTranslation(glm::vec2(0.0f));
 	setScale(1.0f);
 	setRotation(0.0f);
-}
-
-void Transform::checkDraggingTranslation() {
-	if (bDraggingTranslation) {
-		glm::vec4 dl = DrawingBoard::transform.getInverseMatrix() * glm::vec4(Input::getMousePosition() - m_mousePosWhenDraggingStarted, 0.0f, 0.0f);
-		setTranslation(m_translationWhenDraggingStarted + glm::vec2(dl.x, dl.y));
-	}
-}
-void Transform::startDraggingTranslation() {
-	if (!bDraggingTranslation) {
-		bDraggingTranslation = true;
-		m_mousePosWhenDraggingStarted = Input::getMousePosition();
-		m_translationWhenDraggingStarted = m_translation;
-	}
-}
-bool Transform::endDraggingTranslation() {
-	bool handled = bDraggingTranslation;
-	bDraggingTranslation = false;
-	return handled;
 }

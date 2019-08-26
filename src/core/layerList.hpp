@@ -21,12 +21,12 @@ public:
 	void onLeftClicDown();
 	void onLeftClicUp();
 
-	inline bool isHandlingAnInput() { return m_isHandlingAnInput; };
+	inline bool isHandlingAnInput() { return m_bIsHandlingAnInput; };
 
 public:
 	std::vector<Layer*> layers;
 private:
-	bool m_isHandlingAnInput;
+	bool m_bIsHandlingAnInput;
 private:
 	void computeHoveredLayerAndMouseRelPos();
 public:

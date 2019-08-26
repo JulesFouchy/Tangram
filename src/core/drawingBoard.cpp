@@ -86,7 +86,7 @@ void DrawingBoard::onLeftClicDown() {
 }
 
 void DrawingBoard::onLeftClicUp() {
-	if (!transform.endDraggingTranslation()) {
+	if (!transform.endDragging()) {
 		layers.onLeftClicUp();
 	}
 }
@@ -98,5 +98,5 @@ void DrawingBoard::onSpaceBarDown() {
 }
 
 void DrawingBoard::onSpaceBarUp() {
-	transform.endDraggingTranslation();
+	transform.endDragging();
 }

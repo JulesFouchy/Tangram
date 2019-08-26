@@ -10,8 +10,12 @@ public:
 public:
 
 	void startDraggingTranslation();
-	void checkDraggingTranslation();
-	bool endDraggingTranslation();
+	void startDraggingScale();
+private:
+	void startDragging();
+public:
+	void checkDragging();
+	bool endDragging();
 
 	void setTranslation(glm::vec2 translation);
 	void translate(glm::vec2 translation);
@@ -38,6 +42,7 @@ protected:
 	void computeInverseMatrix();
 
 	bool bDraggingTranslation;
+	bool bDraggingScale;
 	glm::vec2 m_mousePosWhenDraggingStarted;
 	glm::vec2 m_translationWhenDraggingStarted;
 protected:
