@@ -6,7 +6,7 @@
 
 #include "utilities/display.hpp"
 
-#include "spdlog/spdlog.h"
+#include "UI/log.hpp"
 
 
 #include "stb_image/stb_image_write.h"

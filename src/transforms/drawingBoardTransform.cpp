@@ -2,7 +2,7 @@
 
 #include "UI/input.hpp"
 
-#include "spdlog/spdlog.h"
+#include "UI/log.hpp"
 
 DrawingBoardTransform::DrawingBoardTransform(float aspectRatio)
 	: RectTransform(aspectRatio), m_zoomInFactor(0.8f)

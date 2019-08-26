@@ -3,7 +3,7 @@
 #include "SDL_opengl.h"
 
 #include <iostream>
-#include "spdlog/spdlog.h"
+#include "UI/log.hpp"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -33,7 +33,7 @@
 int main(int argc, char* argv[])
 {
 	Input::initialize();
-	spdlog::set_pattern("%^[%T] %n: %v%$");
+	Log::Initialize();
 
 	// Decide GL+GLSL versions
 #if __APPLE__
@@ -112,7 +112,6 @@ int main(int argc, char* argv[])
 
 	Texture2D::Initialize();
 	DrawingBoard drawingBoard(1.5f);
-	drawingBoard.transform.setScale(0.9f);
 
 	drawingBoard.addLayer("res/img/test3.jpg");
 
@@ -240,7 +239,7 @@ int main(int argc, char* argv[])
 					if (!imgFilepath.empty()) {
 						spdlog::info("[Saving image] " + imgFilepath);
 						drawingBoard.save(2500000,imgFilepath);
-						spdlog::info("-------------------------------------------------");
+						Log::separationLine();
 					}
 				}
 				else if (e.key.keysym.sym == '0' || e.key.keysym.sym == 1073741922) {

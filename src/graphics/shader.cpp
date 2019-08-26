@@ -5,7 +5,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "spdlog/spdlog.h"
+#include "UI/log.hpp"
 
 Shader::Shader(const std::string& vertexShaderFilepath, const std::string& fragmentShaderFilepath, bool compileShader)
 	: m_shaderId(-1), m_vertexShaderFilepath(vertexShaderFilepath), m_fragmentShaderFilepath(fragmentShaderFilepath)
@@ -36,7 +36,7 @@ void Shader::compile() {
 
 	glDeleteShader(vs);
 	glDeleteShader(fs);
-	spdlog::info("-------------------------------------------------");
+	Log::separationLine();
 }
 
 //Uniforms

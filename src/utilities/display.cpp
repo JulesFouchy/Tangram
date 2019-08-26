@@ -2,7 +2,7 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "spdlog/spdlog.h"
+#include "UI/log.hpp"
 
 SDL_Window* Display::s_window;
 glm::vec2 Display::s_windowSize;

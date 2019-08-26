@@ -4,7 +4,7 @@
 
 #include "UI/input.hpp"
 
-#include "spdlog/spdlog.h"
+#include "UI/log.hpp"
 
 #include <algorithm>
 

@@ -2,7 +2,7 @@
 
 #include "stb_image/stb_image.h"
 
-#include "spdlog/spdlog.h"
+#include "UI/log.hpp"
 
 LoadedImage::LoadedImage(const std::string& filePath)
 	: m_filePath(filePath)
@@ -16,7 +16,7 @@ LoadedImage::LoadedImage(const std::string& filePath)
 	if (!pixels)
 		spdlog::warn("Couldn't open " + m_filePath);
 	Initialize(width, height, BPP, pixels);
-	spdlog::info("-------------------------------------------------");
+	Log::separationLine();
 }
 
 LoadedImage::~LoadedImage() {

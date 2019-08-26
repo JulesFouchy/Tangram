@@ -5,7 +5,7 @@
 #include "utilities/display.hpp"
 #include "utilities/maths.hpp"
 
-#include "spdlog/spdlog.h"
+#include "UI/log.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
 Shader Texture2D::standardShader = Shader("res/shaders/vertex/texture.vert", "res/shaders/fragment/texture_standard.frag", false);
