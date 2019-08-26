@@ -240,6 +240,7 @@ int main(int argc, char* argv[])
 					if (!imgFilepath.empty()) {
 						spdlog::info("[Saving image] " + imgFilepath);
 						drawingBoard.save(2500000,imgFilepath);
+						spdlog::info("-------------------------------------------------");
 					}
 				}
 				else if (e.key.keysym.sym == '0' || e.key.keysym.sym == 1073741922) {

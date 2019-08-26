@@ -36,6 +36,7 @@ void Shader::compile() {
 
 	glDeleteShader(vs);
 	glDeleteShader(fs);
+	spdlog::info("-------------------------------------------------");
 }
 
 //Uniforms

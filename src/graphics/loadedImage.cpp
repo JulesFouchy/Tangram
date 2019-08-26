@@ -16,6 +16,7 @@ LoadedImage::LoadedImage(const std::string& filePath)
 	if (!pixels)
 		spdlog::warn("Couldn't open " + m_filePath);
 	Initialize(width, height, BPP, pixels);
+	spdlog::info("-------------------------------------------------");
 }
 
 LoadedImage::~LoadedImage() {
