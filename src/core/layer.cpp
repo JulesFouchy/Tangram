@@ -16,22 +16,18 @@ Layer::~Layer() {
 
 }
 
-void Layer::show(glm::mat4x4 projection) {
+void Layer::show() {
 	float scale = m_transform.getScale();
 	glm::vec2 translation = m_transform.getTranslation();
 	float dbRatio = m_drawingBoard->transform.getAspectRatio();
 	float ratio = m_transform.getAspectRatio();
-	m_image.show(m_transform.getMatrix(), projection);
+	m_image.show(m_transform.getMatrix(), m_drawingBoard->transform.getProjectionMatrix());
 }
 
-void Layer::showFrame(const glm::mat4x4& viewMatrix) {
+void Layer::showFrame() {
 	ImmediateDrawing::setColor(0.0f, 0.0f, 0.0f, 1.0f);
-	ImmediateDrawing::setViewProjMatrix(Display::getProjMat() * viewMatrix * m_transform.getMatrix());
+	ImmediateDrawing::setViewProjMatrix(Display::getProjMat() * m_drawingBoard->transform.getMatrix() * m_transform.getMatrix());
 	ImmediateDrawing::rectOutline(0.0f, 0.0f, m_transform.getAspectRatio(), 1.0f, 0.002f);
-}
-
-void Layer::show() {
-	show(Display::getProjMat());
 }
 
 void Layer::checkInputs() {

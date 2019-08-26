@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
 	SDL_Window* window = SDL_CreateWindow("Tangram", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
 	SDL_GLContext gl_context = SDL_GL_CreateContext(window);
 	SDL_GL_MakeCurrent(window, gl_context);
-	SDL_GL_SetSwapInterval(1); // Enable vsync
+	//SDL_GL_SetSwapInterval(1); // Enable vsync
 
 	//Initialize display
 	Display::initialize(window);
@@ -112,6 +112,7 @@ int main(int argc, char* argv[])
 
 	Texture2D::Initialize();
 	DrawingBoard drawingBoard(1.5f);
+	drawingBoard.transform.setScale(0.9f);
 
 	drawingBoard.addLayer("res/img/test3.jpg");
 
@@ -178,12 +179,12 @@ int main(int argc, char* argv[])
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		drawingBoard.transform.setRotation(dbRot);
-		drawingBoard.getActivLayer()->m_transform.setRotation(imRot);
-		drawingBoard.getActivLayer()->checkInputs();
+		drawingBoard.layers.getActivLayer()->m_transform.setRotation(imRot);
+		drawingBoard.layers.getActivLayer()->checkInputs();
 		drawingBoard.show();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-		if(drawingBoard.getActivLayer()->m_transform.mouseIsHovering(drawingBoard.transform.getMatrix()))
+		if(drawingBoard.layers.getActivLayer()->m_transform.mouseIsHovering(drawingBoard.transform.getMatrix()))
 			SDL_SetCursor(handCursor);
 
 		SDL_GL_SwapWindow(window);
@@ -207,8 +208,8 @@ int main(int argc, char* argv[])
 					Input::onLeftClicUp();
 					drawingBoard.onLeftClicUp();
 				}
-				else if (e.button.button == SDL_BUTTON_RIGHT)
-					;
+				else if (e.button.button == SDL_BUTTON_RIGHT){
+				}
 				break;
 
 			case SDL_MOUSEBUTTONDOWN:
@@ -216,8 +217,8 @@ int main(int argc, char* argv[])
 					Input::onLeftClicDown();
 					drawingBoard.onLeftClicDown();
 				}
-				else if (e.button.button == SDL_BUTTON_RIGHT)
-					;
+				else if (e.button.button == SDL_BUTTON_RIGHT) {
+				}
 				break;
 
 			case SDL_MOUSEMOTION:

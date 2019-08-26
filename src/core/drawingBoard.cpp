@@ -12,7 +12,7 @@
 #include "stb_image/stb_image_write.h"
 
 DrawingBoard::DrawingBoard(float whRatio) 
-	: transform(whRatio), m_activLayerIndex(-1), renderBuffer(Display::getHeight() * whRatio, Display::getHeight())
+	: transform(whRatio), renderBuffer(Display::getHeight() * whRatio, Display::getHeight())
 {
 
 }
@@ -24,22 +24,17 @@ DrawingBoard::~DrawingBoard() {
 void DrawingBoard::show() {
 	renderBuffer.bind();
 	renderBuffer.clear();
-		for (int k = 0; k < layers.size(); ++k) {
-			layers[k]->show(transform.getProjectionMatrix());
-		}
+		layers.show();
 	renderBuffer.unbind();
-
 	renderBuffer.m_texture.show(transform.getMatrix());
-	for (int k = 0; k < layers.size(); ++k) {
-		layers[k]->showFrame(transform.getMatrix());
-	}
+
+	layers.showFrames();
+
 	showFrame();
 }
 
 void DrawingBoard::showForSaving() {
-	for (int k = 0; k < layers.size(); ++k) {
-		layers[k]->show(transform.getProjectionMatrix());
-	}
+	layers.show();
 }
 
 void DrawingBoard::showFrame() {
@@ -68,28 +63,18 @@ void DrawingBoard::save(int approxNbPixels, std::string filePath) {
 	saveBuffer.unbind();
 }
 
-
-
-void DrawingBoard::addLayer(std::string imgFilePath) {
-	layers.push_back(new Layer(imgFilePath, this));
-	setActivLayer(layers.size() - 1);
-}
-
-Layer* DrawingBoard::getActivLayer() {
-	return layers[m_activLayerIndex];
-}
-void DrawingBoard::setActivLayer(int layerIndex) {
-	m_activLayerIndex = layerIndex;
+void DrawingBoard::addLayer(const std::string imgFilePath) {
+	layers.addLayer(imgFilePath, this);
 }
 
 void DrawingBoard::onLeftClicDown() {
 	if (!transform.onLeftClicDown()) {
-		getActivLayer()->m_transform.onLeftClicDown(transform.getMatrix());
+		layers.getActivLayer()->m_transform.onLeftClicDown(transform.getMatrix());
 	}
 }
 
 void DrawingBoard::onLeftClicUp() {
 	if (!transform.onLeftClicUp()) {
-		getActivLayer()->m_transform.onLeftClicUp();
+		layers.getActivLayer()->m_transform.onLeftClicUp();
 	}
 }

@@ -4,12 +4,11 @@
 #include <vector>
 
 #include "layer.hpp"
+#include "layerList.hpp"
 
 #include "graphics/frameBuffer.hpp"
 
 #include "transforms/drawingBoardTransform.hpp"
-
-class Layer;
 
 class DrawingBoard {
 public:
@@ -20,10 +19,7 @@ public:
 	void showForSaving();
 	void save(int approxNbPixels, std::string filePath);
 
-	void addLayer(std::string imgFilePath);
-
-	Layer* getActivLayer();
-	void setActivLayer(int layerIndex);
+	void addLayer(const std::string imgFilePath);
 
 	void onLeftClicDown();
 	void onLeftClicUp();
@@ -31,11 +27,9 @@ public:
 public:
 	DrawingBoardTransform transform;
 private:
-	int m_activLayerIndex;
-private:
 	void showFrame();
 public:
-	std::vector<Layer*> layers;
+	LayerList layers;
 private:
 	FrameBuffer renderBuffer;
 };
