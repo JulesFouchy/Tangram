@@ -68,7 +68,7 @@ void DrawingBoard::addLayer(const std::string imgFilePath) {
 
 void DrawingBoard::onLeftClicDown() {
 	if (!transform.onLeftClicDown()) {
-		layers.getActivLayer()->m_transform.onLeftClicDown(transform.getMatrix());
+		layers.getActivLayer()->m_transform.onLeftClicDown();
 	}
 }
 

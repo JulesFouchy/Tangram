@@ -4,19 +4,6 @@
 
 #include <vector>
 
-enum MousePositionRelativeToLayer {
-	OUTSIDE,
-	INSIDE,
-	RIGHT,
-	TOP_RIGHT,
-	TOP,
-	TOP_LEFT,
-	LEFT,
-	BOT_LEFT,
-	BOT,
-	BOT_RIGHT
-};
-
 class LayerList {
 public:
 	LayerList();
@@ -31,10 +18,10 @@ public:
 
 public:
 	std::vector<Layer*> layers;
-private:
+public:
 	void computeHoveredLayerAndMouseRelPos();
-private:
+public:
 	int m_activLayerIndex;
-	Layer* hoveredLayer;
-	MousePositionRelativeToLayer mousePosRelToHoveredLayer;
+	Layer* m_hoveredLayer;
+	MousePositionRelativeToRect m_mousePosRelToHoveredLayer;
 };

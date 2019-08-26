@@ -1,5 +1,7 @@
 #include "layerList.hpp"
 
+#include "drawingBoard.hpp"
+
 LayerList::LayerList()
 	: m_activLayerIndex(-1)
 {
@@ -34,5 +36,12 @@ void LayerList::setActivLayer(int layerIndex) {
 }
 
 void LayerList::computeHoveredLayerAndMouseRelPos() {
-
+	m_hoveredLayer = nullptr;
+	for (int k = layers.size()-1; k >= 0; --k) {
+		m_mousePosRelToHoveredLayer = layers[k]->m_transform.getMouseRelativePosition();
+		if (m_mousePosRelToHoveredLayer != OUTSIDE) {
+			m_hoveredLayer = layers[k];
+			break;
+		}
+	}
 }

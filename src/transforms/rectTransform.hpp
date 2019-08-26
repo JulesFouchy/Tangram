@@ -2,6 +2,19 @@
 
 #include "transform.hpp"
 
+enum MousePositionRelativeToRect {
+	OUTSIDE,
+	INSIDE,
+	RIGHT,
+	TOP_RIGHT,
+	TOP,
+	TOP_LEFT,
+	LEFT,
+	BOT_LEFT,
+	BOT,
+	BOT_RIGHT
+};
+
 class RectTransform : public Transform {
 public:
 	RectTransform(float aspectRatio);
@@ -10,12 +23,10 @@ public:
 	inline float getAspectRatio() { return m_aspectRatio; };
 	inline const glm::mat4x4& getProjectionMatrix() { return m_projectionMatrix; };
 
-	bool mouseIsHovering();
-	bool mouseIsHovering(glm::mat4x4 viewMatrix);
+	MousePositionRelativeToRect getMouseRelativePosition();
 
 	void checkInputs(glm::mat4x4 inverseViewMatrix = glm::mat4x4(1.0f));
 	bool onLeftClicDown() override;
-	bool onLeftClicDown(glm::mat4x4 viewTransform);
 	bool onSpaceBarDown() override;
 	bool onLeftClicUp() override;
 	bool onSpaceBarUp() override;

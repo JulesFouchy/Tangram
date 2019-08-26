@@ -126,6 +126,8 @@ int main(int argc, char* argv[])
 	while (!bQuit) {
 
 		DrawingBoard::transform.checkInputs();
+		DrawingBoard::layers.computeHoveredLayerAndMouseRelPos();
+		//spdlog::info("{} {}",(int)DrawingBoard::layers.m_mousePosRelToHoveredLayer, (int)DrawingBoard::layers.m_hoveredLayer);
 
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
@@ -178,7 +180,7 @@ int main(int argc, char* argv[])
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		if (DrawingBoard::layers.getActivLayer()->m_transform.mouseIsHovering(DrawingBoard::transform.getMatrix()))
+		if (DrawingBoard::layers.getActivLayer()->m_transform.getMouseRelativePosition() == INSIDE)
 			SDL_SetCursor(handCursor);
 
 		DrawingBoard::transform.setRotation(dbRot);
