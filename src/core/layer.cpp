@@ -21,10 +21,6 @@ void Layer::show(glm::mat4x4 projection) {
 	glm::vec2 translation = m_transform.getTranslation();
 	float dbRatio = m_drawingBoard->transform.getAspectRatio();
 	float ratio = m_transform.getAspectRatio();
-	mX = 0.0f;//Maths::clamp( 0.5 + (-0.5*dbRatio - translation.x) / ratio, 0.0f, 1.0f) ;
-	MX = 1.0f;// Maths::clamp(0.5 + (0.5 * dbRatio - translation.x) / ratio, 0.0f, 1.0f);
-	mY = 0.0f;// Maths::clamp(0.5f - 0.5f / scale - translation.y / scale, 0.0f, 1.0f);
-	MY = 1.0f;// Maths::clamp(0.5f + 0.5f / scale - translation.y / scale, 0.0f, 1.0f);
 	m_image.show(m_transform.getMatrix(), projection);
 }
 

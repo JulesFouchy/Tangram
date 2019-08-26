@@ -10,11 +10,6 @@ class DrawingBoard;
 
 class Layer {
 public:
-	float mX;
-	float MX;
-	float mY;
-	float MY;
-public:
 	Layer(std::string imgFilePath, DrawingBoard* drawingBoard, std::string layerName = "New layer");
 	~Layer();
 

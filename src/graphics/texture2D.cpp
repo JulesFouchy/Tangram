@@ -90,10 +90,11 @@ Texture2D::~Texture2D() {
 
 void Texture2D::show(glm::mat4x4 transform, glm::mat4x4 projection, float texCoordMinX, float texCoordMaxX, float texCoordMinY, float texCoordMaxY) {
 	//Recompute vertex buffer
-	if (0.0001f < abs(texCoordMinX - lastTexCoordMinX) + abs(texCoordMaxX - lastTexCoordMaxX) + abs(texCoordMinY - lastTexCoordMinY) + abs(texCoordMaxY - lastTexCoordMaxY)) {
+	//not using this functionality anymore since we use a frameBuffer to cut what's outside of the drawing board
+	/*if (0.0001f < abs(texCoordMinX - lastTexCoordMinX) + abs(texCoordMaxX - lastTexCoordMaxX) + abs(texCoordMinY - lastTexCoordMinY) + abs(texCoordMaxY - lastTexCoordMaxY)) {
 		computeAndSendVertexBuffer(texCoordMinX, texCoordMaxX, texCoordMinY, texCoordMaxY);
 		spdlog::info("recomputed vertex buffer of {}", m_debugName);
-	}
+	}*/
 	//Bind texture
 	bind();
 	//Shader
