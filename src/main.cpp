@@ -183,8 +183,8 @@ int main(int argc, char* argv[])
 		DrawingBoard::transform.setRotation(dbRot);
 		DrawingBoard::layers.getActivLayer()->m_transform.setRotation(imRot);
 		DrawingBoard::update();
-		DrawingBoard::layers.update();
 		DrawingBoard::show();
+		DrawingBoard::layers.update();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		//
 		Input::update();

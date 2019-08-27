@@ -12,7 +12,7 @@ public:
 public:
 
 	void startDraggingTranslation();
-	void startDraggingScale();
+	void startDraggingScale(glm::vec2 scaleOriginInRelSpace = glm::vec2(0.0f,-0.5f));
 	void checkDragging();
 	bool endDragging();
 
@@ -45,9 +45,10 @@ protected:
 	glm::vec2 m_translationWhenDraggingStarted;
 
 	bool bDraggingScale;
-	glm::vec2 m_rectCenterWhenDraggingStarted;
-	glm::vec2 m_mousePosWhenDraggingStartedRelToCenter;
-	float m_invDistToCenterSqWhenDraggingStarted;
+	glm::vec2 m_scaleOriginInDrawingBoardSpace;
+	glm::vec2 m_scaleOriginInScreenSpace;
+	glm::vec2 m_mouseDragInitialPosRelToScaleOriginInScreenSpace;
+	float m_invDistToScaleOriginSqWhenDraggingStartedinScreenSpace;
 	float m_scaleWhenDraggingStarted;
 protected:
 	Transform();
