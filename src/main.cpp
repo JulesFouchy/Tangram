@@ -148,8 +148,8 @@ int main(int argc, char* argv[])
 			ImGui::Checkbox("Another Window", &show_another_window);
 
 			ImGui::SliderFloat("dbRot", &dbRot, 0.0f, 6.28f);
-			ImGui::SliderFloat("imRot", &imRot, 0.0f, 6.28f);
-
+			ImGui::SliderFloat("imRot", &imRot, 0.0f, 6.28f); 
+			//ImGui::SliderFloat("ALT_ORIGIN_RADIUS", &ALT_ORIGIN_RADIUS, 0.0f, 0.1f);
 			ImGui::ColorEdit3("clear color", (float*)& clear_color); // Edit 3 floats representing a color
 
 			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)

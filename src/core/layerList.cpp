@@ -6,6 +6,8 @@
 
 #include "UI/input.hpp"
 
+#include "constants.hpp"
+
 LayerList::LayerList()
 	: m_activLayer(nullptr), m_hoveredLayer(nullptr), m_mousePosRelToHoveredLayer(OUTSIDE), m_bIsHandlingAnInput(false), usedCursor(nullptr)
 {
@@ -68,7 +70,7 @@ bool LayerList::mustShowAltOrigin() {
 	return Input::keyIsDown(ALT);
 }
 bool LayerList::mouseIsHoveringAltOrigin() {
-	return mustShowAltOrigin() && glm::length(m_activLayer->m_transform.getAltOriginInWindowSpace() - Input::getMousePosition()) < 0.05f;
+	return mustShowAltOrigin() && glm::length(m_activLayer->m_transform.getAltOriginInWindowSpace() - Input::getMousePosition()) < ALT_ORIGIN_RADIUS;
 }
 
 void LayerList::onDoubleLeftClic() {

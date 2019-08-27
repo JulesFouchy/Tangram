@@ -13,6 +13,8 @@
 
 #include "graphics/immediateDrawing.hpp"
 
+#include "constants.hpp"
+
 Transform::Transform() :
 	m_translation(glm::vec2(0.0f)), m_scale(1.0f), m_rotation(0.0f),
 	m_matrix(glm::mat4x4(1.0f)), m_inverseMatrix(glm::mat4x4(1.0f)),
@@ -34,7 +36,8 @@ glm::vec2 Transform::getAltOriginInWindowSpace() {
 
 void Transform::showAltOrigin() {
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat() * DrawingBoard::transform.getMatrix() * getMatrix());
-	ImmediateDrawing::rect(m_altOriginInTransformSpace.x, m_altOriginInTransformSpace.y, 0.05, 0.05);
+	float scale = getScale() * DrawingBoard::transform.getScale();
+	ImmediateDrawing::rect(m_altOriginInTransformSpace.x, m_altOriginInTransformSpace.y, ALT_ORIGIN_RADIUS / scale * 2.0f, ALT_ORIGIN_RADIUS / scale * 2.0f);
 }
 
 void Transform::startDraggingTranslation() {
