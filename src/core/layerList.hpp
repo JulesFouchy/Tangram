@@ -27,6 +27,9 @@ public:
 
 	inline bool isHandlingAnInput() { return m_bIsHandlingAnInput; };
 
+private:
+	bool mustShowAltOrigin();
+	bool mouseIsHoveringAltOrigin();
 public:
 	std::vector<Layer*> layers;
 private:

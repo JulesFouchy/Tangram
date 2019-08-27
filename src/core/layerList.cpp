@@ -35,7 +35,7 @@ void LayerList::showFrames() {
 	*/
 	getActivLayer()->showFrame();
 
-	if (Input::keyIsDown(ALT)) {
+	if (mustShowAltOrigin()) {
 		getActivLayer()->m_transform.showAltOrigin();
 	}
 
@@ -64,14 +64,21 @@ void LayerList::computeHoveredLayerAndMouseRelPos() {
 	}
 }
 
+bool LayerList::mustShowAltOrigin() {
+	return Input::keyIsDown(ALT);
+}
+bool LayerList::mouseIsHoveringAltOrigin() {
+	return mustShowAltOrigin() && glm::length(m_activLayer->m_transform.getAltOriginInWindowSpace() - Input::getMousePosition()) < 0.05f;
+}
+
 void LayerList::onDoubleLeftClic() {
-	if (Input::keyIsDown(ALT) && glm::length(m_activLayer->m_transform.getAltOriginInWindowSpace() - Input::getMousePosition()) < 0.05f) {
+	if (mouseIsHoveringAltOrigin()) {
 		m_activLayer->m_transform.setAltOrigin(glm::vec2(0.0f));
 	}
 }
 
 void LayerList::onLeftClicDown() {
-	if (Input::keyIsDown(ALT) && glm::length(m_activLayer->m_transform.getAltOriginInWindowSpace() - Input::getMousePosition()) < 0.05f) {
+	if (mouseIsHoveringAltOrigin()) {
 		m_activLayer->m_transform.startDraggingAltOrigin();
 	}
 	else if (m_hoveredLayer)
@@ -140,51 +147,57 @@ void LayerList::setCursor() {
 		Cursor::set(usedCursor);
 	}
 	else {
-		switch (m_mousePosRelToHoveredLayer)
-		{
-		case OUTSIDE:
-			usedCursor = nullptr;
-			Cursor::set(Cursor::standard);
-			break;
-		case INSIDE:
-			usedCursor = Cursor::hand;
-			Cursor::set(Cursor::hand);
-			break;
-		case RIGHT:
-			usedCursor = Cursor::leftRight;
-			Cursor::set(Cursor::leftRight);
-			break;
-		case TOP_RIGHT:
-			usedCursor = Cursor::antiDiagonal;
-			Cursor::set(Cursor::antiDiagonal);
-			break;
-		case TOP:
-			usedCursor = Cursor::topBot;
-			Cursor::set(Cursor::topBot);
-			break;
-		case TOP_LEFT:
-			usedCursor = Cursor::diagonal;
-			Cursor::set(Cursor::diagonal);
-			break;
-		case LEFT:
-			usedCursor = Cursor::leftRight;
-			Cursor::set(Cursor::leftRight);
-			break;
-		case BOT_LEFT:
-			usedCursor = Cursor::antiDiagonal;
-			Cursor::set(Cursor::antiDiagonal);
-			break;
-		case BOT:
-			usedCursor = Cursor::topBot;
-			Cursor::set(Cursor::topBot);
-			break;
-		case BOT_RIGHT:
-			usedCursor = Cursor::diagonal;
-			Cursor::set(Cursor::diagonal);
-			break;
-		default:
-			spdlog::error("[LayerList::SetCursor] reached default case");
-			break;
+		if (mouseIsHoveringAltOrigin()) {
+			usedCursor = Cursor::fourDirections;
+			Cursor::set(Cursor::fourDirections);
+		}
+		else {
+			switch (m_mousePosRelToHoveredLayer)
+			{
+			case OUTSIDE:
+				usedCursor = nullptr;
+				Cursor::set(Cursor::standard);
+				break;
+			case INSIDE:
+				usedCursor = Cursor::hand;
+				Cursor::set(Cursor::hand);
+				break;
+			case RIGHT:
+				usedCursor = Cursor::leftRight;
+				Cursor::set(Cursor::leftRight);
+				break;
+			case TOP_RIGHT:
+				usedCursor = Cursor::antiDiagonal;
+				Cursor::set(Cursor::antiDiagonal);
+				break;
+			case TOP:
+				usedCursor = Cursor::topBot;
+				Cursor::set(Cursor::topBot);
+				break;
+			case TOP_LEFT:
+				usedCursor = Cursor::diagonal;
+				Cursor::set(Cursor::diagonal);
+				break;
+			case LEFT:
+				usedCursor = Cursor::leftRight;
+				Cursor::set(Cursor::leftRight);
+				break;
+			case BOT_LEFT:
+				usedCursor = Cursor::antiDiagonal;
+				Cursor::set(Cursor::antiDiagonal);
+				break;
+			case BOT:
+				usedCursor = Cursor::topBot;
+				Cursor::set(Cursor::topBot);
+				break;
+			case BOT_RIGHT:
+				usedCursor = Cursor::diagonal;
+				Cursor::set(Cursor::diagonal);
+				break;
+			default:
+				spdlog::error("[LayerList::SetCursor] reached default case");
+				break;
+			}
 		}
 	}
 }
