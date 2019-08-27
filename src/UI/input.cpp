@@ -37,6 +37,25 @@ bool Input::leftClicIsDown() {
 bool Input::spaceBarIsDown() {
 	return m_spaceBarIsDown;
 }
+bool Input::keyIsDown(Key key) {
+	const Uint8* state = SDL_GetKeyboardState(NULL);
+	switch (key)
+	{
+	case ALT:
+		return state[SDL_SCANCODE_LALT] || state[SDL_SCANCODE_RALT];
+		break;
+	case CTRL:
+		return state[SDL_SCANCODE_LCTRL] || state[SDL_SCANCODE_RCTRL];
+		break;
+	case SHIFT:
+		return state[SDL_SCANCODE_LSHIFT] || state[SDL_SCANCODE_RSHIFT];
+		break;
+	default:
+		spdlog::error("[Input::keyIsDown] reached default case");
+		return false;
+		break;
+	}
+}
 glm::vec2 Input::getMousePosWhenLastLeftClic(){
 	return m_mousePosWhenLastLeftClic;
 }

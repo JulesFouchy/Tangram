@@ -4,6 +4,8 @@
 
 #include "UI/log.hpp"
 
+#include "UI/input.hpp"
+
 LayerList::LayerList()
 	: m_activLayer(nullptr), m_hoveredLayer(nullptr), m_mousePosRelToHoveredLayer(OUTSIDE), m_bIsHandlingAnInput(false), usedCursor(nullptr)
 {
@@ -57,43 +59,55 @@ void LayerList::computeHoveredLayerAndMouseRelPos() {
 void LayerList::onLeftClicDown() {
 	if (m_hoveredLayer)
 	{
+		//set
 		m_activLayer = m_hoveredLayer;
 		m_bIsHandlingAnInput = true;
-		switch (m_mousePosRelToHoveredLayer)
-		{
-		case OUTSIDE:
-			spdlog::error("[LayerList::onLeftClicDown] shoudn't have entered the switch if we're outside any layer");
-			break;
-		case INSIDE:
+		//Drag translation if inside
+		if (m_mousePosRelToHoveredLayer == INSIDE) {
 			m_hoveredLayer->m_transform.startDraggingTranslation();
-			break;
-		case RIGHT:
-			m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(-0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.0f));
-			break;
-		case TOP_RIGHT:
-			m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(-0.5f * m_hoveredLayer->m_transform.getAspectRatio(), -0.5f));
-			break;
-		case TOP:
-			m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(0.0f, -0.5f));
-			break;
-		case TOP_LEFT:
-			m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(0.5f * m_hoveredLayer->m_transform.getAspectRatio(), -0.5f));
-			break;
-		case LEFT:
-			m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.0f));
-			break;
-		case BOT_LEFT:
-			m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.5f));
-			break;
-		case BOT:
-			m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(0.0f, 0.5f));
-			break;
-		case BOT_RIGHT:
-			m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(-0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.5f));
-			break;
-		default:
-			spdlog::error("[LayerList::onLeftClicDown] reached default case");
-			break;
+		}
+		//Scale towards center if ALT down
+		else if(Input::keyIsDown(ALT)) {
+			m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(0.0f, 0.0f));
+		}
+		//Scale towards opposite border
+		else {
+			switch (m_mousePosRelToHoveredLayer)
+			{
+			case OUTSIDE:
+				spdlog::error("[LayerList::onLeftClicDown] shoudn't have entered the switch if we're outside any layer");
+				break;
+			case INSIDE:
+				spdlog::error("[LayerList::onLeftClicDown] shoudn't have entered the switch if we're inside any layer");
+				break;
+			case RIGHT:
+				m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(-0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.0f));
+				break;
+			case TOP_RIGHT:
+				m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(-0.5f * m_hoveredLayer->m_transform.getAspectRatio(), -0.5f));
+				break;
+			case TOP:
+				m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(0.0f, -0.5f));
+				break;
+			case TOP_LEFT:
+				m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(0.5f * m_hoveredLayer->m_transform.getAspectRatio(), -0.5f));
+				break;
+			case LEFT:
+				m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.0f));
+				break;
+			case BOT_LEFT:
+				m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.5f));
+				break;
+			case BOT:
+				m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(0.0f, 0.5f));
+				break;
+			case BOT_RIGHT:
+				m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(-0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.5f));
+				break;
+			default:
+				spdlog::error("[LayerList::onLeftClicDown] reached default case");
+				break;
+			}
 		}
 	}
 }

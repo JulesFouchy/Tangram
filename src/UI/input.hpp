@@ -3,6 +3,13 @@
 #include "glm/glm.hpp"
 
 #include "utilities/timestamp.hpp"
+#include "SDL.h"
+
+enum Key {
+	ALT,
+	CTRL,
+	SHIFT
+};
 
 class Input {
 
@@ -15,6 +22,7 @@ public:
 	static glm::vec2 getMousePosition();
 	static bool leftClicIsDown();
 	static bool spaceBarIsDown();
+	static bool keyIsDown(Key key);
 	static glm::vec2 getMousePosWhenLastLeftClic();
 
 	static void onLeftClicDown();
