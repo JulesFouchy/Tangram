@@ -26,6 +26,10 @@ void DrawingBoard::Initialize(float whRatio)
 }
 
 void DrawingBoard::show() {
+	ImmediateDrawing::setColor(1.0f, 0.0f, 1.0f, 1.0f);
+	ImmediateDrawing::setViewProjMatrix(Display::getProjMat() * glm::scale(transform.getMatrix(),glm::vec3(transform.getAspectRatio(),1.0f,1.0f)));
+	ImmediateDrawing::rect(0.0f, 0.0f, 1.0f, 1.0f);
+
 	renderBuffer->bind();
 	renderBuffer->clear();
 		layers.show();
