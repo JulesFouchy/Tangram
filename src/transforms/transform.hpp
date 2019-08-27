@@ -4,6 +4,8 @@
 
 class Transform {
 public:
+	virtual ~Transform();
+public:
 	const glm::mat4x4& getMatrix();
 	const glm::mat4x4& getInverseMatrix();
 	void setMatrix(glm::mat4x4 matrix);

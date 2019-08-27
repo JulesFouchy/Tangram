@@ -18,7 +18,7 @@ enum MousePositionRelativeToRect {
 class RectTransform : public Transform {
 public:
 	RectTransform(float aspectRatio);
-	~RectTransform();
+	virtual ~RectTransform();
 
 	inline float getAspectRatio() { return m_aspectRatio; };
 	inline const glm::mat4x4& getProjectionMatrix() { return m_projectionMatrix; };

@@ -18,7 +18,7 @@ enum PixelFormat {
 class Texture2D {
 public:
 	void Initialize(int width, int height, int BPP, unsigned char* pixels = nullptr);
-	~Texture2D();
+	virtual ~Texture2D();
 
 	void show(glm::mat4x4 transform, glm::mat4x4 projection, float texCoordMinX = 0.0f, float texCoordMaxX = 1.0f, float texCoordMinY = 0.0f, float texCoordMaxY = 1.0f);
 	void show(glm::mat4x4 transform, float texCoordMinX = 0.0f, float texCoordMaxX = 1.0f, float texCoordMinY = 0.0f, float texCoordMaxY = 1.0f);

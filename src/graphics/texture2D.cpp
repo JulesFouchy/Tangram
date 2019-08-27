@@ -49,6 +49,11 @@ void Texture2D::Initialize(int width, int height, int BPP, unsigned char* pixels
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
+Texture2D::~Texture2D() {
+	if (m_pixels)
+		free(m_pixels);
+}
+
 void Texture2D::computeAndSendVertexBuffer(float texCoordMinX, float texCoordMaxX, float texCoordMinY, float texCoordMaxY) {
 	float minX = Display::getMinY() * m_aspectRatio;
 	float maxX = Display::getMaxY() * m_aspectRatio;

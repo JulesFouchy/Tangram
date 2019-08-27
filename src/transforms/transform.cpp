@@ -21,6 +21,10 @@ Transform::Transform() :
 {
 }
 
+Transform::~Transform() {
+
+}
+
 void Transform::startDraggingTranslation() {
 	if (!bDraggingTranslation) {
 		bDraggingTranslation = true;
