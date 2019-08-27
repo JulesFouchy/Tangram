@@ -28,9 +28,13 @@ void LayerList::show() {
 }
 
 void LayerList::showFrames() {
+	/*
 	for (int k = 0; k < layers.size(); ++k) {
 		layers[k]->showFrame();
 	}
+	*/
+	getActivLayer()->showFrame();
+
 }
 
 void LayerList::addLayer(std::string imgFilePath) {
