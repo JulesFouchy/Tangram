@@ -46,9 +46,9 @@ protected:
 
 	bool bDraggingScale;
 	glm::vec2 m_scaleOriginInDrawingBoardSpace;
-	glm::vec2 m_scaleOriginInScreenSpace;
-	glm::vec2 m_mouseDragInitialPosRelToScaleOriginInScreenSpace;
-	float m_invDistToScaleOriginSqWhenDraggingStartedinScreenSpace;
+	glm::vec2 m_scaleOriginInWindowSpace;
+	glm::vec2 m_mouseDragInitialPosRelToScaleOriginInWindowSpace;
+	float m_invDistToScaleOriginSqWhenDraggingStartedinWindowSpace;
 	float m_scaleWhenDraggingStarted;
 protected:
 	Transform();
