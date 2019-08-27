@@ -128,7 +128,7 @@ int main(int argc, char* argv[])
 		//spdlog::warn("[Begin Frame]");
 
 		DrawingBoard::update();
-		DrawingBoard::layers.update();
+		
 		//spdlog::info("{} {}",(int)DrawingBoard::layers.m_mousePosRelToHoveredLayer, (int)DrawingBoard::layers.m_hoveredLayer);
 
 		// Start the Dear ImGui frame
@@ -190,6 +190,7 @@ int main(int argc, char* argv[])
 		DrawingBoard::show();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+		DrawingBoard::layers.update();
 		//
 		Input::update();
 		// Handle inputs

@@ -1,19 +1,23 @@
 #include "transform.hpp"
 
 #include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtx/norm.hpp"
 
 #include "UI/input.hpp"
 
 #include "core/drawingBoard.hpp"
+#include "utilities/display.hpp"
 
 #include "UI/log.hpp"
+
+#include "graphics/immediateDrawing.hpp"
 
 Transform::Transform() :
 	m_translation(glm::vec2(0.0f)), m_scale(1.0f), m_rotation(0.0f),
 	m_matrix(glm::mat4x4(1.0f)), m_inverseMatrix(glm::mat4x4(1.0f)),
 	bMatrixMustBeRecomputed(false), bInverseMatrixMustBeRecomputed(false),
 	bDraggingTranslation(false), bDraggingScale(false), m_mousePosWhenDraggingStarted(glm::vec2(0.0f)), m_translationWhenDraggingStarted(glm::vec2(0.0f)),
-	m_scaleWhenDraggingStarted(1.0f)
+	m_rectCenterWhenDraggingStarted(glm::vec2(0.0f)), m_mousePosWhenDraggingStartedRelToCenter(glm::vec2(0.0f)), m_invDistToCenterSqWhenDraggingStarted(0.0f), m_scaleWhenDraggingStarted(1.0f)
 {
 }
 
@@ -27,17 +31,20 @@ void Transform::startDraggingTranslation() {
 void Transform::startDraggingScale() {
 	if (!bDraggingScale) {
 		bDraggingScale = true;
-		m_mousePosWhenDraggingStarted = Input::getMousePosition();
+		m_rectCenterWhenDraggingStarted = DrawingBoard::transform.getMatrix() * glm::vec4(m_translation, 0.0f, 1.0f);
+		m_mousePosWhenDraggingStartedRelToCenter = Input::getMousePosition() - m_rectCenterWhenDraggingStarted;
+		m_invDistToCenterSqWhenDraggingStarted = 1.0f / glm::length2(m_mousePosWhenDraggingStartedRelToCenter);
 		m_scaleWhenDraggingStarted = m_scale;
 	}
 }
 void Transform::checkDragging() {
-	glm::vec4 dl = DrawingBoard::transform.getInverseMatrix() * glm::vec4(Input::getMousePosition() - m_mousePosWhenDraggingStarted, 0.0f, 0.0f);
 	if (bDraggingTranslation) {
+		glm::vec4 dl = DrawingBoard::transform.getInverseMatrix() * glm::vec4(Input::getMousePosition() - m_mousePosWhenDraggingStarted, 0.0f, 0.0f);
 		setTranslation(m_translationWhenDraggingStarted + glm::vec2(dl.x, dl.y));
 	}
 	if (bDraggingScale) {
-		setScale(0.5f);
+		glm::vec2 mousePosRelToRectCenter = Input::getMousePosition() - m_rectCenterWhenDraggingStarted;
+		setScale(m_scaleWhenDraggingStarted * glm::dot(mousePosRelToRectCenter, m_mousePosWhenDraggingStartedRelToCenter) * m_invDistToCenterSqWhenDraggingStarted);
 	}
 }
 bool Transform::endDragging() {

@@ -39,9 +39,13 @@ protected:
 	void computeInverseMatrix();
 
 	bool bDraggingTranslation;
-	bool bDraggingScale;
 	glm::vec2 m_mousePosWhenDraggingStarted;
 	glm::vec2 m_translationWhenDraggingStarted;
+
+	bool bDraggingScale;
+	glm::vec2 m_rectCenterWhenDraggingStarted;
+	glm::vec2 m_mousePosWhenDraggingStartedRelToCenter;
+	float m_invDistToCenterSqWhenDraggingStarted;
 	float m_scaleWhenDraggingStarted;
 protected:
 	Transform();
