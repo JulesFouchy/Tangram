@@ -11,10 +11,14 @@ public:
 	void setMatrix(glm::mat4x4 matrix);
 public:
 
+	void showAltOrigin();
+
 	void startDraggingTranslation();
+	void startDraggingAltOrigin();
 	void startDraggingScale(glm::vec2 scaleOriginInTransformSpace = glm::vec2(0.0f,0.0f));
 	void changeDraggingScaleOrigin(glm::vec2 newScaleOriginInTransformSpace);
 	void revertToInitialDraggingScaleOrigin();
+	void changeToAltDraggingScaleOrigin();
 	void checkDragging();
 	bool endDragging();
 
@@ -30,10 +34,15 @@ public:
 	inline float getRotation() { return m_rotation; }
 	void reset();
 
+	inline void setAltOrigin(glm::vec2 newAltOriginInTransformSpace) { m_altOriginInTransformSpace = newAltOriginInTransformSpace; }
+	glm::vec2 getAltOriginInWindowSpace();
+
 private:
 	glm::vec2 m_translation;
 	float m_scale;
 	float m_rotation;
+
+	glm::vec2 m_altOriginInTransformSpace;
 protected:
 	glm::mat4x4 m_matrix;
 	glm::mat4x4 m_inverseMatrix;
@@ -46,6 +55,9 @@ protected:
 	glm::vec2 m_mousePosWhenDraggingStarted;
 	glm::vec2 m_translationWhenDraggingStarted;
 
+	bool bDraggingAltOrigin;
+	glm::vec2 m_altOriginInTransformSpaceWhenDraggingStarted;
+
 	bool bDraggingScale;
 	glm::vec2 m_initialScaleOriginInTransformSpace;
 	glm::vec2 m_scaleOriginInDrawingBoardSpace;
@@ -54,6 +66,7 @@ protected:
 	float m_invDistToScaleOriginSqWhenDraggingStartedinWindowSpace;
 	float m_scaleWhenDraggingStarted;
 	glm::mat4x4 m_matrixWhenDraggingStarted;
+
 protected:
 	Transform();
 };

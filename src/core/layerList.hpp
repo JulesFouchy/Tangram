@@ -20,6 +20,7 @@ public:
 	Layer* getActivLayer();
 	void setActivLayer(int layerIndex);
 
+	void onDoubleLeftClic();
 	void onLeftClicDown();
 	void onLeftClicUp();
 	void setCursor();

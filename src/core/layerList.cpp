@@ -35,6 +35,10 @@ void LayerList::showFrames() {
 	*/
 	getActivLayer()->showFrame();
 
+	if (Input::keyIsDown(ALT)) {
+		getActivLayer()->m_transform.showAltOrigin();
+	}
+
 }
 
 void LayerList::addLayer(std::string imgFilePath) {
@@ -60,10 +64,19 @@ void LayerList::computeHoveredLayerAndMouseRelPos() {
 	}
 }
 
+void LayerList::onDoubleLeftClic() {
+	if (Input::keyIsDown(ALT) && glm::length(m_activLayer->m_transform.getAltOriginInWindowSpace() - Input::getMousePosition()) < 0.05f) {
+		m_activLayer->m_transform.setAltOrigin(glm::vec2(0.0f));
+	}
+}
+
 void LayerList::onLeftClicDown() {
-	if (m_hoveredLayer)
+	if (Input::keyIsDown(ALT) && glm::length(m_activLayer->m_transform.getAltOriginInWindowSpace() - Input::getMousePosition()) < 0.05f) {
+		m_activLayer->m_transform.startDraggingAltOrigin();
+	}
+	else if (m_hoveredLayer)
 	{
-		//set
+		//Change activ layer
 		m_activLayer = m_hoveredLayer;
 		m_bIsHandlingAnInput = true;
 		//Drag translation if inside
@@ -110,7 +123,7 @@ void LayerList::onLeftClicDown() {
 			}
 			//Scale towards center if ALT down
 			if (Input::keyIsDown(ALT)) {
-				m_hoveredLayer->m_transform.changeDraggingScaleOrigin(glm::vec2(0.0f, 0.0f));
+				m_hoveredLayer->m_transform.changeToAltDraggingScaleOrigin();
 			}
 		}
 	}

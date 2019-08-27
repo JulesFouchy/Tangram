@@ -81,7 +81,8 @@ void DrawingBoard::update() {
 
 void DrawingBoard::onDoubleLeftClic() {
 	//Center the point we doucle-clicked on
-	transform.translate(-Input::getMousePosition());
+	//transform.translate(-Input::getMousePosition());
+	layers.onDoubleLeftClic();
 }
 
 void DrawingBoard::onLeftClicDown() {
