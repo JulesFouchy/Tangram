@@ -70,10 +70,6 @@ void LayerList::onLeftClicDown() {
 		if (m_mousePosRelToHoveredLayer == INSIDE) {
 			m_hoveredLayer->m_transform.startDraggingTranslation();
 		}
-		//Scale towards center if ALT down
-		else if(Input::keyIsDown(ALT)) {
-			m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(0.0f, 0.0f));
-		}
 		//Scale towards opposite border
 		else {
 			switch (m_mousePosRelToHoveredLayer)
@@ -111,6 +107,10 @@ void LayerList::onLeftClicDown() {
 			default:
 				spdlog::error("[LayerList::onLeftClicDown] reached default case");
 				break;
+			}
+			//Scale towards center if ALT down
+			if (Input::keyIsDown(ALT)) {
+				m_hoveredLayer->m_transform.changeDraggingScaleOrigin(glm::vec2(0.0f, 0.0f));
 			}
 		}
 	}

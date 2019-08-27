@@ -245,6 +245,9 @@ int main(int argc, char* argv[])
 						Log::separationLine();
 					}
 				}
+				else if (e.key.keysym.scancode == SDL_SCANCODE_LALT && e.key.repeat == 0) {
+					DrawingBoard::layers.getActivLayer()->m_transform.changeDraggingScaleOrigin(glm::vec2(0.0f,0.0f));
+				}
 				else if (e.key.keysym.sym == '0' || e.key.keysym.sym == 1073741922) {
 					DrawingBoard::transform.reset();
 				}
@@ -269,6 +272,9 @@ int main(int argc, char* argv[])
 				Input::onStandardKeyUp(e.key.keysym.sym);
 				if (e.key.keysym.sym == ' ') {
 					DrawingBoard::onSpaceBarUp();
+				}
+				else if (e.key.keysym.scancode == SDL_SCANCODE_LALT && e.key.repeat == 0) {
+					DrawingBoard::layers.getActivLayer()->m_transform.revertToInitialDraggingScaleOrigin();
 				}
 				break;
 

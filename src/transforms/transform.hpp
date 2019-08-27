@@ -12,7 +12,9 @@ public:
 public:
 
 	void startDraggingTranslation();
-	void startDraggingScale(glm::vec2 scaleOriginInTransformlSpace = glm::vec2(0.0f,0.0f));
+	void startDraggingScale(glm::vec2 scaleOriginInTransformSpace = glm::vec2(0.0f,0.0f));
+	void changeDraggingScaleOrigin(glm::vec2 newScaleOriginInTransformSpace);
+	void revertToInitialDraggingScaleOrigin();
 	void checkDragging();
 	bool endDragging();
 
@@ -45,11 +47,13 @@ protected:
 	glm::vec2 m_translationWhenDraggingStarted;
 
 	bool bDraggingScale;
+	glm::vec2 m_initialScaleOriginInTransformSpace;
 	glm::vec2 m_scaleOriginInDrawingBoardSpace;
 	glm::vec2 m_scaleOriginInWindowSpace;
 	glm::vec2 m_mouseDragInitialPosRelToScaleOriginInWindowSpace;
 	float m_invDistToScaleOriginSqWhenDraggingStartedinWindowSpace;
 	float m_scaleWhenDraggingStarted;
+	glm::mat4x4 m_matrixWhenDraggingStarted;
 protected:
 	Transform();
 };
