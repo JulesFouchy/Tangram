@@ -127,10 +127,6 @@ int main(int argc, char* argv[])
 
 		//spdlog::warn("[Begin Frame]");
 
-		DrawingBoard::update();
-		
-		//spdlog::info("{} {}",(int)DrawingBoard::layers.m_mousePosRelToHoveredLayer, (int)DrawingBoard::layers.m_hoveredLayer);
-
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplSDL2_NewFrame(window);
@@ -184,17 +180,18 @@ int main(int argc, char* argv[])
 
 		if (DrawingBoard::layers.getActivLayer()->m_transform.getMouseRelativePosition() == INSIDE)
 			SDL_SetCursor(handCursor);
-
 		DrawingBoard::transform.setRotation(dbRot);
 		DrawingBoard::layers.getActivLayer()->m_transform.setRotation(imRot);
+		DrawingBoard::update();
+		DrawingBoard::layers.update();
 		DrawingBoard::show();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-		DrawingBoard::layers.update();
 		//
 		Input::update();
 		// Handle inputs
 		SDL_Event e;
+
+		ImGuiIO imGuiIO = ImGui::GetIO();
 		while (SDL_PollEvent(&e)) {
 
 			ImGui_ImplSDL2_ProcessEvent(&e);
@@ -207,8 +204,10 @@ int main(int argc, char* argv[])
 			switch (e.type) {
 			case SDL_MOUSEBUTTONUP:
 				if (e.button.button == SDL_BUTTON_LEFT) {
-					Input::onLeftClicUp();
-					DrawingBoard::onLeftClicUp();
+					if (!imGuiIO.WantCaptureMouse) {
+						Input::onLeftClicUp();
+						DrawingBoard::onLeftClicUp();
+					}
 				}
 				else if (e.button.button == SDL_BUTTON_RIGHT){
 				}
@@ -216,8 +215,10 @@ int main(int argc, char* argv[])
 
 			case SDL_MOUSEBUTTONDOWN:
 				if (e.button.button == SDL_BUTTON_LEFT) {
-					Input::onLeftClicDown();
-					DrawingBoard::onLeftClicDown();
+					if (!imGuiIO.WantCaptureMouse) {
+						Input::onLeftClicDown();
+						DrawingBoard::onLeftClicDown();
+					}
 				}
 				else if (e.button.button == SDL_BUTTON_RIGHT) {
 				}
@@ -273,11 +274,14 @@ int main(int argc, char* argv[])
 				break;
 
 			case SDL_MOUSEWHEEL:
-				glm::vec2 mouse = Input::getMousePosition();
-				if (e.motion.x < 0.0f) {
-					DrawingBoard::transform.zoomIn(Input::getMousePosition());
-				} else {
-					DrawingBoard::transform.zoomOut(Input::getMousePosition());
+				if (!imGuiIO.WantCaptureMouse) {
+					glm::vec2 mouse = Input::getMousePosition();
+					if (e.motion.x < 0.0f) {
+						DrawingBoard::transform.zoomIn(Input::getMousePosition());
+					}
+					else {
+						DrawingBoard::transform.zoomOut(Input::getMousePosition());
+					}
 				}
 				break;
 
