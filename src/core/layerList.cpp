@@ -62,7 +62,7 @@ void LayerList::onLeftClicDown() {
 		switch (m_mousePosRelToHoveredLayer)
 		{
 		case OUTSIDE:
-			spdlog::warn("[LayerList::onLeftClicDown] shoudn't have entered the switch if we're outside any layer");
+			spdlog::error("[LayerList::onLeftClicDown] shoudn't have entered the switch if we're outside any layer");
 			break;
 		case INSIDE:
 			m_hoveredLayer->m_transform.startDraggingTranslation();
@@ -92,6 +92,7 @@ void LayerList::onLeftClicDown() {
 			m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(-0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.5f));
 			break;
 		default:
+			spdlog::error("[LayerList::onLeftClicDown] reached default case");
 			break;
 		}
 	}
@@ -151,7 +152,7 @@ void LayerList::setCursor() {
 			Cursor::set(Cursor::diagonal);
 			break;
 		default:
-			spdlog::warn("[LayerList::SetCursor] reached default case");
+			spdlog::error("[LayerList::SetCursor] reached default case");
 			break;
 		}
 	}

@@ -149,7 +149,7 @@ unsigned int Texture2D::bytesPerPixel(PixelFormat format) {
 		return 1;
 		break;
 	default:
-		spdlog::warn("Unknown pixel format : {}", format);
+		spdlog::error("[Texture2D::bytesPerPixel] Unknown pixel format : {}", format);
 		break;
 	}
 }
@@ -169,7 +169,7 @@ GLint Texture2D::GLpixelInternalFormat(PixelFormat format) {
 		return GL_R8;
 		break;
 	default:
-		spdlog::warn("Unknown pixel format {}", format);
+		spdlog::error("[Texture2D::GLpixelInternalFormat] Unknown pixel format {}", format);
 		break;
 	}
 }
@@ -189,7 +189,7 @@ GLenum Texture2D::GLpixelFormat(PixelFormat format) {
 		return GL_R;
 		break;
 	default:
-		spdlog::warn("Unknown pixel format {}", format);
+		spdlog::error("[Texture2D::GLpixelFormat] Unknown pixel format {}", format);
 		break;
 	}
 }
