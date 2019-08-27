@@ -10,6 +10,8 @@
 
 #include "transforms/drawingBoardTransform.hpp"
 
+#include "UI/cursor.hpp"
+
 class DrawingBoard {
 public:
 	static void Initialize(float whRatio);
@@ -27,7 +29,12 @@ public:
 	static void onLeftClicUp();
 	static void onSpaceBarDown();
 	static void onSpaceBarUp();
+	static void setCursor();
 
+private:
+	static bool m_bIsHandlingAnInput;
+	static inline bool isHandlingAnInput() { return m_bIsHandlingAnInput; };
+	static CursorStyle* m_currentCursor;
 public:
 	static DrawingBoardTransform transform;
 private:

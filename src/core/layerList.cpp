@@ -104,7 +104,7 @@ void LayerList::onLeftClicUp() {
 }
 
 void LayerList::setCursor() {
-	if (m_bIsHandlingAnInput && usedCursor) {
+	if (isHandlingAnInput() && usedCursor) {
 		Cursor::set(usedCursor);
 	}
 	else {

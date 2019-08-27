@@ -183,7 +183,7 @@ int main(int argc, char* argv[])
 		DrawingBoard::update();
 		DrawingBoard::show();
 		DrawingBoard::layers.update();
-		DrawingBoard::layers.setCursor();
+		DrawingBoard::setCursor();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		//
 		Input::update();

@@ -11,12 +11,16 @@
 
 #include "stb_image/stb_image_write.h"
 
+bool DrawingBoard::m_bIsHandlingAnInput;
+CursorStyle* DrawingBoard::m_currentCursor;
 DrawingBoardTransform DrawingBoard::transform(1.0f);
 LayerList DrawingBoard::layers;
 FrameBuffer* DrawingBoard::renderBuffer;
 
 void DrawingBoard::Initialize(float whRatio) 
 {
+	m_currentCursor = nullptr;
+	m_bIsHandlingAnInput = false;
 	transform = DrawingBoardTransform(whRatio);
 	renderBuffer = new FrameBuffer(Display::getHeight() * whRatio, Display::getHeight());
 }
@@ -79,6 +83,7 @@ void DrawingBoard::onDoubleLeftClic() {
 void DrawingBoard::onLeftClicDown() {
 	if (Input::spaceBarIsDown() && !layers.isHandlingAnInput()) {
 		transform.startDraggingTranslation();
+		m_bIsHandlingAnInput = true;
 	}
 	else{
 		layers.onLeftClicDown();
@@ -89,14 +94,34 @@ void DrawingBoard::onLeftClicUp() {
 	if (!transform.endDragging()) {
 		layers.onLeftClicUp();
 	}
+	m_bIsHandlingAnInput = false;
+	m_currentCursor = nullptr;
 }
 
 void DrawingBoard::onSpaceBarDown() {
 	if (Input::leftClicIsDown() && !layers.isHandlingAnInput()) {
 		transform.startDraggingTranslation();
+		m_bIsHandlingAnInput = true;
 	}
 }
 
 void DrawingBoard::onSpaceBarUp() {
 	transform.endDragging();
+	m_bIsHandlingAnInput = false;
+	m_currentCursor = nullptr;
+}
+
+void DrawingBoard::setCursor() {
+	if (isHandlingAnInput() && m_currentCursor) {
+		Cursor::set(m_currentCursor);
+	}
+	else {
+		if (Input::spaceBarIsDown()) {
+			Cursor::set(Cursor::fourDirections);
+			m_currentCursor = Cursor::fourDirections;
+		}
+		else {
+			layers.setCursor();
+		}
+	}
 }
