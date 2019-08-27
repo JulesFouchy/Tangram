@@ -12,7 +12,7 @@ public:
 public:
 
 	void startDraggingTranslation();
-	void startDraggingScale(glm::vec2 scaleOriginInRelSpace = glm::vec2(0.0f,-0.5f));
+	void startDraggingScale(glm::vec2 scaleOriginInTransformlSpace = glm::vec2(0.0f,0.0f));
 	void checkDragging();
 	bool endDragging();
 

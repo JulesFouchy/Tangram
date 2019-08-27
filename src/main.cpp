@@ -25,6 +25,7 @@
 #include "utilities/timestamp.hpp"
 
 #include "UI/fileBrowser.hpp"
+#include "UI/cursor.hpp"
 
 #include "core/drawingBoard.hpp"
 
@@ -107,6 +108,8 @@ int main(int argc, char* argv[])
 	float dbRot = 0.0f;
 	float imRot = 0.0f;
 
+	Cursor::Initialize();
+
 	Input::Initialize();
 	Log::Initialize();
 
@@ -118,9 +121,6 @@ int main(int argc, char* argv[])
 
 	ImmediateDrawing::Initialize();
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat());
-
-	SDL_Cursor* handCursor;
-	handCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
 
 	bool bQuit = false;
 	while (!bQuit) {
@@ -178,13 +178,12 @@ int main(int argc, char* argv[])
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		if (DrawingBoard::layers.getActivLayer()->m_transform.getMouseRelativePosition() == INSIDE)
-			SDL_SetCursor(handCursor);
 		DrawingBoard::transform.setRotation(dbRot);
 		DrawingBoard::layers.getActivLayer()->m_transform.setRotation(imRot);
 		DrawingBoard::update();
 		DrawingBoard::show();
 		DrawingBoard::layers.update();
+		DrawingBoard::layers.setCursor();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		//
 		Input::update();
@@ -302,6 +301,7 @@ int main(int argc, char* argv[])
 	}
 
 	// Cleanup
+	Cursor::ShutDown();
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();

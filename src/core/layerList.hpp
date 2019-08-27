@@ -4,6 +4,8 @@
 
 #include <vector>
 
+#include "UI/cursor.hpp"
+
 class LayerList {
 public:
 	LayerList();
@@ -20,6 +22,7 @@ public:
 
 	void onLeftClicDown();
 	void onLeftClicUp();
+	void setCursor();
 
 	inline bool isHandlingAnInput() { return m_bIsHandlingAnInput; };
 
@@ -27,6 +30,7 @@ public:
 	std::vector<Layer*> layers;
 private:
 	bool m_bIsHandlingAnInput;
+	CursorStyle* usedCursor;
 private:
 	void computeHoveredLayerAndMouseRelPos();
 public:
