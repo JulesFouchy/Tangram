@@ -17,6 +17,8 @@ enum PixelFormat {
 
 class Texture2D {
 public:
+	static void Initialize();
+
 	void Initialize(int width, int height, int BPP, unsigned char* pixels = nullptr);
 	virtual ~Texture2D();
 
@@ -28,8 +30,6 @@ public:
 	void save(const std::string& filePath);
 
 	inline float getAspectRatio() { return m_aspectRatio; }
-
-	static void Initialize();
 
 protected:
 	Texture2D();

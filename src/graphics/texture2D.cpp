@@ -49,9 +49,15 @@ void Texture2D::Initialize(int width, int height, int BPP, unsigned char* pixels
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
+void Texture2D::Initialize() {
+	//Shaders must be compiled after openGl was initialized
+	standardShader.compile();
+}
+
 Texture2D::~Texture2D() {
+	glDeleteTextures(1, &m_textureID);
 	if (m_pixels)
-		free(m_pixels);
+		spdlog::warn("pixels of {} not freed !", m_debugName);
 }
 
 void Texture2D::computeAndSendVertexBuffer(float texCoordMinX, float texCoordMaxX, float texCoordMinY, float texCoordMaxY) {
@@ -80,17 +86,6 @@ void Texture2D::computeAndSendVertexBuffer(float texCoordMinX, float texCoordMax
 	lastTexCoordMaxX = texCoordMaxX;
 	lastTexCoordMinY = texCoordMinY;
 	lastTexCoordMaxY = texCoordMaxY;
-}
-
-void Texture2D::Initialize() {
-	//Shaders must be compiled after openGl was initialized
-	standardShader.compile();
-}
-
-Texture2D::~Texture2D() {
-	glDeleteTextures(1, &m_textureID);
-	if (m_pixels)
-		spdlog::warn("pixels of {} not freed !", m_debugName);
 }
 
 void Texture2D::show(glm::mat4x4 transform, glm::mat4x4 projection, float texCoordMinX, float texCoordMaxX, float texCoordMinY, float texCoordMaxY) {
