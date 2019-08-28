@@ -30,6 +30,7 @@ public:
 private:
 	bool mustShowAltOrigin();
 	bool mouseIsHoveringAltOrigin();
+	bool canDragRotation();
 public:
 	std::vector<Layer*> layers;
 private:

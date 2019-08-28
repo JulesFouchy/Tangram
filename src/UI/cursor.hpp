@@ -18,6 +18,7 @@ public:
 	static CursorStyle* topBot;
 	static CursorStyle* diagonal;
 	static CursorStyle* fourDirections;
+	static CursorStyle* wait;
 private:
 	Cursor() = default;
 	~Cursor() = default;

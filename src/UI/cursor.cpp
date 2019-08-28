@@ -7,6 +7,7 @@ CursorStyle* Cursor::antiDiagonal;
 CursorStyle* Cursor::topBot;
 CursorStyle* Cursor::diagonal;
 CursorStyle* Cursor::fourDirections;
+CursorStyle* Cursor::wait;
 
 void Cursor::Initialize() {
 	standard =			SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
@@ -16,6 +17,7 @@ void Cursor::Initialize() {
 	topBot =			SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENS);
 	diagonal =			SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENWSE);
 	fourDirections =	SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZEALL);
+	wait =				SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_WAIT);
 }
 
 void Cursor::ShutDown() {
@@ -26,6 +28,7 @@ void Cursor::ShutDown() {
 	SDL_FreeCursor(topBot);
 	SDL_FreeCursor(diagonal);
 	SDL_FreeCursor(fourDirections);
+	SDL_FreeCursor(wait);
 }
 
 void Cursor::set(CursorStyle* cursorPtr) {

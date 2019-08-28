@@ -291,10 +291,10 @@ int main(int argc, char* argv[])
 					}
 					else {
 						if (e.motion.x < 0.0f) {
-							DrawingBoard::layers.getActivLayer()->m_transform.scale(0.8f);
+							DrawingBoard::layers.getActivLayer()->m_transform.scale(0.8f, DrawingBoard::layers.getActivLayer()->m_transform.getAltOriginInDrawingBoardSpace());
 						}
 						else {
-							DrawingBoard::layers.getActivLayer()->m_transform.scale(1.0f/0.8f);
+							DrawingBoard::layers.getActivLayer()->m_transform.scale(1.0f/0.8f, DrawingBoard::layers.getActivLayer()->m_transform.getAltOriginInDrawingBoardSpace());
 						}
 					}
 				}

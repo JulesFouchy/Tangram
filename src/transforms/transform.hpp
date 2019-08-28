@@ -41,6 +41,9 @@ public:
 	glm::vec2 getAltOriginInDrawingBoardSpace();
 	inline glm::vec2 getAltOriginInTransformSpace() { return m_altOriginInTransformSpace; }
 
+	inline bool isDraggingScale() { return bDraggingScale; }
+	inline bool isDraggingRotation() { return bDraggingRotation; }
+
 private:
 	glm::vec2 m_translation;
 	float m_scale;

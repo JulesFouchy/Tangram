@@ -67,10 +67,14 @@ void LayerList::computeHoveredLayerAndMouseRelPos() {
 }
 
 bool LayerList::mustShowAltOrigin() {
-	return Input::keyIsDown(ALT);
+	return Input::keyIsDown(ALT) || getActivLayer()->m_transform.isDraggingRotation();
 }
 bool LayerList::mouseIsHoveringAltOrigin() {
 	return mustShowAltOrigin() && glm::length(m_activLayer->m_transform.getAltOriginInWindowSpace() - Input::getMousePosition()) < ALT_ORIGIN_RADIUS;
+}
+bool LayerList::canDragRotation() {
+	float distToAltCenter = glm::length(m_activLayer->m_transform.getAltOriginInWindowSpace() - Input::getMousePosition());
+	return mustShowAltOrigin() && START_ROTATING_MIN_RADIUS < distToAltCenter && distToAltCenter < START_ROTATING_MAX_RADIUS;
 }
 
 void LayerList::onDoubleLeftClic() {
@@ -82,6 +86,9 @@ void LayerList::onDoubleLeftClic() {
 void LayerList::onLeftClicDown() {
 	if (mouseIsHoveringAltOrigin()) {
 		m_activLayer->m_transform.startDraggingAltOrigin();
+	}
+	else if (canDragRotation()) {
+		m_activLayer->m_transform.startDraggingRotation();
 	}
 	else if (m_hoveredLayer)
 	{
@@ -102,9 +109,7 @@ void LayerList::onLeftClicDown() {
 			case INSIDE:
 				spdlog::error("[LayerList::onLeftClicDown] shoudn't have entered the switch if we're inside any layer");
 				break;
-			default :
-				m_hoveredLayer->m_transform.startDraggingRotation();
-			/*case RIGHT:
+			case RIGHT:
 				m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(-0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.0f));
 				break;
 			case TOP_RIGHT:
@@ -130,7 +135,7 @@ void LayerList::onLeftClicDown() {
 				break;
 			default:
 				spdlog::error("[LayerList::onLeftClicDown] reached default case");
-				break;*/
+				break;
 			}
 			//Scale towards center if ALT down
 			if (Input::keyIsDown(ALT)) {
@@ -154,6 +159,10 @@ void LayerList::setCursor() {
 		if (mouseIsHoveringAltOrigin()) {
 			usedCursor = Cursor::fourDirections;
 			Cursor::set(Cursor::fourDirections);
+		}
+		else if (canDragRotation()) {
+			usedCursor = Cursor::wait;
+			Cursor::set(Cursor::wait);
 		}
 		else {
 			switch (m_mousePosRelToHoveredLayer)
