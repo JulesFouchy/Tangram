@@ -1,3 +1,3 @@
 #pragma once
 
-const float ALT_ORIGIN_RADIUS = 0.005f;
+const float ALT_ORIGIN_RADIUS = 0.008f;

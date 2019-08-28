@@ -102,7 +102,9 @@ void LayerList::onLeftClicDown() {
 			case INSIDE:
 				spdlog::error("[LayerList::onLeftClicDown] shoudn't have entered the switch if we're inside any layer");
 				break;
-			case RIGHT:
+			default :
+				m_hoveredLayer->m_transform.startDraggingRotation();
+			/*case RIGHT:
 				m_hoveredLayer->m_transform.startDraggingScale(glm::vec2(-0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.0f));
 				break;
 			case TOP_RIGHT:
@@ -128,7 +130,7 @@ void LayerList::onLeftClicDown() {
 				break;
 			default:
 				spdlog::error("[LayerList::onLeftClicDown] reached default case");
-				break;
+				break;*/
 			}
 			//Scale towards center if ALT down
 			if (Input::keyIsDown(ALT)) {

@@ -173,13 +173,14 @@ int main(int argc, char* argv[])
 		}
 
 		// Rendering
+		//Log::log(DrawingBoard::layers.getActivLayer()->m_transform.getAltOriginInDrawingBoardSpace());
 		ImGui::Render();
 		glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		DrawingBoard::transform.setRotation(dbRot);
-		DrawingBoard::layers.getActivLayer()->m_transform.setRotation(imRot);
+		DrawingBoard::layers.getActivLayer()->m_transform.rotate(imRot, DrawingBoard::layers.getActivLayer()->m_transform.getAltOriginInDrawingBoardSpace());
 		DrawingBoard::update();
 		DrawingBoard::show();
 		DrawingBoard::layers.update();
@@ -280,12 +281,21 @@ int main(int argc, char* argv[])
 
 			case SDL_MOUSEWHEEL:
 				if (!imGuiIO.WantCaptureMouse) {
-					glm::vec2 mouse = Input::getMousePosition();
-					if (e.motion.x < 0.0f) {
-						DrawingBoard::transform.zoomIn(Input::getMousePosition());
+					if (!Input::keyIsDown(ALT)) {
+						if (e.motion.x < 0.0f) {
+							DrawingBoard::transform.zoomIn(Input::getMousePosition());
+						}
+						else {
+							DrawingBoard::transform.zoomOut(Input::getMousePosition());
+						}
 					}
 					else {
-						DrawingBoard::transform.zoomOut(Input::getMousePosition());
+						if (e.motion.x < 0.0f) {
+							DrawingBoard::layers.getActivLayer()->m_transform.scale(0.8f);
+						}
+						else {
+							DrawingBoard::layers.getActivLayer()->m_transform.scale(1.0f/0.8f);
+						}
 					}
 				}
 				break;
