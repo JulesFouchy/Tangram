@@ -35,7 +35,7 @@ public:
 	std::vector<Layer*> layers;
 private:
 	bool m_bIsHandlingAnInput;
-	CursorStyle* usedCursor;
+	CursorType* usedCursor;
 private:
 	void computeHoveredLayerAndMouseRelPos();
 public:

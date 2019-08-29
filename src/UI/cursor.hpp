@@ -2,23 +2,28 @@
 
 #include "SDL.h"
 
-typedef SDL_Cursor CursorStyle;
+#include <string>
+
+typedef SDL_Cursor CursorType;
 
 class Cursor {
 public:
 	static void Initialize();
 	static void ShutDown();
 
-	static void set(CursorStyle* cursorPtr);
+	static void set(CursorType* cursorPtr);
 public:
-	static CursorStyle* standard;
-	static CursorStyle* hand;
-	static CursorStyle* leftRight;
-	static CursorStyle* antiDiagonal;
-	static CursorStyle* topBot;
-	static CursorStyle* diagonal;
-	static CursorStyle* fourDirections;
-	static CursorStyle* wait;
+	static CursorType* standard;
+	static CursorType* hand;
+	static CursorType* leftRight;
+	static CursorType* antiDiagonal;
+	static CursorType* topBot;
+	static CursorType* diagonal;
+	static CursorType* fourDirections;
+	static CursorType* wait;
+	static CursorType* rotate;
+private:
+	static CursorType* createCustomCursor(std::string imagePath);
 private:
 	Cursor() = default;
 	~Cursor() = default;

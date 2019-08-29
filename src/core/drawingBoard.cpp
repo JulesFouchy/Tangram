@@ -12,7 +12,7 @@
 #include "stb_image/stb_image_write.h"
 
 bool DrawingBoard::m_bIsHandlingAnInput;
-CursorStyle* DrawingBoard::m_currentCursor;
+CursorType* DrawingBoard::m_currentCursor;
 DrawingBoardTransform DrawingBoard::transform(1.0f);
 LayerList DrawingBoard::layers;
 FrameBuffer* DrawingBoard::renderBuffer;

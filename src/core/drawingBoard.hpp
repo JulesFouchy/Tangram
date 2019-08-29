@@ -34,7 +34,7 @@ public:
 private:
 	static bool m_bIsHandlingAnInput;
 	static inline bool isHandlingAnInput() { return m_bIsHandlingAnInput; };
-	static CursorStyle* m_currentCursor;
+	static CursorType* m_currentCursor;
 public:
 	static DrawingBoardTransform transform;
 private:

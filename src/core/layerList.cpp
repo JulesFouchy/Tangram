@@ -166,8 +166,8 @@ void LayerList::setCursor() {
 			Cursor::set(Cursor::fourDirections);
 		}
 		else if (canDragRotation()) {
-			usedCursor = Cursor::wait;
-			Cursor::set(Cursor::wait);
+			usedCursor = Cursor::rotate;
+			Cursor::set(Cursor::rotate);
 		}
 		else {
 			switch (m_mousePosRelToHoveredLayer)
