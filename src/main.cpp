@@ -184,7 +184,6 @@ int main(int argc, char* argv[])
 		DrawingBoard::update();
 		DrawingBoard::show();
 		DrawingBoard::layers.update();
-		DrawingBoard::setCursor();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		//
 		Input::update();
@@ -192,6 +191,9 @@ int main(int argc, char* argv[])
 		SDL_Event e;
 
 		ImGuiIO imGuiIO = ImGui::GetIO();
+		if (!imGuiIO.WantCaptureMouse) {
+			DrawingBoard::setCursor();
+		}
 		while (SDL_PollEvent(&e)) {
 
 			ImGui_ImplSDL2_ProcessEvent(&e);
