@@ -22,6 +22,8 @@ public:
 
 	static void addLayer(const std::string imgFilePath);
 
+	inline static LayerList& getLayerList() { return layers; };
+
 	static void update();
 
 	static void onDoubleLeftClic();

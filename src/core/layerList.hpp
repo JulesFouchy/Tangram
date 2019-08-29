@@ -17,6 +17,7 @@ public:
 	void showFrames();
 
 	void addLayer(std::string imgFilePath);
+	Layer* getLayer(int index);
 	Layer* getActivLayer();
 	void setActivLayer(int layerIndex);
 

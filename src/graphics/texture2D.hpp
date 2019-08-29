@@ -31,6 +31,8 @@ public:
 
 	inline float getAspectRatio() { return m_aspectRatio; }
 
+	inline unsigned int getID() { return m_textureID; }
+
 protected:
 	Texture2D();
 	friend class FrameBuffer;

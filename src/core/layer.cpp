@@ -10,7 +10,7 @@
 #include "graphics/immediateDrawing.hpp"
 
 Layer::Layer(std::string imgFilePath, std::string layerName)
-	:	m_image(imgFilePath), m_name(layerName), m_transform(m_image.getAspectRatio())
+	: m_bVisible(true), m_image(imgFilePath), m_name(layerName), m_transform(m_image.getAspectRatio())
 {
 }
 

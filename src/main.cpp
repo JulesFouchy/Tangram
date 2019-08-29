@@ -26,6 +26,7 @@
 
 #include "UI/fileBrowser.hpp"
 #include "UI/cursor.hpp"
+#include "UI/layerListUI.hpp"
 
 #include "core/drawingBoard.hpp"
 
@@ -102,7 +103,7 @@ int main(int argc, char* argv[])
 	//IM_ASSERT(font != NULL);
 
 	// Our state
-	bool show_demo_window = false;
+	bool show_demo_window = true;
 	bool show_another_window = false;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 	float dbRot = 0.0f;
@@ -118,6 +119,7 @@ int main(int argc, char* argv[])
 	DrawingBoard::transform.setScale(0.9f);
 
 	DrawingBoard::addLayer("res/img/test3.jpg");
+	DrawingBoard::addLayer("res/img/test2.png");
 
 	ImmediateDrawing::Initialize();
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat());
@@ -131,6 +133,8 @@ int main(int argc, char* argv[])
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplSDL2_NewFrame(window);
 		ImGui::NewFrame();
+
+		UI::showLayerList();
 
 		// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 		if (show_demo_window)

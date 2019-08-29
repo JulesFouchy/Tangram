@@ -28,7 +28,8 @@ void LayerList::update() {
 
 void LayerList::show() {
 	for (int k = 0; k < layers.size(); ++k) {
-		layers[k]->show();
+		if(layers[k]->isVisible())
+			layers[k]->show();
 	}
 }
 
@@ -38,19 +39,24 @@ void LayerList::showFrames() {
 		layers[k]->showFrame();
 	}
 	*/
-	getActivLayer()->showFrame();
+	if (getActivLayer()->isVisible()) {
+		getActivLayer()->showFrame();
 
-	if (mustShowAltOrigin()) {
-		getActivLayer()->m_transform.showAltOrigin();
+		if (mustShowAltOrigin()) {
+			getActivLayer()->m_transform.showAltOrigin();
+		}
 	}
 
 }
 
 void LayerList::addLayer(std::string imgFilePath) {
-	layers.push_back(new Layer(imgFilePath));
+	layers.push_back(new Layer(imgFilePath, imgFilePath));
 	setActivLayer(layers.size() - 1);
 }
 
+Layer* LayerList::getLayer(int index) {
+	return layers[index];
+}
 Layer* LayerList::getActivLayer() {
 	return m_activLayer;
 }
@@ -61,10 +67,12 @@ void LayerList::setActivLayer(int layerIndex) {
 void LayerList::computeHoveredLayerAndMouseRelPos() {
 	m_hoveredLayer = nullptr;
 	for (int k = layers.size()-1; k >= 0; --k) {
-		m_mousePosRelToHoveredLayer = layers[k]->m_transform.getMouseRelativePosition();
-		if (m_mousePosRelToHoveredLayer != OUTSIDE) {
-			m_hoveredLayer = layers[k];
-			break;
+		if (layers[k]->isVisible()) {
+			m_mousePosRelToHoveredLayer = layers[k]->m_transform.getMouseRelativePosition();
+			if (m_mousePosRelToHoveredLayer != OUTSIDE) {
+				m_hoveredLayer = layers[k];
+				break;
+			}
 		}
 	}
 }

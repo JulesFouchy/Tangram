@@ -16,6 +16,16 @@ public:
 	void show();
 	void showFrame();
 
+	inline const std::string& getName() { return m_name; }
+
+	inline bool isVisible() { return m_bVisible; }
+	inline void setVisibility(bool visible) { m_bVisible = visible; }
+	inline bool* getIsVisiblePointer() { return &m_bVisible; }
+
+	inline Texture2D& getTexture() { return m_image; }
+
+private:
+	bool m_bVisible;
 private:
 	LoadedImage m_image;
 	std::string m_name;
