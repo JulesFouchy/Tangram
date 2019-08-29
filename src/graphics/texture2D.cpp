@@ -114,8 +114,6 @@ void Texture2D::show(glm::mat4x4 transform, glm::mat4x4 projection, float texCoo
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (const void*)(2 * sizeof(float)));
 	//IBO
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_quadIBOid);
-	//Blend mode
-	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//Draw call
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }

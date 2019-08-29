@@ -6,6 +6,7 @@
 #include "UI/log.hpp"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
 #include "constants.hpp"
 
@@ -109,6 +110,11 @@ int main(int argc, char* argv[])
 	float dbRot = 0.0f;
 	float imRot = 0.0f;
 
+	glEnable(GL_BLEND);
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA ,GL_ONE); // a.k.a. newAlpha = srcAlpha + dstAlpha - srcAlpha*dstAlpha
+																							   // a.k.a. the amount of light that each layer let's through are multiplied together
+																							   // a.k.a. stacking partially transparent layers slowly gives us a less and less transparent image
+
 	Cursor::Initialize();
 
 	Input::Initialize();
@@ -154,7 +160,8 @@ int main(int argc, char* argv[])
 			ImGui::SliderFloat("dbRot", &dbRot, 0.0f, 6.28f);
 			ImGui::SliderFloat("imRot", &imRot, 0.0f, 6.28f); 
 			//ImGui::SliderFloat("ALT_ORIGIN_RADIUS", &ALT_ORIGIN_RADIUS, 0.0f, 0.1f);
-			ImGui::ColorEdit3("clear color", (float*)& clear_color); // Edit 3 floats representing a color
+			//ImGui::ColorEdit3("clear color", (float*)& clear_color); // Edit 3 floats representing a color
+			ImGui::ColorEdit4("drawing board", glm::value_ptr(DrawingBoard::backgroundColor));
 
 			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
 				counter++;

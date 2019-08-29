@@ -33,6 +33,9 @@ public:
 	static void onSpaceBarUp();
 	static void setCursor();
 
+public:
+	static glm::vec4 backgroundColor;
+
 private:
 	static bool m_bIsHandlingAnInput;
 	static inline bool isHandlingAnInput() { return m_bIsHandlingAnInput; };

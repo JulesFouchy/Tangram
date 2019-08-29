@@ -75,7 +75,6 @@ void ImmediateDrawing::rect(float x, float y, float w, float h){
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (const void*)(2 * sizeof(float)));
 	//IBO
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_fullQuadIBOid);
-	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }
 
@@ -104,6 +103,5 @@ void ImmediateDrawing::ring(float x, float y, float innerR, float outerR) {
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (const void*)(2 * sizeof(float)));
 	//IBO
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_fullQuadIBOid);
-	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }

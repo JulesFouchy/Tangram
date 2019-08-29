@@ -11,6 +11,10 @@
 
 #include "stb_image/stb_image_write.h"
 
+#include "GL/glew.h"
+
+glm::vec4 DrawingBoard::backgroundColor;
+
 bool DrawingBoard::m_bIsHandlingAnInput;
 CursorType* DrawingBoard::m_currentCursor;
 DrawingBoardTransform DrawingBoard::transform(1.0f);
@@ -23,10 +27,11 @@ void DrawingBoard::Initialize(float whRatio)
 	m_bIsHandlingAnInput = false;
 	transform = DrawingBoardTransform(whRatio);
 	renderBuffer = new FrameBuffer(Display::getHeight() * whRatio, Display::getHeight());
+	backgroundColor = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
 }
 
 void DrawingBoard::show() {
-	ImmediateDrawing::setColor(1.0f, 0.0f, 1.0f, 1.0f);
+	ImmediateDrawing::setColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat() * glm::scale(transform.getMatrix(),glm::vec3(transform.getAspectRatio(),1.0f,1.0f)));
 	ImmediateDrawing::rect(0.0f, 0.0f, 1.0f, 1.0f);
 
