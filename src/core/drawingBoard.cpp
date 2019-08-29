@@ -14,6 +14,7 @@
 #include "GL/glew.h"
 
 glm::vec4 DrawingBoard::backgroundColor;
+glm::vec4 DrawingBoard::outsideColor;
 
 bool DrawingBoard::m_bIsHandlingAnInput;
 CursorType* DrawingBoard::m_currentCursor;
@@ -28,6 +29,7 @@ void DrawingBoard::Initialize(float whRatio)
 	transform = DrawingBoardTransform(whRatio);
 	renderBuffer = new FrameBuffer(Display::getHeight() * whRatio, Display::getHeight());
 	backgroundColor = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
+	outsideColor = glm::vec4(0.45f, 0.55f, 0.6f, 1.0f);
 }
 
 void DrawingBoard::show() {
@@ -35,11 +37,21 @@ void DrawingBoard::show() {
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat() * glm::scale(transform.getMatrix(),glm::vec3(transform.getAspectRatio(),1.0f,1.0f)));
 	ImmediateDrawing::rect(0.0f, 0.0f, 1.0f, 1.0f);
 
-	renderBuffer->bind();
+	/*renderBuffer->bind();
 	renderBuffer->clear();
-		layers.show();
+		layers.showInDrawingBoardSpace();
 	renderBuffer->unbind();
-	renderBuffer->m_texture.show(transform.getMatrix());
+	renderBuffer->m_texture.show(transform.getMatrix());*/
+
+	layers.show(transform.getMatrix(), Display::getProjMat());
+
+	ImmediateDrawing::setColor(outsideColor);
+	ImmediateDrawing::windowMinusARectangle(
+		(transform.getTranslation() + glm::vec2(0.5f * Display::getRatio(), 0.5f)) * Display::getHeight(),
+		transform.getScale() * transform.getAspectRatio() * Display::getHeight(),
+		transform.getScale() * Display::getHeight(),
+		transform.getRotation()
+	);
 
 	layers.showFrames();
 
@@ -47,7 +59,7 @@ void DrawingBoard::show() {
 }
 
 void DrawingBoard::showForSaving() {
-	layers.show();
+	layers.showInDrawingBoardSpace();
 }
 
 void DrawingBoard::showFrame() {

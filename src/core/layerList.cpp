@@ -26,10 +26,17 @@ void LayerList::update() {
 		m_activLayer->m_transform.checkDragging();
 }
 
-void LayerList::show() {
+void LayerList::show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix) {
+	for (int k = 0; k < layers.size(); ++k) {
+		if (layers[k]->isVisible())
+			layers[k]->show(viewMatrix, projMatrix);
+	}
+}
+
+void LayerList::showInDrawingBoardSpace() {
 	for (int k = 0; k < layers.size(); ++k) {
 		if(layers[k]->isVisible())
-			layers[k]->show();
+			layers[k]->showInDrawingBoardSpace();
 	}
 }
 

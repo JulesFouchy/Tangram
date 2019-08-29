@@ -18,7 +18,11 @@ Layer::~Layer() {
 
 }
 
-void Layer::show() {
+void Layer::show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix) {
+	m_image.show(viewMatrix * m_transform.getMatrix(), projMatrix);
+}
+
+void Layer::showInDrawingBoardSpace() {
 	m_image.show(m_transform.getMatrix(), DrawingBoard::transform.getProjectionMatrix());
 }
 

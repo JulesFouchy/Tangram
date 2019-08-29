@@ -13,7 +13,8 @@ public:
 	Layer(std::string imgFilePath, std::string layerName = "New layer");
 	~Layer();
 
-	void show();
+	void show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix);
+	void showInDrawingBoardSpace();
 	void showFrame();
 
 	inline const std::string& getName() { return m_name; }

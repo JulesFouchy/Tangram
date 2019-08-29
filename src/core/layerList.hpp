@@ -13,7 +13,8 @@ public:
 
 	void update();
 
-	void show();
+	void show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix);
+	void showInDrawingBoardSpace();
 	void showFrames();
 
 	void addLayer(std::string imgFilePath);

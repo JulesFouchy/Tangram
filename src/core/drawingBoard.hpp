@@ -35,6 +35,7 @@ public:
 
 public:
 	static glm::vec4 backgroundColor;
+	static glm::vec4 outsideColor;
 
 private:
 	static bool m_bIsHandlingAnInput;
