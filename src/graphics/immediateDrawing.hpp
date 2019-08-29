@@ -17,10 +17,13 @@ public:
 	static void rect(float x, float y, float w, float h);
 	static void rectOutline(float x, float y, float w, float h, float thickness);
 
+	static void ring(float x, float y, float innerR, float outerR);
+
 private:
 	static unsigned int m_fullQuadVBid;
 	static unsigned int m_fullQuadIBOid;
 	static glm::mat4x4 m_viewProjMatrix;
 	static glm::vec4 m_color;
 	static Shader m_flatColorShader;
+	static Shader m_ringShader;
 };

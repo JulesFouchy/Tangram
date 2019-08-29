@@ -42,7 +42,12 @@ glm::vec2 Transform::getAltOriginInDrawingBoardSpace() {
 void Transform::showAltOrigin() {
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat() * DrawingBoard::transform.getMatrix() * getMatrix());
 	float scale = getScale() * DrawingBoard::transform.getScale();
-	ImmediateDrawing::rect(m_altOriginInTransformSpace.x, m_altOriginInTransformSpace.y, ALT_ORIGIN_RADIUS / scale * 2.0f, ALT_ORIGIN_RADIUS / scale * 2.0f);
+	ImmediateDrawing::setColor(0.0f, 0.0f, 0.0f, 0.5f);
+	ImmediateDrawing::ring(m_altOriginInTransformSpace.x, m_altOriginInTransformSpace.y, 0.0f, ALT_ORIGIN_RADIUS / scale);
+	ImmediateDrawing::setColor(1.0f, 1.0f, 1.0f, 0.5f);
+	ImmediateDrawing::ring(m_altOriginInTransformSpace.x, m_altOriginInTransformSpace.y, ALT_ORIGIN_RADIUS / scale, (ALT_ORIGIN_RADIUS*1.5f) / scale);
+	ImmediateDrawing::setColor(0.8f, 0.8f, 0.8f, 0.5f);
+	ImmediateDrawing::ring(m_altOriginInTransformSpace.x, m_altOriginInTransformSpace.y, START_ROTATING_MIN_RADIUS / scale, START_ROTATING_MAX_RADIUS / scale);
 }
 
 void Transform::startDraggingTranslation() {

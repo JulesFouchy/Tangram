@@ -8,6 +8,9 @@
 
 #include "constants.hpp"
 
+#include "utilities/display.hpp"
+#include "graphics/immediateDrawing.hpp"
+
 LayerList::LayerList()
 	: m_activLayer(nullptr), m_hoveredLayer(nullptr), m_mousePosRelToHoveredLayer(OUTSIDE), m_bIsHandlingAnInput(false), usedCursor(nullptr)
 {
@@ -86,9 +89,11 @@ void LayerList::onDoubleLeftClic() {
 void LayerList::onLeftClicDown() {
 	if (mouseIsHoveringAltOrigin()) {
 		m_activLayer->m_transform.startDraggingAltOrigin();
+		m_bIsHandlingAnInput = true;
 	}
 	else if (canDragRotation()) {
 		m_activLayer->m_transform.startDraggingRotation();
+		m_bIsHandlingAnInput = true;
 	}
 	else if (m_hoveredLayer)
 	{
