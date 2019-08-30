@@ -7,6 +7,8 @@
 #include "utilities/display.hpp"
 #include "utilities/maths.hpp"
 
+#include "UI/log.hpp"
+
 #include "graphics/immediateDrawing.hpp"
 
 Layer::Layer(std::string imgFilePath, std::string layerName)
@@ -15,7 +17,7 @@ Layer::Layer(std::string imgFilePath, std::string layerName)
 }
 
 Layer::~Layer() {
-
+	spdlog::warn("[Destructed Layer] {}", getName());
 }
 
 void Layer::show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix) {

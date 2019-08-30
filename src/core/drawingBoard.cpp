@@ -53,9 +53,13 @@ void DrawingBoard::show() {
 		transform.getRotation()
 	);
 
-	layers.showFrames();
+	layers.selectedLayers.showFrames();
 
 	showFrame();
+
+	if (layers.mustShowAltOrigin()) {
+		layers.selectedLayers.showAltOrigin();
+	}
 }
 
 void DrawingBoard::showForSaving() {
@@ -120,17 +124,59 @@ void DrawingBoard::onLeftClicUp() {
 	m_currentCursor = nullptr;
 }
 
-void DrawingBoard::onSpaceBarDown() {
-	if (Input::leftClicIsDown() && !layers.isHandlingAnInput()) {
-		transform.startDraggingTranslation();
-		m_bIsHandlingAnInput = true;
+void DrawingBoard::onScroll(float motion) {
+	if (!Input::keyIsDown(ALT)) {
+		if (motion < 0.0f) {
+			DrawingBoard::transform.zoomIn(Input::getMousePosition());
+		}
+		else {
+			DrawingBoard::transform.zoomOut(Input::getMousePosition());
+		}
+	}
+	else {
+		if (motion < 0.0f) {
+			layers.selectedLayers.m_transform.scale(0.8f, layers.selectedLayers.m_transform.getAltOriginInDrawingBoardSpace());
+		}
+		else {
+			layers.selectedLayers.m_transform.scale(1.0f / 0.8f, layers.selectedLayers.m_transform.getAltOriginInDrawingBoardSpace());
+		}
 	}
 }
 
-void DrawingBoard::onSpaceBarUp() {
-	transform.endDragging();
-	m_bIsHandlingAnInput = false;
-	m_currentCursor = nullptr;
+void DrawingBoard::onKeyDown(Key key) {
+	switch (key) {
+	case SPACE :
+		if (Input::leftClicIsDown() && !layers.isHandlingAnInput()) {
+			transform.startDraggingTranslation();
+			m_bIsHandlingAnInput = true;
+		}
+		break;
+	case ALT:
+		layers.selectedLayers.m_transform.changeToAltDraggingScaleOrigin();
+		break;
+	default:
+		break;
+	}
+}
+
+void DrawingBoard::onKeyUp(Key key) {
+	switch (key)
+	{
+	case ALT:
+		layers.selectedLayers.m_transform.revertToInitialDraggingScaleOrigin();
+		break;
+	case CTRL:
+		break;
+	case SHIFT:
+		break;
+	case SPACE:
+		transform.endDragging();
+		m_bIsHandlingAnInput = false;
+		m_currentCursor = nullptr;
+		break;
+	default:
+		break;
+	}
 }
 
 void DrawingBoard::setCursor() {

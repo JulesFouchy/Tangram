@@ -12,6 +12,8 @@
 
 #include "UI/cursor.hpp"
 
+#include "UI/keys.hpp"
+
 class DrawingBoard {
 public:
 	static void Initialize(float whRatio);
@@ -29,8 +31,9 @@ public:
 	static void onDoubleLeftClic();
 	static void onLeftClicDown();
 	static void onLeftClicUp();
-	static void onSpaceBarDown();
-	static void onSpaceBarUp();
+	static void onScroll(float motion);
+	static void onKeyDown(Key key);
+	static void onKeyUp(Key key);
 	static void setCursor();
 
 public:

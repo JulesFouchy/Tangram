@@ -2,6 +2,8 @@
 
 #include "layer.hpp"
 
+#include "groupOfLayers.hpp"
+
 #include <vector>
 
 #include "UI/cursor.hpp"
@@ -15,11 +17,9 @@ public:
 
 	void show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix);
 	void showInDrawingBoardSpace();
-	void showFrames();
 
 	void addLayer(std::string imgFilePath);
 	Layer* getLayer(int index);
-	Layer* getActivLayer();
 	void setActivLayer(int layerIndex);
 
 	void onDoubleLeftClic();
@@ -27,21 +27,22 @@ public:
 	void onLeftClicUp();
 	void setCursor();
 
-	inline bool isHandlingAnInput() { return m_bIsHandlingAnInput; };
+	bool mustShowAltOrigin();
+
+	inline bool isHandlingAnInput() { return selectedLayers.m_transform.isBusy(); };
 
 private:
-	bool mustShowAltOrigin();
 	bool mouseIsHoveringAltOrigin();
 	bool canDragRotation();
 public:
 	std::vector<Layer*> layers;
+	GroupOfLayers selectedLayers;
 private:
-	bool m_bIsHandlingAnInput;
 	CursorType* usedCursor;
 private:
 	void computeHoveredLayerAndMouseRelPos();
 public:
-	Layer* m_activLayer;
+	//Layer* m_activLayer;
 	Layer* m_hoveredLayer;
 	MousePositionRelativeToRect m_mousePosRelToHoveredLayer;
 };

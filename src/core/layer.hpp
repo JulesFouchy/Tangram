@@ -7,6 +7,7 @@
 
 class Layer {
 friend class LayerList;
+friend class GroupOfLayers;
 friend class DrawingBoard;
 
 public:

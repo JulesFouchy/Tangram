@@ -4,12 +4,7 @@
 
 #include "utilities/timestamp.hpp"
 #include "SDL.h"
-
-enum Key {
-	ALT,
-	CTRL,
-	SHIFT
-};
+#include "keys.hpp"
 
 class Input {
 

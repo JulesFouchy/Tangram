@@ -28,6 +28,7 @@
 #include "UI/fileBrowser.hpp"
 #include "UI/cursor.hpp"
 #include "UI/layerListUI.hpp"
+#include "UI/mainMenuBar.hpp"
 
 #include "core/drawingBoard.hpp"
 
@@ -141,6 +142,8 @@ int main(int argc, char* argv[])
 		ImGui::NewFrame();
 
 		UI::showLayerList();
+		UI::showSelectedLayers();
+		UI::showMainMenuBar();
 
 		// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 		if (show_demo_window)
@@ -191,7 +194,7 @@ int main(int argc, char* argv[])
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		DrawingBoard::transform.setRotation(dbRot);
-		DrawingBoard::layers.getActivLayer()->m_transform.rotate(imRot, DrawingBoard::layers.getActivLayer()->m_transform.getAltOriginInDrawingBoardSpace());
+		//DrawingBoard::layers.getActivLayer()->m_transform.rotate(imRot, DrawingBoard::layers.getActivLayer()->m_transform.getAltOriginInDrawingBoardSpace());
 		DrawingBoard::update();
 		DrawingBoard::show();
 		DrawingBoard::layers.update();
@@ -260,13 +263,13 @@ int main(int argc, char* argv[])
 					}
 				}
 				else if (e.key.keysym.scancode == SDL_SCANCODE_LALT && e.key.repeat == 0) {
-					DrawingBoard::layers.getActivLayer()->m_transform.changeToAltDraggingScaleOrigin();
+					DrawingBoard::onKeyDown(ALT);
 				}
 				else if (e.key.keysym.sym == '0' || e.key.keysym.sym == 1073741922) {
 					DrawingBoard::transform.reset();
 				}
 				else if (e.key.keysym.sym == ' ') {
-					DrawingBoard::onSpaceBarDown();
+					DrawingBoard::onKeyDown(SPACE);
 				}
 				else if (e.key.keysym.scancode == SDL_SCANCODE_UP) {
 					;
@@ -285,31 +288,16 @@ int main(int argc, char* argv[])
 			case SDL_KEYUP:
 				Input::onStandardKeyUp(e.key.keysym.sym);
 				if (e.key.keysym.sym == ' ') {
-					DrawingBoard::onSpaceBarUp();
+					DrawingBoard::onKeyUp(SPACE);
 				}
 				else if (e.key.keysym.scancode == SDL_SCANCODE_LALT && e.key.repeat == 0) {
-					DrawingBoard::layers.getActivLayer()->m_transform.revertToInitialDraggingScaleOrigin();
+					DrawingBoard::onKeyUp(ALT);
 				}
 				break;
 
 			case SDL_MOUSEWHEEL:
 				if (!imGuiIO.WantCaptureMouse) {
-					if (!Input::keyIsDown(ALT)) {
-						if (e.motion.x < 0.0f) {
-							DrawingBoard::transform.zoomIn(Input::getMousePosition());
-						}
-						else {
-							DrawingBoard::transform.zoomOut(Input::getMousePosition());
-						}
-					}
-					else {
-						if (e.motion.x < 0.0f) {
-							DrawingBoard::layers.getActivLayer()->m_transform.scale(0.8f, DrawingBoard::layers.getActivLayer()->m_transform.getAltOriginInDrawingBoardSpace());
-						}
-						else {
-							DrawingBoard::layers.getActivLayer()->m_transform.scale(1.0f/0.8f, DrawingBoard::layers.getActivLayer()->m_transform.getAltOriginInDrawingBoardSpace());
-						}
-					}
+					DrawingBoard::onScroll(e.motion.x);
 				}
 				break;
 
