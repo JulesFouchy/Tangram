@@ -20,7 +20,7 @@ public:
 
 	void addLayer(std::string imgFilePath);
 	Layer* getLayer(int index);
-	void setActivLayer(int layerIndex);
+	void setSelectedLayer(Layer* layer);
 
 	void onDoubleLeftClic();
 	void onLeftClicDown();

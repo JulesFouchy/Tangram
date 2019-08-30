@@ -58,8 +58,9 @@ void LayerList::showInDrawingBoardSpace() {
 }*/
 
 void LayerList::addLayer(std::string imgFilePath) {
-	layers.push_back(new Layer(imgFilePath, imgFilePath));
-	setActivLayer(layers.size() - 1);
+	Layer* layer = new Layer(imgFilePath, imgFilePath);
+	layers.push_back(layer);
+	setSelectedLayer(layer);
 }
 
 Layer* LayerList::getLayer(int index) {
@@ -68,9 +69,9 @@ Layer* LayerList::getLayer(int index) {
 /*Layer* LayerList::getActivLayer() {
 	return selectedLayers.;
 }*/
-void LayerList::setActivLayer(int layerIndex) {
+void LayerList::setSelectedLayer(Layer* layer) {
 	selectedLayers.removeAllLayers();
-	selectedLayers.addLayer(layers[layerIndex]);
+	selectedLayers.addLayer(layer);
 }
 
 void LayerList::computeHoveredLayerAndMouseRelPos() {
@@ -126,8 +127,7 @@ void LayerList::onLeftClicDown() {
 		}
 		else {
 			if (!selectedLayers.contains(m_hoveredLayer)) {
-				selectedLayers.removeAllLayers();
-				selectedLayers.addLayer(m_hoveredLayer);
+				setSelectedLayer(m_hoveredLayer);
 			}
 		}
 		switch (m_mousePosRelToHoveredLayer)
