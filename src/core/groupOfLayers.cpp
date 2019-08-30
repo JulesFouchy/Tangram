@@ -48,16 +48,58 @@ void GroupOfLayers::showFrames() {
 	}
 }
 
-void GroupOfLayers::getActualAltOriginInDBspace() {
-
-}
-
 void GroupOfLayers::showAltOrigin() {
 	if (m_layers.size() == 1) {
 		m_layers[0]->m_transform.showAltOrigin();
 	}
 	else if (m_layers.size() > 1) {
 		m_transform.showAltOrigin();
+	}
+	else {
+		spdlog::warn("[Group of Layers] showAltOrigin was called but there is actually no layer in the group !");
+	}
+}
+
+glm::vec2 GroupOfLayers::getAltOriginInWindowSpace() {
+	if (m_layers.size() == 1) {
+		return m_layers[0]->m_transform.getAltOriginInWindowSpace();
+	}
+	else if (m_layers.size() > 1) {
+		return m_transform.getAltOriginInWindowSpace();
+	}
+	else {
+		spdlog::warn("[Group of Layers] getAltOrigin was called but there is actually no layer in the group !");
+		return glm::vec2(0.0f);
+	}
+}
+
+void GroupOfLayers::startDraggingAltOrigin() {
+	if (m_layers.size() == 1) {
+		m_layers[0]->m_transform.startDraggingAltOrigin();
+	}
+	else if (m_layers.size() > 1) {
+		m_transform.startDraggingAltOrigin();
+	}
+	else {
+		spdlog::warn("[Group of Layers] startDraggingAltOrigin was called but there is actually no layer in the group !");
+	}
+}
+
+void GroupOfLayers::resetAltOrigin() {
+	if (m_layers.size() == 1) {
+		m_layers[0]->m_transform.setAltOrigin(glm::vec2(0.0f));
+	}
+	else if (m_layers.size() > 1) {
+		m_transform.reset();
+		//Set in the middle of all layers
+		glm::vec2 newOriginInDBspace = glm::vec2(0.0f);
+		for (Layer* layer : m_layers)
+			newOriginInDBspace = glm::vec4(newOriginInDBspace,0.0f, 0.0f) + layer->m_transform.getMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+		newOriginInDBspace /= m_layers.size();
+		m_transform.setAltOrigin(glm::vec4(newOriginInDBspace, 0.0f, 1.0f)); //no need to convert back to transform space bc m_transform.getMatrix() == identity
+	}
+	else {
+		spdlog::warn("[Group of Layers] resetAltOrigin was called but there is actually no layer in the group !");
 	}
 }
 
@@ -75,6 +117,21 @@ void GroupOfLayers::startDraggingScale(glm::vec2 originInDBspace) {
 	}
 }
 
+void GroupOfLayers::startDraggingRotation() {
+	if (m_layers.size() == 1) {
+		m_layers[0]->m_transform.startDraggingRotation();
+	}
+	else if (m_layers.size() > 1) {
+		m_transform.startDraggingRotation();
+		for (int k = 0; k < m_layers.size(); ++k) {
+			m_layers[k]->m_transform.startDraggingRotation(m_transform.getAltOriginInDrawingBoardSpace());
+		}
+	}
+	else {
+		spdlog::warn("[Group of Layers] startDraggingRotation was called but there is actually no layer in the group !");
+	}
+}
+
 void GroupOfLayers::checkDragging() {
 	m_transform.checkDragging();
 	for (int k = 0; k < m_layers.size(); ++k) {
@@ -86,5 +143,42 @@ void GroupOfLayers::endDragging() {
 	m_transform.endDragging();
 	for (int k = 0; k < m_layers.size(); ++k) {
 		m_layers[k]->m_transform.endDragging();
+	}
+}
+
+void GroupOfLayers::changeDraggingScaleToAltOrigin() {
+	if (m_layers.size() == 1) {
+		m_layers[0]->m_transform.changeDraggingScaleToAltOrigin();
+	}
+	else if (m_layers.size() > 1) {
+		m_transform.changeDraggingScaleToAltOrigin();
+		for (int k = 0; k < m_layers.size(); ++k) {
+			m_layers[k]->m_transform.changeDraggingScaleOrigin(m_layers[k]->m_transform.getInverseMatrix() * glm::vec4(m_transform.getAltOriginInDrawingBoardSpace(), 0.0f, 1.0f));
+		}
+	}
+	else {
+		spdlog::warn("[Group of Layers] changeDraggingScaleToAltOrigin was called but there is actually no layer in the group !");
+	}
+}
+
+void GroupOfLayers::revertDraggingScaleToInitialOrigin() {
+	m_transform.revertDraggingScaleToInitialOrigin();
+	for (int k = 0; k < m_layers.size(); ++k) {
+		m_layers[k]->m_transform.revertDraggingScaleToInitialOrigin();
+	}
+}
+
+void GroupOfLayers::scale(float scaleFactor) {
+	if (m_layers.size() == 1) {
+		m_layers[0]->m_transform.scale(scaleFactor, m_layers[0]->m_transform.getAltOriginInDrawingBoardSpace());
+	}
+	else if (m_layers.size() > 1) {
+		m_transform.scale(scaleFactor, m_transform.getAltOriginInDrawingBoardSpace());
+		for (int k = 0; k < m_layers.size(); ++k) {
+			m_layers[k]->m_transform.scale(scaleFactor, glm::vec4(m_transform.getAltOriginInDrawingBoardSpace(), 0.0f, 1.0f));
+		}
+	}
+	else {
+		spdlog::warn("[Group of Layers] scale was called but there is actually no layer in the group !");
 	}
 }

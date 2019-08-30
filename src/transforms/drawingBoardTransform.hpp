@@ -12,7 +12,4 @@ public:
 	void zoomOut(glm::vec2 origin);
 
 	void checkDraggingTranslation();
-
-private:
-	float m_zoomInFactor;
 };

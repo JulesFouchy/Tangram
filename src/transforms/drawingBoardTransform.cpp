@@ -4,22 +4,24 @@
 
 #include "UI/log.hpp"
 
+#include "constants.hpp"
+
 DrawingBoardTransform::DrawingBoardTransform(float aspectRatio)
-	: RectTransform(aspectRatio), m_zoomInFactor(0.8f)
+	: RectTransform(aspectRatio)
 {
 }
 
 void DrawingBoardTransform::zoomIn() {
-	scale(m_zoomInFactor);
+	scale(ZOOM_FACTOR);
 }
 void DrawingBoardTransform::zoomIn(glm::vec2 origin) {
-	scale(m_zoomInFactor, origin);
+	scale(ZOOM_FACTOR, origin);
 }
 void DrawingBoardTransform::zoomOut() {
-	scale(1.0f / m_zoomInFactor);
+	scale(1.0f / ZOOM_FACTOR);
 }
 void DrawingBoardTransform::zoomOut(glm::vec2 origin) {
-	scale(1.0f / m_zoomInFactor, origin);
+	scale(1.0f / ZOOM_FACTOR, origin);
 }
 
 void DrawingBoardTransform::checkDraggingTranslation(){

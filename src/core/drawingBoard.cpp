@@ -134,12 +134,7 @@ void DrawingBoard::onScroll(float motion) {
 		}
 	}
 	else {
-		if (motion < 0.0f) {
-			layers.selectedLayers.m_transform.scale(0.8f, layers.selectedLayers.m_transform.getAltOriginInDrawingBoardSpace());
-		}
-		else {
-			layers.selectedLayers.m_transform.scale(1.0f / 0.8f, layers.selectedLayers.m_transform.getAltOriginInDrawingBoardSpace());
-		}
+		layers.onScroll(motion);
 	}
 }
 
@@ -152,7 +147,7 @@ void DrawingBoard::onKeyDown(Key key) {
 		}
 		break;
 	case ALT:
-		layers.selectedLayers.m_transform.changeToAltDraggingScaleOrigin();
+		layers.selectedLayers.changeDraggingScaleToAltOrigin();
 		break;
 	default:
 		break;
@@ -163,7 +158,7 @@ void DrawingBoard::onKeyUp(Key key) {
 	switch (key)
 	{
 	case ALT:
-		layers.selectedLayers.m_transform.revertToInitialDraggingScaleOrigin();
+		layers.selectedLayers.revertDraggingScaleToInitialOrigin();
 		break;
 	case CTRL:
 		break;

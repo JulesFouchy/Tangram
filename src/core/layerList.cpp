@@ -87,28 +87,33 @@ void LayerList::computeHoveredLayerAndMouseRelPos() {
 }
 
 bool LayerList::mustShowAltOrigin() {
-	return Input::keyIsDown(ALT);//|| getActivLayer()->m_transform.isDraggingRotation();
+	return Input::keyIsDown(ALT) && !selectedLayers.isEmpty();//|| getActivLayer()->m_transform.isDraggingRotation();
 }
 bool LayerList::mouseIsHoveringAltOrigin() {
-	return false;//mustShowAltOrigin() && glm::length(m_activLayer->m_transform.getAltOriginInWindowSpace() - Input::getMousePosition()) < ALT_ORIGIN_RADIUS;
+	return mustShowAltOrigin() && glm::length(selectedLayers.getAltOriginInWindowSpace() - Input::getMousePosition()) < ALT_ORIGIN_RADIUS;
 }
 bool LayerList::canDragRotation() {
-	//float distToAltCenter = glm::length(m_activLayer->m_transform.getAltOriginInWindowSpace() - Input::getMousePosition());
-	return false;// mustShowAltOrigin() && START_ROTATING_MIN_RADIUS < distToAltCenter&& distToAltCenter < START_ROTATING_MAX_RADIUS;
+	if (mustShowAltOrigin()) {
+		float distToAltOrigin = glm::length(selectedLayers.getAltOriginInWindowSpace() - Input::getMousePosition());
+		return START_ROTATING_MIN_RADIUS < distToAltOrigin && distToAltOrigin < START_ROTATING_MAX_RADIUS;
+	}
+	else {
+		return false;
+	}
 }
 
 void LayerList::onDoubleLeftClic() {
 	if (mouseIsHoveringAltOrigin()) {
-		//m_activLayer->m_transform.setAltOrigin(glm::vec2(0.0f));
+		selectedLayers.resetAltOrigin();
 	}
 }
 
 void LayerList::onLeftClicDown() {
 	if (mouseIsHoveringAltOrigin()) {
-		//m_activLayer->m_transform.startDraggingAltOrigin();
+		selectedLayers.startDraggingAltOrigin();
 	}
 	else if (canDragRotation()) {
-		//m_activLayer->m_transform.startDraggingRotation();
+		selectedLayers.startDraggingRotation();
 	}
 	else if (m_hoveredLayer)
 	{
@@ -165,7 +170,7 @@ void LayerList::onLeftClicDown() {
 		}
 		//Scale towards center if ALT down
 		if (Input::keyIsDown(ALT)) {
-			m_hoveredLayer->m_transform.changeToAltDraggingScaleOrigin();
+			selectedLayers.changeDraggingScaleToAltOrigin();
 		}
 	}
 	else {
@@ -176,6 +181,15 @@ void LayerList::onLeftClicDown() {
 void LayerList::onLeftClicUp() {
 	selectedLayers.endDragging();
 	usedCursor = nullptr;
+}
+
+void LayerList::onScroll(float motion) {
+	if (motion < 0.0f) {
+		selectedLayers.scale(ZOOM_FACTOR);
+	}
+	else {
+		selectedLayers.scale(1.0f / ZOOM_FACTOR);
+	}
 }
 
 void LayerList::setCursor() {

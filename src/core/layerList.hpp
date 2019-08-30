@@ -25,6 +25,7 @@ public:
 	void onDoubleLeftClic();
 	void onLeftClicDown();
 	void onLeftClicUp();
+	void onScroll(float motion);
 	void setCursor();
 
 	bool mustShowAltOrigin();

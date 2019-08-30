@@ -17,8 +17,9 @@ public:
 	void startDraggingAltOrigin();
 	void startDraggingScale(glm::vec2 scaleOriginInTransformSpace = glm::vec2(0.0f,0.0f));
 	void changeDraggingScaleOrigin(glm::vec2 newScaleOriginInTransformSpace);
-	void revertToInitialDraggingScaleOrigin();
-	void changeToAltDraggingScaleOrigin();
+	void revertDraggingScaleToInitialOrigin();
+	void changeDraggingScaleToAltOrigin();
+	void startDraggingRotation(glm::vec2 rotationOriginInDBspace);
 	void startDraggingRotation();
 	void checkDragging();
 	bool endDragging();
@@ -28,7 +29,7 @@ public:
 	inline glm::vec2 getTranslation() { return m_translation; }
 	void setScale(float scale);
 	void scale(float scale);
-	void scale(float scale, glm::vec2 origin);
+	void scale(float scale, glm::vec2 originInDBspace);
 	inline float getScale() { return m_scale; };
 	void setRotation(float rotation);
 	void rotate(float rotation);
@@ -78,6 +79,8 @@ protected:
 
 	bool bDraggingRotation;
 	float m_rotationWhenDraggingStarted;
+	glm::vec2 m_rotationOriginInDBspace;
+	glm::vec2 m_rotationOriginInWindowSpace;
 
 protected:
 	Transform();

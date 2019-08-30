@@ -2,5 +2,4 @@
 
 namespace UI {
 	void showLayerList();
-	void showSelectedLayers();
 }
