@@ -27,6 +27,8 @@ public:
 
 	void showFrames();
 
+	bool isBusy();
+
 	void showAltOrigin();
 	glm::vec2 getAltOriginInWindowSpace();
 	void startDraggingAltOrigin();

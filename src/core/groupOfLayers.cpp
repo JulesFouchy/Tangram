@@ -67,6 +67,14 @@ void GroupOfLayers::showFrames() {
 	}
 }
 
+bool GroupOfLayers::isBusy() {
+	bool busy = m_transform.isBusy();
+	for (int k = 0; k < m_layers.size(); ++k) {
+		busy |= m_layers[k]->m_transform.isBusy();
+	}
+	return busy;
+}
+
 void GroupOfLayers::showAltOrigin() {
 	if (m_layers.size() == 1) {
 		m_layers[0]->m_transform.showAltOrigin();
