@@ -21,7 +21,6 @@ public:
 	virtual ~RectTransform();
 
 	const glm::mat4x4& getProjectionMatrix();
-	glm::vec2 getAltOriginInWindowSpace() override;
 
 	inline float getAspectRatio() { return m_aspectRatio; };
 	void setAspectRatio(float newAspectRatio);

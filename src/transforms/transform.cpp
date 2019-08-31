@@ -36,7 +36,7 @@ glm::vec2 Transform::getAltOriginInWindowSpace() {
 	return DrawingBoard::transform.getMatrix() * getMatrix() * glm::vec4(getAltOriginInTransformSpace(), 0.0f, 1.0f);
 }
 glm::vec2 Transform::getAltOriginInDrawingBoardSpace() {
-	return getMatrix() * glm::vec4(m_altOriginInTransformSpace, 0.0f, 1.0f);
+	return getMatrix() * glm::vec4(getAltOriginInTransformSpace(), 0.0f, 1.0f);
 }
 
 void Transform::showAltOrigin() {
@@ -48,12 +48,13 @@ void Transform::showAltOrigin() {
 	//setScale(defaultScale);
 	//DrawingBoard::transform.setScale(dbScale);
 	float scale = getScale()* DrawingBoard::transform.getScale();
+	glm::vec2 altOrig = getAltOriginInTransformSpace();
 	ImmediateDrawing::setColor(0.0f, 0.0f, 0.0f, 0.5f);
-	ImmediateDrawing::ring(m_altOriginInTransformSpace.x, m_altOriginInTransformSpace.y, 0.0f, Settings::ALT_ORIGIN_RADIUS / scale);
+	ImmediateDrawing::ring(altOrig.x, altOrig.y, 0.0f, Settings::ALT_ORIGIN_RADIUS / scale);
 	ImmediateDrawing::setColor(1.0f, 1.0f, 1.0f, 0.5f);
-	ImmediateDrawing::ring(m_altOriginInTransformSpace.x, m_altOriginInTransformSpace.y, Settings::ALT_ORIGIN_RADIUS / scale, (Settings::ALT_ORIGIN_RADIUS*1.5f) / scale);
+	ImmediateDrawing::ring(altOrig.x, altOrig.y, Settings::ALT_ORIGIN_RADIUS / scale, (Settings::ALT_ORIGIN_RADIUS*1.5f) / scale);
 	ImmediateDrawing::setColor(0.8f, 0.8f, 0.8f, 0.5f);
-	ImmediateDrawing::ring(m_altOriginInTransformSpace.x, m_altOriginInTransformSpace.y, Settings::START_ROTATING_MIN_RADIUS / scale, Settings::START_ROTATING_MAX_RADIUS / scale);
+	ImmediateDrawing::ring(altOrig.x, altOrig.y, Settings::START_ROTATING_MIN_RADIUS / scale, Settings::START_ROTATING_MAX_RADIUS / scale);
 }
 
 void Transform::startDraggingTranslation() {
@@ -67,7 +68,7 @@ void Transform::startDraggingAltOrigin() {
 	if (!bDraggingAltOrigin) {
 		bDraggingAltOrigin = true;
 		m_mousePosWhenDraggingStarted = Input::getMousePosition();
-		m_altOriginInTransformSpaceWhenDraggingStarted = m_altOriginInTransformSpace;
+		m_altOriginInTransformSpaceWhenDraggingStarted = getAltOriginInTransformSpace();
 	}
 }
 void Transform::startDraggingScale(glm::vec2 scaleOriginInTransformSpace) {
@@ -111,7 +112,7 @@ void Transform::revertDraggingScaleToInitialOrigin() {
 	changeDraggingScaleOrigin(m_initialDragCenterInTransformSpace);
 }
 void Transform::changeDraggingScaleToAltOrigin() {
-	changeDraggingScaleOrigin(m_altOriginInTransformSpace);
+	changeDraggingScaleOrigin(getAltOriginInTransformSpace());
 }
 void Transform::checkDragging() {
 	if (bDraggingTranslation) {

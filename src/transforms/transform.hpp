@@ -2,6 +2,8 @@
 
 #include "glm/glm.hpp"
 
+#include "UI/log.hpp"
+
 class Transform {
 public:
 	virtual ~Transform();
@@ -38,7 +40,7 @@ public:
 	void reset();
 
 	inline void setAltOrigin(glm::vec2 newAltOriginInTransformSpace) { m_altOriginInTransformSpace = newAltOriginInTransformSpace; }
-	virtual glm::vec2 getAltOriginInWindowSpace();
+	glm::vec2 getAltOriginInWindowSpace();
 	glm::vec2 getAltOriginInDrawingBoardSpace();
 	inline glm::vec2 getAltOriginInTransformSpace() { return m_altOriginInTransformSpace; }
 

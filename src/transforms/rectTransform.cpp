@@ -29,11 +29,8 @@ const glm::mat4x4& RectTransform::getProjectionMatrix() {
 	return m_projectionMatrix;
 }
 
-glm::vec2 RectTransform::getAltOriginInWindowSpace() {
-	return DrawingBoard::transform.getMatrix() * getMatrix() * glm::vec4(getAltOriginInTransformSpace(), 0.0f, 1.0f);
-}
-
 void RectTransform::setAspectRatio(float newAspectRatio) {
+	setAltOrigin(glm::vec2(getAltOriginInTransformSpace().x / m_aspectRatio * newAspectRatio, getAltOriginInTransformSpace().y));
 	m_aspectRatio = newAspectRatio;
 	bMustRecomputeProjMat = true;
 }
@@ -62,6 +59,7 @@ void RectTransform::startDraggingAspectRatioV(glm::vec2 dragCenterInTransformSpa
 
 
 void RectTransform::checkDragging() {
+	Log::log(getAltOriginInTransformSpace());
 	Transform::checkDragging();
 	float newAspectRatio = m_aspectRatioWhenDraggingStarted;
 	float newScale = m_scaleWhenDraggingStarted;
