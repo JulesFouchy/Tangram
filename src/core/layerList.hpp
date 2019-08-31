@@ -36,7 +36,7 @@ private:
 	bool mouseIsHoveringAltOrigin();
 	bool canDragRotation();
 public:
-	std::vector<Layer*> layers;
+	GroupOfLayers layers;
 	GroupOfLayers selectedLayers;
 private:
 	CursorType* usedCursor;

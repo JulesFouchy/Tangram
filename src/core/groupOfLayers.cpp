@@ -12,6 +12,10 @@ GroupOfLayers::~GroupOfLayers() {
 
 }
 
+Layer* GroupOfLayers::operator[](int k) {
+	return m_layers[k];
+}
+
 void GroupOfLayers::addLayer(Layer* layer) {
 	//Check for doublons
 	for (Layer* otherLayer : m_layers) {
@@ -24,14 +28,29 @@ void GroupOfLayers::addLayer(Layer* layer) {
 	m_layers.push_back(layer);
 }
 
-void GroupOfLayers::removeLayer(Layer* layer) {
-	for (int k = 0; k < m_layers.size(); ++k) {
-		if (m_layers[k] == layer) {
-			m_layers.erase(m_layers.begin() + k);
-			return;
-		}
+void GroupOfLayers::reorderLayer(Layer* layer, int newIndex) {
+	int layerIndex = getIndex(layer);
+	if (layerIndex >= 0) {
+		m_layers.insert(m_layers.begin() + newIndex, layer);
+		removeLayer(layerIndex < newIndex ? layerIndex : layerIndex + 1);
 	}
-	spdlog::warn("[Group of Layers] asked to remove a layer that wasn't in it : {}", layer->getName());
+	else {
+		spdlog::warn("[Group of Layers] trying to reorder a layer that isn't in the group : {}", layer->getName());
+	}
+}
+
+void GroupOfLayers::removeLayer(Layer* layer) {
+	int index = getIndex(layer);
+	if (index >= 0) {
+		removeLayer(index);
+	}
+	else {
+		spdlog::warn("[Group of Layers] asked to remove a layer that wasn't there : {}", layer->getName());
+	}
+}
+
+void GroupOfLayers::removeLayer(int layerIndex) {
+	m_layers.erase(m_layers.begin() + layerIndex);
 }
 
 void GroupOfLayers::removeAllLayers() {
@@ -181,4 +200,12 @@ void GroupOfLayers::scale(float scaleFactor) {
 	else {
 		spdlog::warn("[Group of Layers] scale was called but there is actually no layer in the group !");
 	}
+}
+
+int GroupOfLayers::getIndex(Layer* layer) {
+	for (int k = 0; k < m_layers.size(); ++k) {
+		if (m_layers[k] == layer)
+			return k;
+	}
+	return -1;
 }

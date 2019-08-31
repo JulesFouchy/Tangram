@@ -13,8 +13,13 @@ public:
 	GroupOfLayers();
 	~GroupOfLayers();
 
+	inline int size() { return m_layers.size();	}
+	Layer* operator[](int k);
+
 	void addLayer(Layer* layer);
+	void reorderLayer(Layer* layer, int newIndex);
 	void removeLayer(Layer* layer);
+	void removeLayer(int layerIndex);
 	void removeAllLayers();
 
 	bool contains(Layer* layer);
@@ -37,6 +42,8 @@ public:
 
 	void scale(float scaleFactor);
 
+private:
+	int getIndex(Layer* layer);
 private:
 	std::vector<Layer*> m_layers;
 	GroupTransform m_transform;

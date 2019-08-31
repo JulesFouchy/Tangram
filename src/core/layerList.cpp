@@ -59,7 +59,7 @@ void LayerList::showInDrawingBoardSpace() {
 
 void LayerList::addLayer(std::string imgFilePath) {
 	Layer* layer = new Layer(imgFilePath, imgFilePath);
-	layers.push_back(layer);
+	layers.addLayer(layer);
 	setSelectedLayer(layer);
 }
 
