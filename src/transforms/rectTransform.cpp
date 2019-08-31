@@ -36,13 +36,14 @@ void RectTransform::startDraggingAspectRatio() {
 	bDraggingAspectRatio = true;
 	m_aspectRatioWhenDraggingStarted = m_aspectRatio;
 	m_mousePosWhenDraggingStarted = Input::getMousePosition();
+	m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * getMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 void RectTransform::checkDragging() {
 	Transform::checkDragging();
 	if (bDraggingAspectRatio) {
-		float dx = Input::getMousePosition().x - m_mousePosWhenDraggingStarted.x;
-		setAspectRatio(m_aspectRatioWhenDraggingStarted + dx);
+		float dx = (Input::getMousePosition().x - m_dragCenterInWindowSpace.x) /( m_mousePosWhenDraggingStarted.x - m_dragCenterInWindowSpace.x);
+		setAspectRatio(m_aspectRatioWhenDraggingStarted * dx);
 	}
 }
 

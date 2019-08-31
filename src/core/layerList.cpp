@@ -154,22 +154,22 @@ void LayerList::onLeftClicDown() {
 				originInTransformSpace = glm::vec2(-0.5f * m_hoveredLayer->m_transform.getAspectRatio(), -0.5f);
 				break;
 			case TOP:
-				selectedLayers.startDraggingScale(m_hoveredLayer->m_transform.getMatrix() * glm::vec4(0.0f * m_hoveredLayer->m_transform.getAspectRatio(), -0.5f, 0.0f, 1.0f));
+				originInTransformSpace = glm::vec2(0.0f, -0.5f);
 				break;
 			case TOP_LEFT:
-				selectedLayers.startDraggingScale(m_hoveredLayer->m_transform.getMatrix() * glm::vec4(0.5f * m_hoveredLayer->m_transform.getAspectRatio(), -0.5f, 0.0f, 1.0f));
+				originInTransformSpace = glm::vec2(0.5f * m_hoveredLayer->m_transform.getAspectRatio(), -0.5f);
 				break;
 			case LEFT:
-				selectedLayers.startDraggingScale(m_hoveredLayer->m_transform.getMatrix() * glm::vec4(0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.0f, 0.0f, 1.0f));
+				originInTransformSpace = glm::vec2(0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.0f);
 				break;
 			case BOT_LEFT:
-				selectedLayers.startDraggingScale(m_hoveredLayer->m_transform.getMatrix() * glm::vec4(0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.5f, 0.0f, 1.0f));
+				originInTransformSpace = glm::vec2(0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.5f);
 				break;
 			case BOT:
-				selectedLayers.startDraggingScale(m_hoveredLayer->m_transform.getMatrix() * glm::vec4(0.0f * m_hoveredLayer->m_transform.getAspectRatio(), 0.5f, 0.0f, 1.0f));
+				originInTransformSpace = glm::vec2(0.0f, 0.5f);
 				break;
 			case BOT_RIGHT:
-				selectedLayers.startDraggingScale(m_hoveredLayer->m_transform.getMatrix() * glm::vec4(-0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.5f, 0.0f, 1.0f));
+				originInTransformSpace = glm::vec2(-0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.5f);
 				break;
 			default:
 				spdlog::error("[LayerList::onLeftClicDown] reached default case");
