@@ -27,7 +27,7 @@
 
 #include "UI/fileBrowser.hpp"
 #include "UI/cursor.hpp"
-#include "UI/layerListUI.hpp"
+#include "UI/UI_LayerList.hpp"
 #include "UI/mainMenuBar.hpp"
 
 #include "core/drawingBoard.hpp"
@@ -141,7 +141,7 @@ int main(int argc, char* argv[])
 		ImGui_ImplSDL2_NewFrame(window);
 		ImGui::NewFrame();
 
-		UI::show();
+		UI_LayerList::show();
 		UI::showMainMenuBar();
 
 		// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
