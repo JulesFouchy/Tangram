@@ -6,7 +6,7 @@
 
 #include "UI/input.hpp"
 
-#include "constants.hpp"
+#include "UI/settings.hpp"
 
 #include "utilities/display.hpp"
 #include "graphics/immediateDrawing.hpp"
@@ -91,12 +91,12 @@ bool LayerList::mustShowAltOrigin() {
 	return Input::keyIsDown(ALT) && !selectedLayers.isEmpty();//|| getActivLayer()->m_transform.isDraggingRotation();
 }
 bool LayerList::mouseIsHoveringAltOrigin() {
-	return mustShowAltOrigin() && glm::length(selectedLayers.getAltOriginInWindowSpace() - Input::getMousePosition()) < ALT_ORIGIN_RADIUS;
+	return mustShowAltOrigin() && glm::length(selectedLayers.getAltOriginInWindowSpace() - Input::getMousePosition()) < Settings::ALT_ORIGIN_RADIUS;
 }
 bool LayerList::canDragRotation() {
 	if (mustShowAltOrigin()) {
 		float distToAltOrigin = glm::length(selectedLayers.getAltOriginInWindowSpace() - Input::getMousePosition());
-		return START_ROTATING_MIN_RADIUS < distToAltOrigin && distToAltOrigin < START_ROTATING_MAX_RADIUS;
+		return Settings::START_ROTATING_MIN_RADIUS < distToAltOrigin && distToAltOrigin < Settings::START_ROTATING_MAX_RADIUS;
 	}
 	else {
 		return false;
@@ -185,10 +185,10 @@ void LayerList::onLeftClicUp() {
 
 void LayerList::onScroll(float motion) {
 	if (motion < 0.0f) {
-		selectedLayers.scale(ZOOM_FACTOR);
+		selectedLayers.scale(Settings::ZOOM_FACTOR);
 	}
 	else {
-		selectedLayers.scale(1.0f / ZOOM_FACTOR);
+		selectedLayers.scale(1.0f / Settings::ZOOM_FACTOR);
 	}
 }
 

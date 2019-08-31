@@ -15,7 +15,7 @@
 
 #include "graphics/immediateDrawing.hpp"
 
-#include "constants.hpp"
+#include "UI/settings.hpp"
 
 Transform::Transform() :
 	m_translation(glm::vec2(0.0f)), m_scale(1.0f), m_rotation(0.0f),
@@ -40,14 +40,20 @@ glm::vec2 Transform::getAltOriginInDrawingBoardSpace() {
 }
 
 void Transform::showAltOrigin() {
+	//float defaultScale = getScale();
+	//float dbScale = DrawingBoard::transform.getScale();
+	//setScale(std::exp(Maths::clamp(std::log(defaultScale), -0.5f, 0.5f)));
+	//DrawingBoard::transform.setScale(std::exp(Maths::clamp(std::log(dbScale), -0.5f, 0.5f)));
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat() * DrawingBoard::transform.getMatrix() * getMatrix());
-	float scale = getScale() * DrawingBoard::transform.getScale();
+	//setScale(defaultScale);
+	//DrawingBoard::transform.setScale(dbScale);
+	float scale = getScale()* DrawingBoard::transform.getScale();
 	ImmediateDrawing::setColor(0.0f, 0.0f, 0.0f, 0.5f);
-	ImmediateDrawing::ring(m_altOriginInTransformSpace.x, m_altOriginInTransformSpace.y, 0.0f, ALT_ORIGIN_RADIUS / scale);
+	ImmediateDrawing::ring(m_altOriginInTransformSpace.x, m_altOriginInTransformSpace.y, 0.0f, Settings::ALT_ORIGIN_RADIUS / scale);
 	ImmediateDrawing::setColor(1.0f, 1.0f, 1.0f, 0.5f);
-	ImmediateDrawing::ring(m_altOriginInTransformSpace.x, m_altOriginInTransformSpace.y, ALT_ORIGIN_RADIUS / scale, (ALT_ORIGIN_RADIUS*1.5f) / scale);
+	ImmediateDrawing::ring(m_altOriginInTransformSpace.x, m_altOriginInTransformSpace.y, Settings::ALT_ORIGIN_RADIUS / scale, (Settings::ALT_ORIGIN_RADIUS*1.5f) / scale);
 	ImmediateDrawing::setColor(0.8f, 0.8f, 0.8f, 0.5f);
-	ImmediateDrawing::ring(m_altOriginInTransformSpace.x, m_altOriginInTransformSpace.y, START_ROTATING_MIN_RADIUS / scale, START_ROTATING_MAX_RADIUS / scale);
+	ImmediateDrawing::ring(m_altOriginInTransformSpace.x, m_altOriginInTransformSpace.y, Settings::START_ROTATING_MIN_RADIUS / scale, Settings::START_ROTATING_MAX_RADIUS / scale);
 }
 
 void Transform::startDraggingTranslation() {

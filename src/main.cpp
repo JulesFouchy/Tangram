@@ -8,13 +8,13 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-#include "constants.hpp"
-
 #include "graphics/immediateDrawing.hpp"
 #include "graphics/shader.hpp"
 #include "graphics/texture2D.hpp"
 #include "graphics/loadedImage.hpp"
 #include "UI/input.hpp"
+
+#include "UI/settings.hpp"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_sdl.h"
@@ -160,7 +160,8 @@ int main(int argc, char* argv[])
 			ImGui::Checkbox("Another Window", &show_another_window);
 
 			ImGui::SliderFloat("dbRot", &dbRot, 0.0f, 6.28f);
-			ImGui::SliderFloat("imRot", &imRot, 0.0f, 6.28f); 
+			ImGui::SliderFloat("minRadius", &Settings::START_ROTATING_MIN_RADIUS, 0.0f, 1.0f);
+			ImGui::SliderFloat("maxRadius", &Settings::START_ROTATING_MAX_RADIUS, 0.0f, 1.0f);
 			//ImGui::SliderFloat("ALT_ORIGIN_RADIUS", &ALT_ORIGIN_RADIUS, 0.0f, 0.1f);
 			//ImGui::ColorEdit3("clear color", (float*)& clear_color); // Edit 3 floats representing a color
 			ImGui::ColorEdit4("drawing board", glm::value_ptr(DrawingBoard::backgroundColor));
