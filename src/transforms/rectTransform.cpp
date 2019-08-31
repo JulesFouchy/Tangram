@@ -12,10 +12,44 @@
 
 #include "glm/gtc/matrix_inverse.hpp"
 RectTransform::RectTransform(float aspectRatio)
-	: m_aspectRatio(aspectRatio), m_projectionMatrix(glm::ortho(-0.5f * m_aspectRatio, 0.5f * m_aspectRatio, -0.5f, 0.5f))
+	: m_aspectRatio(aspectRatio), m_projectionMatrix(glm::ortho(-0.5f * m_aspectRatio, 0.5f * m_aspectRatio, -0.5f, 0.5f)), bMustRecomputeProjMat(false),
+	bDraggingAspectRatio(false), m_aspectRatioWhenDraggingStarted(aspectRatio)
 {
 }
 RectTransform::~RectTransform(){
+}
+
+const glm::mat4x4& RectTransform::getProjectionMatrix() {
+	if (bMustRecomputeProjMat) {
+		m_projectionMatrix = glm::ortho(-0.5f * m_aspectRatio, 0.5f * m_aspectRatio, -0.5f, 0.5f);
+		bMustRecomputeProjMat = false;
+	}
+	return m_projectionMatrix;
+}
+
+void RectTransform::setAspectRatio(float newAspectRatio) {
+	m_aspectRatio = newAspectRatio;
+	bMustRecomputeProjMat = true;
+}
+
+void RectTransform::startDraggingAspectRatio() {
+	bDraggingAspectRatio = true;
+	m_aspectRatioWhenDraggingStarted = m_aspectRatio;
+	m_mousePosWhenDraggingStarted = Input::getMousePosition();
+}
+
+void RectTransform::checkDragging() {
+	Transform::checkDragging();
+	if (bDraggingAspectRatio) {
+		float dx = Input::getMousePosition().x - m_mousePosWhenDraggingStarted.x;
+		setAspectRatio(m_aspectRatioWhenDraggingStarted + dx);
+	}
+}
+
+bool RectTransform::endDragging() {
+	bool handled = Transform::endDragging() || bDraggingAspectRatio;
+	bDraggingAspectRatio = false;
+	return handled;
 }
 
 MousePositionRelativeToRect RectTransform::getMouseRelativePosition() {

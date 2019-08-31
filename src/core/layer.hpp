@@ -31,6 +31,7 @@ private:
 private:
 	LoadedImage m_image;
 	std::string m_name;
+	float m_initialAspectRatio;
 public:
 	RectTransform m_transform;
 };

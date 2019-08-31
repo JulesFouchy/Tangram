@@ -12,7 +12,7 @@
 #include "graphics/immediateDrawing.hpp"
 
 Layer::Layer(std::string imgFilePath, std::string layerName)
-	: m_bVisible(true), m_image(imgFilePath), m_name(layerName), m_transform(m_image.getAspectRatio())
+	: m_bVisible(true), m_image(imgFilePath), m_name(layerName), m_transform(m_image.getAspectRatio()),	m_initialAspectRatio(m_image.getAspectRatio())
 {
 }
 
@@ -21,7 +21,7 @@ Layer::~Layer() {
 }
 
 void Layer::show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix) {
-	m_image.show(viewMatrix * m_transform.getMatrix(), projMatrix);
+	m_image.show(viewMatrix * glm::scale(m_transform.getMatrix(), glm::vec3(m_transform.getAspectRatio()/m_initialAspectRatio, 1.0f, 1.0f)), projMatrix);
 }
 
 void Layer::showInDrawingBoardSpace() {

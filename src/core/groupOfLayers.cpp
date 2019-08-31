@@ -151,6 +151,12 @@ void GroupOfLayers::startDraggingRotation() {
 	}
 }
 
+void GroupOfLayers::startDraggingAspectRatio() {
+	for (int k = 0; k < m_layers.size(); ++k) {
+		m_layers[k]->m_transform.startDraggingAspectRatio();
+	}
+}
+
 void GroupOfLayers::checkDragging() {
 	m_transform.checkDragging();
 	for (int k = 0; k < m_layers.size(); ++k) {
