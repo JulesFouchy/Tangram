@@ -59,7 +59,6 @@ void RectTransform::startDraggingAspectRatioV(glm::vec2 dragCenterInTransformSpa
 
 
 void RectTransform::checkDragging() {
-	Log::log(getAltOriginInTransformSpace());
 	Transform::checkDragging();
 	float newAspectRatio = m_aspectRatioWhenDraggingStarted;
 	float newScale = m_scaleWhenDraggingStarted;
@@ -68,18 +67,21 @@ void RectTransform::checkDragging() {
 		//TODO shoudn't project onto x, but on the rotated x-axis of the transform
 		float dx = (Input::getMousePosition().x - m_dragCenterInWindowSpace.x) /( m_mousePosWhenDraggingStarted.x - m_dragCenterInWindowSpace.x);
 		newAspectRatio *= dx;
-		newTranslation.x = Maths::map(m_dragCenterInTransformSpace.x, -0.5f * m_aspectRatioWhenDraggingStarted, 0.5f * m_aspectRatioWhenDraggingStarted, -1.0f, 1.0f) * (m_aspectRatioWhenDraggingStarted - m_aspectRatioWhenDraggingStarted * dx) * 0.5f;
+		newTranslation.x = m_dragCenterInTransformSpace.x * (1.0f - dx);
 	}
 	if (bDraggingAspectRatioV) {
 		//TODO shoudn't project onto y, but on the rotated y-axis of the transform
 		float dy = (Input::getMousePosition().y - m_dragCenterInWindowSpace.y) / (m_mousePosWhenDraggingStarted.y - m_dragCenterInWindowSpace.y);
 		newAspectRatio /= dy;
 		newScale *= dy;
+		newTranslation.x /= dy;
 		newTranslation.y = m_dragCenterInTransformSpace.y * (1.0f/dy - 1.0f);
 	}
+	if (bDraggingAspectRatioV) {
+	}
 	if (bDraggingAspectRatioH || bDraggingAspectRatioV) {
-		setAspectRatio(newAspectRatio);
 		setScale(newScale);
+		setAspectRatio(newAspectRatio);
 		setTranslation(glm::vec4(m_translationWhenDraggingStarted, 0.0f, 0.0f) + getMatrix() * glm::vec4(newTranslation, 0.0f, 0.0f));
 	}
 }
