@@ -69,18 +69,16 @@ protected:
 	glm::vec2 m_altOriginInTransformSpaceWhenDraggingStarted;
 
 	bool bDraggingScale;
-	glm::vec2 m_initialScaleOriginInTransformSpace;
-	glm::vec2 m_scaleOriginInDrawingBoardSpace;
-	glm::vec2 m_scaleOriginInWindowSpace;
+	glm::vec2 m_initialDragCenterInTransformSpace;
+	glm::vec2 m_dragCenterInDrawingBoardSpace;
+	glm::vec2 m_dragCenterInWindowSpace;
 	glm::vec2 m_mouseRelPosWhenDraggingStartedInWindowSpace;
-	float m_invDistToScaleOriginSqWhenDraggingStartedinWindowSpace;
+	float m_invDistToDragCenterSqWhenDraggingStartedinWindowSpace;
 	float m_scaleWhenDraggingStarted;
 	glm::mat4x4 m_matrixWhenDraggingStarted;
 
 	bool bDraggingRotation;
 	float m_rotationWhenDraggingStarted;
-	glm::vec2 m_rotationOriginInDBspace;
-	glm::vec2 m_rotationOriginInWindowSpace;
 
 protected:
 	Transform();
