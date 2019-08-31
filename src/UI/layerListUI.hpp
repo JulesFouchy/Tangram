@@ -1,5 +1,6 @@
 #pragma once
 
 namespace UI {
-	void showLayerList();
+	void show();
+	void dragDropTargetReorderLayer(int layerIndex);
 }

@@ -7,7 +7,7 @@
 
 #include "core/drawingBoard.hpp"
 
-void UI::showLayerList() {
+void UI::show() {
 
 	LayerList& layerList = DrawingBoard::getLayerList();
 
@@ -28,9 +28,8 @@ void UI::showLayerList() {
 	for (int k = layerList.layers.size() - 1; k >= 0 ; --k) {
 		Layer* layer = layerList.layers[k];
 		//
-		//ImGui::BeginChild(layer->getName().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth() * 0.95f, 150));
+		ImGui::BeginChild(layer->getName().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth() * 0.95f, 150), true, ImGuiWindowFlags_NoMove);
 			ImGui::PushID((int)layer);
-			ImGui::Button("Drag me !");
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 			{
 				ImGui::SetDragDropPayload("Reordering layer", &layer, sizeof(Layer*));
@@ -58,7 +57,7 @@ void UI::showLayerList() {
 				layer->m_transform.reset();
 			}
 			ImGui::PopID();
-		//ImGui::EndChild();
+		ImGui::EndChild();
 			ImGui::Text("-------------------------");
 			if (ImGui::BeginDragDropTarget())
 			{
