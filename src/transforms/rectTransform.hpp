@@ -25,9 +25,10 @@ public:
 
 	const glm::mat4x4& getProjectionMatrix();
 
-	inline bool isBusy() override { return Transform::isBusy() || bDraggingAspectRatio; }
+	inline bool isBusy() override { return Transform::isBusy() || bDraggingAspectRatioH || bDraggingAspectRatioV; }
 
-	void startDraggingAspectRatio();
+	void startDraggingAspectRatioH();
+	void startDraggingAspectRatioV();
 	void checkDragging() override;
 	bool endDragging() override;
 
@@ -39,6 +40,7 @@ private:
 
 	bool bMustRecomputeProjMat;
 
-	bool bDraggingAspectRatio;
+	bool bDraggingAspectRatioH;
+	bool bDraggingAspectRatioV;
 	float m_aspectRatioWhenDraggingStarted;
 };

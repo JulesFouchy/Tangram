@@ -176,7 +176,12 @@ void LayerList::onLeftClicDown() {
 				break;
 			}
 			if (Input::keyIsDown(SHIFT)) {
-				selectedLayers.startDraggingAspectRatio();
+				if (originInTransformSpace.x != 0.0f) {
+					selectedLayers.startDraggingAspectRatioH();
+				}
+				if (originInTransformSpace.y != 0.0f) {
+					selectedLayers.startDraggingAspectRatioV();
+				}
 			}
 			else {
 				selectedLayers.startDraggingScale(m_hoveredLayer->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f));

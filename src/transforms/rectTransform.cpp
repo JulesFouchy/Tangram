@@ -13,7 +13,7 @@
 #include "glm/gtc/matrix_inverse.hpp"
 RectTransform::RectTransform(float aspectRatio)
 	: m_aspectRatio(aspectRatio), m_projectionMatrix(glm::ortho(-0.5f * m_aspectRatio, 0.5f * m_aspectRatio, -0.5f, 0.5f)), bMustRecomputeProjMat(false),
-	bDraggingAspectRatio(false), m_aspectRatioWhenDraggingStarted(aspectRatio)
+	bDraggingAspectRatioH(false), bDraggingAspectRatioV(false), m_aspectRatioWhenDraggingStarted(aspectRatio)
 {
 }
 RectTransform::~RectTransform(){
@@ -32,24 +32,51 @@ void RectTransform::setAspectRatio(float newAspectRatio) {
 	bMustRecomputeProjMat = true;
 }
 
-void RectTransform::startDraggingAspectRatio() {
-	bDraggingAspectRatio = true;
+void RectTransform::startDraggingAspectRatioH() {
+	bDraggingAspectRatioH = true;
+
 	m_aspectRatioWhenDraggingStarted = m_aspectRatio;
 	m_mousePosWhenDraggingStarted = Input::getMousePosition();
 	m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * getMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
+void RectTransform::startDraggingAspectRatioV() {
+	bDraggingAspectRatioV = true;
+	m_scaleWhenDraggingStarted = getScale();
+
+	m_aspectRatioWhenDraggingStarted = m_aspectRatio;
+	m_mousePosWhenDraggingStarted = Input::getMousePosition();
+	m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * getMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+
 void RectTransform::checkDragging() {
 	Transform::checkDragging();
-	if (bDraggingAspectRatio) {
+	float newAspectRatio = m_aspectRatioWhenDraggingStarted;
+	float newScale = m_scaleWhenDraggingStarted;
+	if (bDraggingAspectRatioH) {
+		spdlog::info("H");
+		//TODO shoudn't project onto x, but on the rotated x-axis of the transform
 		float dx = (Input::getMousePosition().x - m_dragCenterInWindowSpace.x) /( m_mousePosWhenDraggingStarted.x - m_dragCenterInWindowSpace.x);
-		setAspectRatio(m_aspectRatioWhenDraggingStarted * dx);
+		newAspectRatio *= dx;
+	}
+	if (bDraggingAspectRatioV) {
+		spdlog::info("V");
+		//TODO shoudn't project onto y, but on the rotated y-axis of the transform
+		float dy = (Input::getMousePosition().y - m_dragCenterInWindowSpace.y) / (m_mousePosWhenDraggingStarted.y - m_dragCenterInWindowSpace.y);
+		newAspectRatio /= dy;
+		newScale *= dy;
+	}
+	if (bDraggingAspectRatioH || bDraggingAspectRatioV) {
+		setAspectRatio(newAspectRatio);
+		setScale(newScale);
 	}
 }
 
 bool RectTransform::endDragging() {
-	bool handled = Transform::endDragging() || bDraggingAspectRatio;
-	bDraggingAspectRatio = false;
+	bool handled = Transform::endDragging() || bDraggingAspectRatioH || bDraggingAspectRatioV;
+	bDraggingAspectRatioH = false;
+	bDraggingAspectRatioV = false;
 	return handled;
 }
 
