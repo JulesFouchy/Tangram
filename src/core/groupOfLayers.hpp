@@ -30,6 +30,7 @@ public:
 	bool isBusy();
 
 	void showAltOrigin();
+	glm::vec2 getAltOriginInTransformSpace();
 	glm::vec2 getAltOriginInWindowSpace();
 	void startDraggingAltOrigin();
 	void resetAltOrigin();
@@ -37,8 +38,8 @@ public:
 	void startDraggingTranslation();
 	void startDraggingScale(glm::vec2 originInDBspace);
 	void startDraggingRotation();
-	void startDraggingAspectRatioH();
-	void startDraggingAspectRatioV();
+	void startDraggingAspectRatioH(glm::vec2 dragCenterInTransformSpace);
+	void startDraggingAspectRatioV(glm::vec2 dragCenterInTransformSpace);
 	void checkDragging();
 	void endDragging();
 	void changeDraggingScaleToAltOrigin();

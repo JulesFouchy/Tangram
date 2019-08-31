@@ -33,7 +33,7 @@ Transform::~Transform() {
 }
 
 glm::vec2 Transform::getAltOriginInWindowSpace() { 
-	return DrawingBoard::transform.getMatrix() * getMatrix() * glm::vec4(m_altOriginInTransformSpace, 0.0f, 1.0f);
+	return DrawingBoard::transform.getMatrix() * getMatrix() * glm::vec4(getAltOriginInTransformSpace(), 0.0f, 1.0f);
 }
 glm::vec2 Transform::getAltOriginInDrawingBoardSpace() {
 	return getMatrix() * glm::vec4(m_altOriginInTransformSpace, 0.0f, 1.0f);

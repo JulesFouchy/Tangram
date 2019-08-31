@@ -87,6 +87,19 @@ void GroupOfLayers::showAltOrigin() {
 	}
 }
 
+glm::vec2 GroupOfLayers::getAltOriginInTransformSpace() {
+	if (m_layers.size() == 1) {
+		return m_layers[0]->m_transform.getAltOriginInTransformSpace();
+	}
+	else if (m_layers.size() > 1) {
+		return m_transform.getAltOriginInTransformSpace();
+	}
+	else {
+		spdlog::warn("[Group of Layers] getAltOriginInTransformSpace was called but there is actually no layer in the group !");
+		return glm::vec2(0.0f);
+	}
+}
+
 glm::vec2 GroupOfLayers::getAltOriginInWindowSpace() {
 	if (m_layers.size() == 1) {
 		return m_layers[0]->m_transform.getAltOriginInWindowSpace();
@@ -95,7 +108,7 @@ glm::vec2 GroupOfLayers::getAltOriginInWindowSpace() {
 		return m_transform.getAltOriginInWindowSpace();
 	}
 	else {
-		spdlog::warn("[Group of Layers] getAltOrigin was called but there is actually no layer in the group !");
+		spdlog::warn("[Group of Layers] getAltOriginInWindowSpace was called but there is actually no layer in the group !");
 		return glm::vec2(0.0f);
 	}
 }
@@ -159,15 +172,15 @@ void GroupOfLayers::startDraggingRotation() {
 	}
 }
 
-void GroupOfLayers::startDraggingAspectRatioH() {
+void GroupOfLayers::startDraggingAspectRatioH(glm::vec2 dragCenterInTransformSpace) {
 	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.startDraggingAspectRatioH();
+		m_layers[k]->m_transform.startDraggingAspectRatioH(dragCenterInTransformSpace);
 	}
 }
 
-void GroupOfLayers::startDraggingAspectRatioV() {
+void GroupOfLayers::startDraggingAspectRatioV(glm::vec2 dragCenterInTransformSpace) {
 	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.startDraggingAspectRatioV();
+		m_layers[k]->m_transform.startDraggingAspectRatioV(dragCenterInTransformSpace);
 	}
 }
 

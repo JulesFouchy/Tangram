@@ -176,17 +176,27 @@ void LayerList::onLeftClicDown() {
 				break;
 			}
 			if (Input::keyIsDown(SHIFT)) {
-				if (originInTransformSpace.x != 0.0f) {
-					selectedLayers.startDraggingAspectRatioH();
+				if(Input::keyIsDown(ALT)){
+					if (originInTransformSpace.x != 0.0f) {
+						selectedLayers.startDraggingAspectRatioH(selectedLayers.getAltOriginInTransformSpace());
+					}
+					if (originInTransformSpace.y != 0.0f) {
+						selectedLayers.startDraggingAspectRatioV(selectedLayers.getAltOriginInTransformSpace());
+					}
 				}
-				if (originInTransformSpace.y != 0.0f) {
-					selectedLayers.startDraggingAspectRatioV();
+				else {
+					if (originInTransformSpace.x != 0.0f) {
+						selectedLayers.startDraggingAspectRatioH(originInTransformSpace);
+					}
+					if (originInTransformSpace.y != 0.0f) {
+						selectedLayers.startDraggingAspectRatioV(originInTransformSpace);
+					}
 				}
 			}
 			else {
 				selectedLayers.startDraggingScale(m_hoveredLayer->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f));
 			}
-			//Scale towards center if ALT down
+			//Scale towards alt origin if ALT down
 			if (Input::keyIsDown(ALT)) {
 				selectedLayers.changeDraggingScaleToAltOrigin();
 			}

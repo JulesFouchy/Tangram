@@ -20,15 +20,16 @@ public:
 	RectTransform(float aspectRatio);
 	virtual ~RectTransform();
 
+	const glm::mat4x4& getProjectionMatrix();
+	glm::vec2 getAltOriginInWindowSpace() override;
+
 	inline float getAspectRatio() { return m_aspectRatio; };
 	void setAspectRatio(float newAspectRatio);
 
-	const glm::mat4x4& getProjectionMatrix();
-
 	inline bool isBusy() override { return Transform::isBusy() || bDraggingAspectRatioH || bDraggingAspectRatioV; }
 
-	void startDraggingAspectRatioH();
-	void startDraggingAspectRatioV();
+	void startDraggingAspectRatioH(glm::vec2 dragCenterInTransformSpace);
+	void startDraggingAspectRatioV(glm::vec2 dragCenterInTransformSpace);
 	void checkDragging() override;
 	bool endDragging() override;
 
@@ -43,4 +44,5 @@ private:
 	bool bDraggingAspectRatioH;
 	bool bDraggingAspectRatioV;
 	float m_aspectRatioWhenDraggingStarted;
+	glm::vec2 m_dragCenterInTransformSpace;
 };
