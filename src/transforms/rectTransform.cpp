@@ -64,13 +64,11 @@ void RectTransform::checkDragging() {
 	float newScale = m_scaleWhenDraggingStarted;
 	glm::vec2 newTranslation = glm::vec2(0.0f);
 	if (bDraggingAspectRatioH) {
-		//TODO shoudn't project onto x, but on the rotated x-axis of the transform
 		float du = glm::dot((Input::getMousePosition() - m_dragCenterInWindowSpace), getUAxis()) / glm::dot( m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getUAxis());
 		newAspectRatio *= du;
 		newTranslation.x = m_dragCenterInTransformSpace.x * (1.0f - du);
 	}
 	if (bDraggingAspectRatioV) {
-		//TODO shoudn't project onto y, but on the rotated y-axis of the transform
 		float dv = glm::dot((Input::getMousePosition() - m_dragCenterInWindowSpace), getVAxis()) / glm::dot(m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getVAxis());
 		newAspectRatio /= dv;
 		newScale *= dv;
