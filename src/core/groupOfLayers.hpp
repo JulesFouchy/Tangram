@@ -44,6 +44,8 @@ public:
 	void endDragging();
 	void changeDraggingScaleToAltOrigin();
 	void revertDraggingScaleToInitialOrigin();
+	void changeDraggingRatioToAltOrigin();
+	void revertDraggingRatioToInitialOrigin();
 
 	void scale(float scaleFactor);
 

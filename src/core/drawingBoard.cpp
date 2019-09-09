@@ -148,6 +148,7 @@ void DrawingBoard::onKeyDown(Key key) {
 		break;
 	case ALT:
 		layers.selectedLayers.changeDraggingScaleToAltOrigin();
+		layers.selectedLayers.changeDraggingRatioToAltOrigin();
 		break;
 	default:
 		break;
@@ -159,6 +160,7 @@ void DrawingBoard::onKeyUp(Key key) {
 	{
 	case ALT:
 		layers.selectedLayers.revertDraggingScaleToInitialOrigin();
+		layers.selectedLayers.revertDraggingRatioToInitialOrigin();
 		break;
 	case CTRL:
 		break;

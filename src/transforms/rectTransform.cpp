@@ -37,15 +37,17 @@ void RectTransform::setAspectRatio(float newAspectRatio) {
 }
 
 void RectTransform::startDraggingAspectRatio(glm::vec2 dragCenterInTransformSpace) {
+	m_matrixWhenDraggingStarted = getMatrix();
 	m_scaleWhenDraggingStarted = getScale();
 	m_translationWhenDraggingStarted = getTranslation();
 	m_aspectRatioWhenDraggingStarted = m_aspectRatio;
 	m_mousePosWhenDraggingStarted = Input::getMousePosition();
+	m_initialDragCenterInTransformSpace = dragCenterInTransformSpace;
+
 	m_dragCenterInTransformSpace = dragCenterInTransformSpace;
 	m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * getMatrix() * glm::vec4(dragCenterInTransformSpace, 0.0f, 1.0f);
-
 	m_oneOverInitialMouseRelPosProjOnU = 1.0f / glm::dot(m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getUAxis());
-	m_oneOverInitialMouseRelPosProjOnV = 1.0F / glm::dot(m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getVAxis());
+	m_oneOverInitialMouseRelPosProjOnV = 1.0f / glm::dot(m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getVAxis());
 }
 
 void RectTransform::startDraggingAspectRatioH(glm::vec2 dragCenterInTransformSpace) {
@@ -56,6 +58,19 @@ void RectTransform::startDraggingAspectRatioH(glm::vec2 dragCenterInTransformSpa
 void RectTransform::startDraggingAspectRatioV(glm::vec2 dragCenterInTransformSpace) {
 	bDraggingAspectRatioV = true;
 	startDraggingAspectRatio(dragCenterInTransformSpace);
+}
+
+void RectTransform::changeDraggingRatioOrigin(glm::vec2 newRatioOriginInTransformSpace) {
+	m_dragCenterInTransformSpace = newRatioOriginInTransformSpace;
+	m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * m_matrixWhenDraggingStarted * glm::vec4(newRatioOriginInTransformSpace, 0.0f, 1.0f);
+	m_oneOverInitialMouseRelPosProjOnU = 1.0f / glm::dot(m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getUAxis());
+	m_oneOverInitialMouseRelPosProjOnV = 1.0f / glm::dot(m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getVAxis());
+}
+void RectTransform::revertDraggingRatioToInitialOrigin() {
+	changeDraggingRatioOrigin(m_initialDragCenterInTransformSpace);
+}
+void RectTransform::changeDraggingRatioToAltOrigin() {
+	changeDraggingRatioOrigin(getAltOriginInTransformSpace() * glm::vec2(m_aspectRatioWhenDraggingStarted / getAspectRatio() ,1.0f));
 }
 
 void RectTransform::checkDragging() {

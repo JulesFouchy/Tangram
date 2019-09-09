@@ -29,6 +29,9 @@ public:
 
 	void startDraggingAspectRatioH(glm::vec2 dragCenterInTransformSpace);
 	void startDraggingAspectRatioV(glm::vec2 dragCenterInTransformSpace);
+	void changeDraggingRatioOrigin(glm::vec2 newRatioOriginInTransformSpace);
+	void revertDraggingRatioToInitialOrigin();
+	void changeDraggingRatioToAltOrigin();
 	void checkDragging() override;
 	bool endDragging() override;
 

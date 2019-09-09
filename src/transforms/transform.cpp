@@ -76,6 +76,8 @@ void Transform::startDraggingScale(glm::vec2 scaleOriginInTransformSpace) {
 		bDraggingScale = true;
 
 		m_matrixWhenDraggingStarted = getMatrix();
+		m_scaleWhenDraggingStarted = m_scale;
+		m_translationWhenDraggingStarted = m_translation;
 		m_mousePosWhenDraggingStarted = Input::getMousePosition();
 		m_initialDragCenterInTransformSpace = scaleOriginInTransformSpace;
 
@@ -83,22 +85,7 @@ void Transform::startDraggingScale(glm::vec2 scaleOriginInTransformSpace) {
 		m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * glm::vec4(m_dragCenterInDrawingBoardSpace, 0.0f, 1.0f);
 		m_mouseRelPosWhenDraggingStartedInWindowSpace = Input::getMousePosition() - m_dragCenterInWindowSpace;
 		m_invDistToDragCenterSqWhenDraggingStartedinWindowSpace = 1.0f / glm::length2(m_mouseRelPosWhenDraggingStartedInWindowSpace);
-		m_scaleWhenDraggingStarted = m_scale;
-		m_translationWhenDraggingStarted = m_translation;
 	}
-}
-void Transform::startDraggingRotation(glm::vec2 rotationOriginInDBspace) {
-	if (!bDraggingRotation) {
-		bDraggingRotation = true;
-		m_mouseRelPosWhenDraggingStartedInWindowSpace = glm::vec4(Input::getMousePosition(), 0.0f, 0.0f) - DrawingBoard::transform.getMatrix() * glm::vec4(rotationOriginInDBspace, 0.0f, 1.0f);
-		m_rotationWhenDraggingStarted = m_rotation;
-		m_translationWhenDraggingStarted = m_translation;
-		m_dragCenterInDrawingBoardSpace = rotationOriginInDBspace;
-		m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * glm::vec4(rotationOriginInDBspace, 0.0f, 1.0f);
-	}
-}
-void Transform::startDraggingRotation() {
-	startDraggingRotation(getAltOriginInDrawingBoardSpace());
 }
 void Transform::changeDraggingScaleOrigin(glm::vec2 newScaleOriginInTransformSpace) {
 	if (bDraggingScale) {
@@ -113,6 +100,19 @@ void Transform::revertDraggingScaleToInitialOrigin() {
 }
 void Transform::changeDraggingScaleToAltOrigin() {
 	changeDraggingScaleOrigin(getAltOriginInTransformSpace());
+}
+void Transform::startDraggingRotation(glm::vec2 rotationOriginInDBspace) {
+	if (!bDraggingRotation) {
+		bDraggingRotation = true;
+		m_mouseRelPosWhenDraggingStartedInWindowSpace = glm::vec4(Input::getMousePosition(), 0.0f, 0.0f) - DrawingBoard::transform.getMatrix() * glm::vec4(rotationOriginInDBspace, 0.0f, 1.0f);
+		m_rotationWhenDraggingStarted = m_rotation;
+		m_translationWhenDraggingStarted = m_translation;
+		m_dragCenterInDrawingBoardSpace = rotationOriginInDBspace;
+		m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * glm::vec4(rotationOriginInDBspace, 0.0f, 1.0f);
+	}
+}
+void Transform::startDraggingRotation() {
+	startDraggingRotation(getAltOriginInDrawingBoardSpace());
 }
 void Transform::checkDragging() {
 	if (bDraggingTranslation) {
