@@ -65,19 +65,17 @@ void RectTransform::checkDragging() {
 	glm::vec2 newTranslation = glm::vec2(0.0f);
 	if (bDraggingAspectRatioH) {
 		//TODO shoudn't project onto x, but on the rotated x-axis of the transform
-		float dx = (Input::getMousePosition().x - m_dragCenterInWindowSpace.x) /( m_mousePosWhenDraggingStarted.x - m_dragCenterInWindowSpace.x);
-		newAspectRatio *= dx;
-		newTranslation.x = m_dragCenterInTransformSpace.x * (1.0f - dx);
+		float du = glm::dot((Input::getMousePosition() - m_dragCenterInWindowSpace), getUAxis()) / glm::dot( m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getUAxis());
+		newAspectRatio *= du;
+		newTranslation.x = m_dragCenterInTransformSpace.x * (1.0f - du);
 	}
 	if (bDraggingAspectRatioV) {
 		//TODO shoudn't project onto y, but on the rotated y-axis of the transform
-		float dy = (Input::getMousePosition().y - m_dragCenterInWindowSpace.y) / (m_mousePosWhenDraggingStarted.y - m_dragCenterInWindowSpace.y);
-		newAspectRatio /= dy;
-		newScale *= dy;
-		newTranslation.x /= dy;
-		newTranslation.y = m_dragCenterInTransformSpace.y * (1.0f/dy - 1.0f);
-	}
-	if (bDraggingAspectRatioV) {
+		float dv = glm::dot((Input::getMousePosition() - m_dragCenterInWindowSpace), getVAxis()) / glm::dot(m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getVAxis());
+		newAspectRatio /= dv;
+		newScale *= dv;
+		newTranslation.x /= dv;
+		newTranslation.y = m_dragCenterInTransformSpace.y * (1.0f/dv - 1.0f);
 	}
 	if (bDraggingAspectRatioH || bDraggingAspectRatioV) {
 		setScale(newScale);

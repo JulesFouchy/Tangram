@@ -19,8 +19,8 @@
 
 Transform::Transform() :
 	m_translation(glm::vec2(0.0f)), m_scale(1.0f), m_rotation(0.0f),
-	m_matrix(glm::mat4x4(1.0f)), m_inverseMatrix(glm::mat4x4(1.0f)),
-	bMatrixMustBeRecomputed(false), bInverseMatrixMustBeRecomputed(false),
+	m_matrix(glm::mat4x4(1.0f)), m_inverseMatrix(glm::mat4x4(1.0f)), m_uAxis(glm::vec2(1.0f, 0.0f)), m_vAxis(glm::vec2(0.0f, 1.0f)),
+	bMatrixMustBeRecomputed(false), bInverseMatrixMustBeRecomputed(false), bAxesMustBeRecomputed(false),
 	bDraggingTranslation(false), bDraggingAltOrigin(false), bDraggingScale(false), m_mousePosWhenDraggingStarted(glm::vec2(0.0f)), m_translationWhenDraggingStarted(glm::vec2(0.0f)), m_altOriginInTransformSpaceWhenDraggingStarted(glm::vec2(0.0f)),
 	m_altOriginInTransformSpace(glm::vec2(0.0f)), m_initialDragCenterInTransformSpace(glm::vec2(0.0f)), m_dragCenterInDrawingBoardSpace(glm::vec2(0.0f)), m_dragCenterInWindowSpace(glm::vec2(0.0f)),
 	m_mouseRelPosWhenDraggingStartedInWindowSpace(glm::vec2(0.0f)), m_invDistToDragCenterSqWhenDraggingStartedinWindowSpace(0.0f), m_scaleWhenDraggingStarted(1.0f), m_matrixWhenDraggingStarted(glm::mat4x4(1.0f)),
@@ -165,6 +165,18 @@ const glm::mat4x4& Transform::getInverseMatrix() {
 	return m_inverseMatrix;
 }
 
+const glm::vec2& Transform::getUAxis() {
+	if (bAxesMustBeRecomputed)
+		computeAxes();
+	return m_uAxis;
+}
+
+const glm::vec2& Transform::getVAxis() {
+	if (bAxesMustBeRecomputed)
+		computeAxes();
+	return m_vAxis;
+}
+
 void Transform::setTranslation(glm::vec2 translation) {
 	m_translation = translation;
 	bMatrixMustBeRecomputed = true;
@@ -189,6 +201,7 @@ void Transform::setRotation(float rotation) {
 	m_rotation = rotation;
 	bMatrixMustBeRecomputed = true;
 	bInverseMatrixMustBeRecomputed = true;
+	bAxesMustBeRecomputed = true;
 }
 void Transform::rotate(float rotation) {
 	setRotation(m_rotation + rotation);
@@ -219,6 +232,14 @@ void Transform::computeInverseMatrix() {
 	}
 	bInverseMatrixMustBeRecomputed = false;
 }
+void Transform::computeAxes() {
+	float c = cos(getRotation());
+	float s = sin(getRotation());
+	m_uAxis = glm::vec2( c, s);
+	m_vAxis = glm::vec2(-s, c);
+	bAxesMustBeRecomputed = false;
+}
+
 void Transform::reset() {
 	setTranslation(glm::vec2(0.0f));
 	setScale(1.0f);

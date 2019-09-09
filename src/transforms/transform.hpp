@@ -10,6 +10,8 @@ public:
 public:
 	const glm::mat4x4& getMatrix();
 	const glm::mat4x4& getInverseMatrix();
+	const glm::vec2& getUAxis();
+	const glm::vec2& getVAxis();
 	void setMatrix(glm::mat4x4 matrix);
 public:
 
@@ -58,10 +60,14 @@ private:
 protected:
 	glm::mat4x4 m_matrix;
 	glm::mat4x4 m_inverseMatrix;
+	glm::vec2 m_uAxis;
+	glm::vec2 m_vAxis;
 	bool bMatrixMustBeRecomputed;
 	bool bInverseMatrixMustBeRecomputed;
+	bool bAxesMustBeRecomputed;
 	void computeMatrix();
 	void computeInverseMatrix();
+	void computeAxes();
 
 	bool bDraggingTranslation;
 	glm::vec2 m_mousePosWhenDraggingStarted;
