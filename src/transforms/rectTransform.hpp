@@ -34,8 +34,8 @@ public:
 	void changeDraggingRatioOrigin(glm::vec2 newRatioOriginInTransformSpace);
 	void revertDraggingRatioToInitialOrigin();
 	void changeDraggingRatioToAltOrigin();
-	void switchDraggingScaleToRatio();
-	void switchDraggingRatioToScale();
+	void switchDraggingToRatioFromScale();
+	void switchDraggingToScaleFromRatio();
 	void checkDragging() override;
 	bool endDragging() override;
 

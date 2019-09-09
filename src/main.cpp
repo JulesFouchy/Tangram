@@ -265,6 +265,12 @@ int main(int argc, char* argv[])
 				else if (e.key.keysym.scancode == SDL_SCANCODE_LALT && e.key.repeat == 0) {
 					DrawingBoard::onKeyDown(ALT);
 				}
+				else if (e.key.keysym.scancode == SDL_SCANCODE_LSHIFT && e.key.repeat == 0) {
+					DrawingBoard::onKeyDown(SHIFT);
+				}
+				else if (e.key.keysym.scancode == SDL_SCANCODE_LCTRL && e.key.repeat == 0) {
+					DrawingBoard::onKeyDown(CTRL);
+				}
 				else if (e.key.keysym.sym == '0' || e.key.keysym.sym == 1073741922) {
 					DrawingBoard::transform.reset();
 				}
@@ -292,6 +298,12 @@ int main(int argc, char* argv[])
 				}
 				else if (e.key.keysym.scancode == SDL_SCANCODE_LALT && e.key.repeat == 0) {
 					DrawingBoard::onKeyUp(ALT);
+				}
+				else if (e.key.keysym.scancode == SDL_SCANCODE_LSHIFT && e.key.repeat == 0) {
+					DrawingBoard::onKeyUp(SHIFT);
+				}
+				else if (e.key.keysym.scancode == SDL_SCANCODE_LCTRL && e.key.repeat == 0) {
+					DrawingBoard::onKeyUp(CTRL);
 				}
 				break;
 

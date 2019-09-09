@@ -246,6 +246,18 @@ void GroupOfLayers::revertDraggingRatioToInitialOrigin() {
 	}
 }
 
+
+void GroupOfLayers::switchDraggingToRatioFromScale() {
+	for (int k = 0; k < m_layers.size(); ++k) {
+		m_layers[k]->m_transform.switchDraggingToRatioFromScale();
+	}
+}
+void GroupOfLayers::switchDraggingToScaleFromRatio(){
+	for (int k = 0; k < m_layers.size(); ++k) {
+		m_layers[k]->m_transform.switchDraggingToScaleFromRatio();
+	}
+}
+
 void GroupOfLayers::scale(float scaleFactor) {
 	if (m_layers.size() == 1) {
 		m_layers[0]->m_transform.scale(scaleFactor, m_layers[0]->m_transform.getAltOriginInDrawingBoardSpace());

@@ -113,6 +113,7 @@ void LayerList::onKeyDown(Key key) {
 	case CTRL:
 		break;
 	case SHIFT:
+		selectedLayers.switchDraggingToRatioFromScale();
 		break;
 	case SPACE:
 		break;
@@ -131,6 +132,7 @@ void LayerList::onKeyUp(Key key) {
 	case CTRL:
 		break;
 	case SHIFT:
+		selectedLayers.switchDraggingToScaleFromRatio();
 		break;
 	case SPACE:
 		break;

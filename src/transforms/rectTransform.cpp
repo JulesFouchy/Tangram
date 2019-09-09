@@ -85,14 +85,22 @@ void RectTransform::revertDraggingRatioToInitialOrigin() {
 void RectTransform::changeDraggingRatioToAltOrigin() {
 	changeDraggingRatioOrigin(getAltOriginInTransformSpace() * glm::vec2(m_aspectRatioWhenDraggingStarted / getAspectRatio() ,1.0f));
 }
-void RectTransform::switchDraggingScaleToRatio() {
-	bDraggingScale = false;
-	bDraggingAspectRatio = true;
+void RectTransform::switchDraggingToRatioFromScale() {
+	if (bDraggingScale) {
+		bDraggingScale = false;
+		bDraggingAspectRatio = true;
 
-	computeDraggingRatioVariables();
+		computeDraggingRatioVariables();
+	}
 }
-void RectTransform::switchDraggingRatioToScale(){
+void RectTransform::switchDraggingToScaleFromRatio(){
+	if (bDraggingAspectRatio) {
+		bDraggingScale = true;
+		bDraggingAspectRatio = false;
+		setAspectRatio(m_aspectRatioWhenDraggingStarted);
 
+		computeDraggingScaleVariables(m_mousePosWhenDraggingStarted);
+	}
 }
 
 void RectTransform::checkDragging() {
