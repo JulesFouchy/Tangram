@@ -151,9 +151,9 @@ void GroupOfLayers::startDraggingTranslation() {
 }
 
 void GroupOfLayers::startDraggingScale(glm::vec2 originInDBspace) {
-	m_transform.startDraggingScale(m_transform.getInverseMatrix() * glm::vec4(originInDBspace, 0.0f, 1.0f));
+	m_transform.startDraggingScale(originInDBspace);
 	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.startDraggingScale(m_layers[k]->m_transform.getInverseMatrix() * glm::vec4(originInDBspace, 0.0f, 1.0f));
+		m_layers[k]->m_transform.startDraggingScale(originInDBspace);
 	}
 }
 
@@ -172,15 +172,21 @@ void GroupOfLayers::startDraggingRotation() {
 	}
 }
 
-void GroupOfLayers::startDraggingAspectRatioH(glm::vec2 dragCenterInTransformSpace) {
+void GroupOfLayers::startDraggingAspectRatio(glm::vec2 originInDBspace) {
 	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.startDraggingAspectRatioH(dragCenterInTransformSpace);
+		m_layers[k]->m_transform.startDraggingAspectRatio(originInDBspace);
 	}
 }
 
-void GroupOfLayers::startDraggingAspectRatioV(glm::vec2 dragCenterInTransformSpace) {
+void GroupOfLayers::unlockUAspectRatio() {
 	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.startDraggingAspectRatioV(dragCenterInTransformSpace);
+		m_layers[k]->m_transform.unlockUAspectRatio();
+	}
+}
+
+void GroupOfLayers::unlockVAspectRatio() {
+	for (int k = 0; k < m_layers.size(); ++k) {
+		m_layers[k]->m_transform.unlockVAspectRatio();
 	}
 }
 
@@ -223,7 +229,6 @@ void GroupOfLayers::revertDraggingScaleToInitialOrigin() {
 void GroupOfLayers::changeDraggingRatioToAltOrigin() {
 	if (m_layers.size() == 1) {
 		m_layers[0]->m_transform.changeDraggingRatioToAltOrigin();
-		spdlog::info("he");
 	}
 	else if (m_layers.size() > 1) {
 		for (int k = 0; k < m_layers.size(); ++k) {

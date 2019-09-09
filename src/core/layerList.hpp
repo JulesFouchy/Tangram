@@ -8,6 +8,8 @@
 
 #include "UI/cursor.hpp"
 
+#include "UI/keys.hpp"
+
 class LayerList {
 public:
 	LayerList();
@@ -22,6 +24,8 @@ public:
 	Layer* getLayer(int index);
 	void setSelectedLayer(Layer* layer);
 
+	void onKeyDown(Key key);
+	void onKeyUp(Key key);
 	void onDoubleLeftClic();
 	void onLeftClicDown();
 	void onLeftClicUp();

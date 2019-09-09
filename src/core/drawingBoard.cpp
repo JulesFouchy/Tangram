@@ -145,12 +145,12 @@ void DrawingBoard::onKeyDown(Key key) {
 			transform.startDraggingTranslation();
 			m_bIsHandlingAnInput = true;
 		}
-		break;
-	case ALT:
-		layers.selectedLayers.changeDraggingScaleToAltOrigin();
-		layers.selectedLayers.changeDraggingRatioToAltOrigin();
+		else {
+			layers.onKeyDown(key);
+		}
 		break;
 	default:
+		layers.onKeyDown(key);
 		break;
 	}
 }
@@ -158,20 +158,14 @@ void DrawingBoard::onKeyDown(Key key) {
 void DrawingBoard::onKeyUp(Key key) {
 	switch (key)
 	{
-	case ALT:
-		layers.selectedLayers.revertDraggingScaleToInitialOrigin();
-		layers.selectedLayers.revertDraggingRatioToInitialOrigin();
-		break;
-	case CTRL:
-		break;
-	case SHIFT:
-		break;
 	case SPACE:
 		transform.endDragging();
 		m_bIsHandlingAnInput = false;
 		m_currentCursor = nullptr;
+		layers.onKeyUp(key);
 		break;
 	default:
+		layers.onKeyUp(key);
 		break;
 	}
 }

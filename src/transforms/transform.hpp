@@ -19,7 +19,7 @@ public:
 
 	void startDraggingTranslation();
 	void startDraggingAltOrigin();
-	void startDraggingScale(glm::vec2 scaleOriginInTransformSpace = glm::vec2(0.0f,0.0f));
+	virtual void startDraggingScale(glm::vec2 scaleOriginInDrawingBoardSpace);
 	void changeDraggingScaleOrigin(glm::vec2 newScaleOriginInTransformSpace);
 	void revertDraggingScaleToInitialOrigin();
 	void changeDraggingScaleToAltOrigin();
@@ -77,7 +77,9 @@ protected:
 	glm::vec2 m_altOriginInTransformSpaceWhenDraggingStarted;
 
 	bool bDraggingScale;
+	void computeDraggingScaleVariables(glm::vec2 mousePos);
 	glm::vec2 m_initialDragCenterInTransformSpace;
+	glm::vec2 m_dragCenterInTransformSpace;
 	glm::vec2 m_dragCenterInDrawingBoardSpace;
 	glm::vec2 m_dragCenterInWindowSpace;
 	glm::vec2 m_mouseRelPosWhenDraggingStartedInWindowSpace;

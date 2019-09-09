@@ -1,6 +1,7 @@
 #include "rectTransform.hpp"
 
 #include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtx/norm.hpp"
 
 #include "UI/input.hpp"
 
@@ -15,7 +16,7 @@
 #include "glm/gtc/matrix_inverse.hpp"
 RectTransform::RectTransform(float aspectRatio)
 	: m_aspectRatio(aspectRatio), m_projectionMatrix(glm::ortho(-0.5f * m_aspectRatio, 0.5f * m_aspectRatio, -0.5f, 0.5f)), bMustRecomputeProjMat(false),
-	bDraggingAspectRatioH(false), bDraggingAspectRatioV(false), m_aspectRatioWhenDraggingStarted(aspectRatio), m_dragCenterInTransformSpace(glm::vec2(0.0f)),
+	bDraggingAspectRatio(false), bAspectRatioUUnlocked(false), bAspectRatioVUnlocked(false), m_aspectRatioWhenDraggingStarted(aspectRatio),
 	m_oneOverInitialMouseRelPosProjOnU(0.0f), m_oneOverInitialMouseRelPosProjOnV(0.0f)
 {
 }
@@ -36,35 +37,47 @@ void RectTransform::setAspectRatio(float newAspectRatio) {
 	bMustRecomputeProjMat = true;
 }
 
-void RectTransform::startDraggingAspectRatio(glm::vec2 dragCenterInTransformSpace) {
+void RectTransform::startDraggingScaleOrAspectRatio(glm::vec2 dragCenterInDrawingBoardSpace) {
 	m_matrixWhenDraggingStarted = getMatrix();
 	m_scaleWhenDraggingStarted = getScale();
+	m_aspectRatioWhenDraggingStarted = getAspectRatio();
 	m_translationWhenDraggingStarted = getTranslation();
-	m_aspectRatioWhenDraggingStarted = m_aspectRatio;
 	m_mousePosWhenDraggingStarted = Input::getMousePosition();
-	m_initialDragCenterInTransformSpace = dragCenterInTransformSpace;
 
-	m_dragCenterInTransformSpace = dragCenterInTransformSpace;
-	m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * getMatrix() * glm::vec4(dragCenterInTransformSpace, 0.0f, 1.0f);
+	m_dragCenterInDrawingBoardSpace = dragCenterInDrawingBoardSpace;
+	m_dragCenterInTransformSpace = getInverseMatrix() * glm::vec4(m_dragCenterInDrawingBoardSpace, 0.0f, 1.0f);
+	m_initialDragCenterInTransformSpace = m_dragCenterInTransformSpace;
+	m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * glm::vec4(m_dragCenterInDrawingBoardSpace, 0.0f, 1.0f);
+}
+void RectTransform::startDraggingScale(glm::vec2 dragCenterInDrawingBoardSpace) {
+	bDraggingScale = true;
+	startDraggingScaleOrAspectRatio(dragCenterInDrawingBoardSpace);
+	computeDraggingScaleVariables(Input::getMousePosition());
+}
+void RectTransform::computeDraggingRatioVariables() {
 	m_oneOverInitialMouseRelPosProjOnU = 1.0f / glm::dot(m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getUAxis());
 	m_oneOverInitialMouseRelPosProjOnV = 1.0f / glm::dot(m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getVAxis());
 }
-
-void RectTransform::startDraggingAspectRatioH(glm::vec2 dragCenterInTransformSpace) {
-	bDraggingAspectRatioH = true;
-	startDraggingAspectRatio(dragCenterInTransformSpace);
+void RectTransform::startDraggingAspectRatio(glm::vec2 dragCenterInDrawingBoardSpace) {
+	bDraggingAspectRatio = true;
+	startDraggingScaleOrAspectRatio(dragCenterInDrawingBoardSpace);
+	computeDraggingRatioVariables();
 }
 
-void RectTransform::startDraggingAspectRatioV(glm::vec2 dragCenterInTransformSpace) {
-	bDraggingAspectRatioV = true;
-	startDraggingAspectRatio(dragCenterInTransformSpace);
+void RectTransform::unlockUAspectRatio() {
+	bAspectRatioUUnlocked = true;
+}
+
+void RectTransform::unlockVAspectRatio() {
+	bAspectRatioVUnlocked = true;
 }
 
 void RectTransform::changeDraggingRatioOrigin(glm::vec2 newRatioOriginInTransformSpace) {
-	m_dragCenterInTransformSpace = newRatioOriginInTransformSpace;
-	m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * m_matrixWhenDraggingStarted * glm::vec4(newRatioOriginInTransformSpace, 0.0f, 1.0f);
-	m_oneOverInitialMouseRelPosProjOnU = 1.0f / glm::dot(m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getUAxis());
-	m_oneOverInitialMouseRelPosProjOnV = 1.0f / glm::dot(m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getVAxis());
+	if (bDraggingAspectRatio) {
+		m_dragCenterInTransformSpace = newRatioOriginInTransformSpace;
+		m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * m_matrixWhenDraggingStarted * glm::vec4(newRatioOriginInTransformSpace, 0.0f, 1.0f);
+		computeDraggingRatioVariables();
+	}
 }
 void RectTransform::revertDraggingRatioToInitialOrigin() {
 	changeDraggingRatioOrigin(m_initialDragCenterInTransformSpace);
@@ -72,25 +85,34 @@ void RectTransform::revertDraggingRatioToInitialOrigin() {
 void RectTransform::changeDraggingRatioToAltOrigin() {
 	changeDraggingRatioOrigin(getAltOriginInTransformSpace() * glm::vec2(m_aspectRatioWhenDraggingStarted / getAspectRatio() ,1.0f));
 }
+void RectTransform::switchDraggingScaleToRatio() {
+	bDraggingScale = false;
+	bDraggingAspectRatio = true;
+
+	computeDraggingRatioVariables();
+}
+void RectTransform::switchDraggingRatioToScale(){
+
+}
 
 void RectTransform::checkDragging() {
 	Transform::checkDragging();
-	float newAspectRatio = m_aspectRatioWhenDraggingStarted;
-	float newScale = m_scaleWhenDraggingStarted;
-	glm::vec2 newTranslation = glm::vec2(0.0f);
-	if (bDraggingAspectRatioH) {
-		float du = glm::dot((Input::getMousePosition() - m_dragCenterInWindowSpace), getUAxis()) * m_oneOverInitialMouseRelPosProjOnU;
-		newAspectRatio *= du;
-		newTranslation.x = m_dragCenterInTransformSpace.x * (1.0f - du);
-	}
-	if (bDraggingAspectRatioV) {
-		float dv = glm::dot((Input::getMousePosition() - m_dragCenterInWindowSpace), getVAxis()) * m_oneOverInitialMouseRelPosProjOnV;
-		newAspectRatio /= dv;
-		newScale *= dv;
-		newTranslation.x /= dv;
-		newTranslation.y = m_dragCenterInTransformSpace.y * (1.0f/dv - 1.0f);
-	}
-	if (bDraggingAspectRatioH || bDraggingAspectRatioV) {
+	if (bDraggingAspectRatio) {
+		float newAspectRatio = m_aspectRatioWhenDraggingStarted;
+		float newScale = m_scaleWhenDraggingStarted;
+		glm::vec2 newTranslation = glm::vec2(0.0f);
+		if (bAspectRatioUUnlocked) {
+			float du = glm::dot((Input::getMousePosition() - m_dragCenterInWindowSpace), getUAxis()) * m_oneOverInitialMouseRelPosProjOnU;
+			newAspectRatio *= du;
+			newTranslation.x = m_dragCenterInTransformSpace.x * (1.0f - du);
+		}
+		if (bAspectRatioVUnlocked) {
+			float dv = glm::dot((Input::getMousePosition() - m_dragCenterInWindowSpace), getVAxis()) * m_oneOverInitialMouseRelPosProjOnV;
+			newAspectRatio /= dv;
+			newScale *= dv;
+			newTranslation.x /= dv;
+			newTranslation.y = m_dragCenterInTransformSpace.y * (1.0f / dv - 1.0f);
+		}
 		setScale(newScale);
 		setAspectRatio(newAspectRatio);
 		setTranslation(glm::vec4(m_translationWhenDraggingStarted, 0.0f, 0.0f) + getMatrix() * glm::vec4(newTranslation, 0.0f, 0.0f));
@@ -98,9 +120,10 @@ void RectTransform::checkDragging() {
 }
 
 bool RectTransform::endDragging() {
-	bool handled = Transform::endDragging() || bDraggingAspectRatioH || bDraggingAspectRatioV;
-	bDraggingAspectRatioH = false;
-	bDraggingAspectRatioV = false;
+	bool handled = Transform::endDragging() || bDraggingAspectRatio;
+	bDraggingAspectRatio = false;
+	bAspectRatioUUnlocked = false;
+	bAspectRatioVUnlocked = false;
 	return handled;
 }
 

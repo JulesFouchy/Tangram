@@ -103,6 +103,42 @@ bool LayerList::canDragRotation() {
 	}
 }
 
+void LayerList::onKeyDown(Key key) {
+	switch (key)
+	{
+	case ALT:
+		selectedLayers.changeDraggingScaleToAltOrigin();
+		selectedLayers.changeDraggingRatioToAltOrigin();
+		break;
+	case CTRL:
+		break;
+	case SHIFT:
+		break;
+	case SPACE:
+		break;
+	default:
+		break;
+	}
+}
+
+void LayerList::onKeyUp(Key key) {
+	switch (key)
+	{
+	case ALT:
+		selectedLayers.revertDraggingScaleToInitialOrigin();
+		selectedLayers.revertDraggingRatioToInitialOrigin();
+		break;
+	case CTRL:
+		break;
+	case SHIFT:
+		break;
+	case SPACE:
+		break;
+	default:
+		break;
+	}
+}
+
 void LayerList::onDoubleLeftClic() {
 	if (mouseIsHoveringAltOrigin()) {
 		selectedLayers.resetAltOrigin();
@@ -175,30 +211,28 @@ void LayerList::onLeftClicDown() {
 				spdlog::error("[LayerList::onLeftClicDown] reached default case");
 				break;
 			}
+			// Unlock the correct u and/or v aspect ratio in case we switch for dragging ratio
+			if (originInTransformSpace.x != 0.0f) {
+				selectedLayers.unlockUAspectRatio();
+			}
+			if (originInTransformSpace.y != 0.0f) {
+				selectedLayers.unlockVAspectRatio();
+			}
+			// Drag ratio
 			if (Input::keyIsDown(SHIFT)) {
+				selectedLayers.startDraggingAspectRatio(m_hoveredLayer->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f));
+				//Scale towards alt origin if ALT down
 				if(Input::keyIsDown(ALT)){
-					if (originInTransformSpace.x != 0.0f) {
-						selectedLayers.startDraggingAspectRatioH(selectedLayers.getAltOriginInTransformSpace());
-					}
-					if (originInTransformSpace.y != 0.0f) {
-						selectedLayers.startDraggingAspectRatioV(selectedLayers.getAltOriginInTransformSpace());
-					}
-				}
-				else {
-					if (originInTransformSpace.x != 0.0f) {
-						selectedLayers.startDraggingAspectRatioH(originInTransformSpace);
-					}
-					if (originInTransformSpace.y != 0.0f) {
-						selectedLayers.startDraggingAspectRatioV(originInTransformSpace);
-					}
+					selectedLayers.changeDraggingRatioToAltOrigin();
 				}
 			}
+			// Drag scale
 			else {
 				selectedLayers.startDraggingScale(m_hoveredLayer->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f));
-			}
-			//Scale towards alt origin if ALT down
-			if (Input::keyIsDown(ALT)) {
-				selectedLayers.changeDraggingScaleToAltOrigin();
+				//Scale towards alt origin if ALT down
+				if (Input::keyIsDown(ALT)) {
+					selectedLayers.changeDraggingScaleToAltOrigin();
+				}
 			}
 		}
 	}

@@ -25,13 +25,17 @@ public:
 	inline float getAspectRatio() { return m_aspectRatio; };
 	void setAspectRatio(float newAspectRatio);
 
-	inline bool isBusy() override { return Transform::isBusy() || bDraggingAspectRatioH || bDraggingAspectRatioV; }
+	inline bool isBusy() override { return Transform::isBusy() || bDraggingAspectRatio; }
 
-	void startDraggingAspectRatioH(glm::vec2 dragCenterInTransformSpace);
-	void startDraggingAspectRatioV(glm::vec2 dragCenterInTransformSpace);
+	void startDraggingScale(glm::vec2 dragCenterInDrawingBoardSpace) override;
+	void startDraggingAspectRatio(glm::vec2 dragCenterInDrawingBoardSpace);
+	void unlockUAspectRatio();
+	void unlockVAspectRatio();
 	void changeDraggingRatioOrigin(glm::vec2 newRatioOriginInTransformSpace);
 	void revertDraggingRatioToInitialOrigin();
 	void changeDraggingRatioToAltOrigin();
+	void switchDraggingScaleToRatio();
+	void switchDraggingRatioToScale();
 	void checkDragging() override;
 	bool endDragging() override;
 
@@ -43,12 +47,12 @@ private:
 
 	bool bMustRecomputeProjMat;
 
-	bool bDraggingAspectRatioH;
-	bool bDraggingAspectRatioV;
+	void startDraggingScaleOrAspectRatio(glm::vec2 dragCenterInDrawingBoardSpace);
+	void computeDraggingRatioVariables();
+	bool bDraggingAspectRatio;
+	bool bAspectRatioUUnlocked;
+	bool bAspectRatioVUnlocked;
 	float m_aspectRatioWhenDraggingStarted;
-	glm::vec2 m_dragCenterInTransformSpace;
 	float m_oneOverInitialMouseRelPosProjOnU;
 	float m_oneOverInitialMouseRelPosProjOnV;
-
-	void startDraggingAspectRatio(glm::vec2 dragCenterInTransformSpace);
 };
