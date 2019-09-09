@@ -15,7 +15,8 @@
 #include "glm/gtc/matrix_inverse.hpp"
 RectTransform::RectTransform(float aspectRatio)
 	: m_aspectRatio(aspectRatio), m_projectionMatrix(glm::ortho(-0.5f * m_aspectRatio, 0.5f * m_aspectRatio, -0.5f, 0.5f)), bMustRecomputeProjMat(false),
-	bDraggingAspectRatioH(false), bDraggingAspectRatioV(false), m_aspectRatioWhenDraggingStarted(aspectRatio), m_dragCenterInTransformSpace(glm::vec2(0.0f))
+	bDraggingAspectRatioH(false), bDraggingAspectRatioV(false), m_aspectRatioWhenDraggingStarted(aspectRatio), m_dragCenterInTransformSpace(glm::vec2(0.0f)),
+	m_oneOverInitialMouseRelPosProjOnU(0.0f), m_oneOverInitialMouseRelPosProjOnV(0.0f)
 {
 }
 RectTransform::~RectTransform(){
@@ -35,28 +36,27 @@ void RectTransform::setAspectRatio(float newAspectRatio) {
 	bMustRecomputeProjMat = true;
 }
 
-void RectTransform::startDraggingAspectRatioH(glm::vec2 dragCenterInTransformSpace) {
-	bDraggingAspectRatioH = true;
+void RectTransform::startDraggingAspectRatio(glm::vec2 dragCenterInTransformSpace) {
 	m_scaleWhenDraggingStarted = getScale();
-
 	m_translationWhenDraggingStarted = getTranslation();
 	m_aspectRatioWhenDraggingStarted = m_aspectRatio;
 	m_mousePosWhenDraggingStarted = Input::getMousePosition();
 	m_dragCenterInTransformSpace = dragCenterInTransformSpace;
 	m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * getMatrix() * glm::vec4(dragCenterInTransformSpace, 0.0f, 1.0f);
+
+	m_oneOverInitialMouseRelPosProjOnU = 1.0f / glm::dot(m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getUAxis());
+	m_oneOverInitialMouseRelPosProjOnV = 1.0F / glm::dot(m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getVAxis());
+}
+
+void RectTransform::startDraggingAspectRatioH(glm::vec2 dragCenterInTransformSpace) {
+	bDraggingAspectRatioH = true;
+	startDraggingAspectRatio(dragCenterInTransformSpace);
 }
 
 void RectTransform::startDraggingAspectRatioV(glm::vec2 dragCenterInTransformSpace) {
 	bDraggingAspectRatioV = true;
-	m_scaleWhenDraggingStarted = getScale();
-
-	m_translationWhenDraggingStarted = getTranslation();
-	m_aspectRatioWhenDraggingStarted = m_aspectRatio;
-	m_mousePosWhenDraggingStarted = Input::getMousePosition();
-	m_dragCenterInTransformSpace = dragCenterInTransformSpace;
-	m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * getMatrix() * glm::vec4(dragCenterInTransformSpace, 0.0f, 1.0f);
+	startDraggingAspectRatio(dragCenterInTransformSpace);
 }
-
 
 void RectTransform::checkDragging() {
 	Transform::checkDragging();
@@ -64,12 +64,12 @@ void RectTransform::checkDragging() {
 	float newScale = m_scaleWhenDraggingStarted;
 	glm::vec2 newTranslation = glm::vec2(0.0f);
 	if (bDraggingAspectRatioH) {
-		float du = glm::dot((Input::getMousePosition() - m_dragCenterInWindowSpace), getUAxis()) / glm::dot( m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getUAxis());
+		float du = glm::dot((Input::getMousePosition() - m_dragCenterInWindowSpace), getUAxis()) * m_oneOverInitialMouseRelPosProjOnU;
 		newAspectRatio *= du;
 		newTranslation.x = m_dragCenterInTransformSpace.x * (1.0f - du);
 	}
 	if (bDraggingAspectRatioV) {
-		float dv = glm::dot((Input::getMousePosition() - m_dragCenterInWindowSpace), getVAxis()) / glm::dot(m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getVAxis());
+		float dv = glm::dot((Input::getMousePosition() - m_dragCenterInWindowSpace), getVAxis()) * m_oneOverInitialMouseRelPosProjOnV;
 		newAspectRatio /= dv;
 		newScale *= dv;
 		newTranslation.x /= dv;

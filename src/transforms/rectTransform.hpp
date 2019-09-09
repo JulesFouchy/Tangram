@@ -44,4 +44,8 @@ private:
 	bool bDraggingAspectRatioV;
 	float m_aspectRatioWhenDraggingStarted;
 	glm::vec2 m_dragCenterInTransformSpace;
+	float m_oneOverInitialMouseRelPosProjOnU;
+	float m_oneOverInitialMouseRelPosProjOnV;
+
+	void startDraggingAspectRatio(glm::vec2 dragCenterInTransformSpace);
 };
