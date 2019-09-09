@@ -91,6 +91,8 @@ void RectTransform::switchDraggingToRatioFromScale() {
 		bDraggingAspectRatio = true;
 
 		computeDraggingRatioVariables();
+
+		checkDragging();
 	}
 }
 void RectTransform::switchDraggingToScaleFromRatio(){
@@ -100,6 +102,8 @@ void RectTransform::switchDraggingToScaleFromRatio(){
 		setAspectRatio(m_aspectRatioWhenDraggingStarted);
 
 		computeDraggingScaleVariables(m_mousePosWhenDraggingStarted);
+
+		checkDragging();
 	}
 }
 
