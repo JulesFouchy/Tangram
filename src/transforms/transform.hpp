@@ -20,9 +20,9 @@ public:
 	void startDraggingTranslation();
 	void startDraggingAltOrigin();
 	virtual void startDraggingScale(glm::vec2 scaleOriginInDrawingBoardSpace);
-	void changeDraggingScaleOrigin(glm::vec2 newScaleOriginInTransformSpace);
-	void revertDraggingScaleToInitialOrigin();
-	void changeDraggingScaleToAltOrigin();
+	virtual void changeDraggingCenter(glm::vec2 newDraggingCenterInTransformSpace);
+	void revertDraggingCenterToInitialOrigin();
+	virtual void changeDraggingCenterToAltOrigin();
 	void startDraggingRotation(glm::vec2 rotationOriginInDBspace);
 	void startDraggingRotation();
 	virtual void checkDragging();

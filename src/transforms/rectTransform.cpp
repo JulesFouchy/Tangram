@@ -72,18 +72,14 @@ void RectTransform::unlockVAspectRatio() {
 	bAspectRatioVUnlocked = true;
 }
 
-void RectTransform::changeDraggingRatioOrigin(glm::vec2 newRatioOriginInTransformSpace) {
+void RectTransform::changeDraggingCenter(glm::vec2 newDraggingCenterInTransformSpace) {
+	Transform::changeDraggingCenter(newDraggingCenterInTransformSpace);
 	if (bDraggingAspectRatio) {
-		m_dragCenterInTransformSpace = newRatioOriginInTransformSpace;
-		m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * m_matrixWhenDraggingStarted * glm::vec4(newRatioOriginInTransformSpace, 0.0f, 1.0f);
 		computeDraggingRatioVariables();
 	}
 }
-void RectTransform::revertDraggingRatioToInitialOrigin() {
-	changeDraggingRatioOrigin(m_initialDragCenterInTransformSpace);
-}
-void RectTransform::changeDraggingRatioToAltOrigin() {
-	changeDraggingRatioOrigin(getAltOriginInTransformSpace() * glm::vec2(m_aspectRatioWhenDraggingStarted / getAspectRatio() ,1.0f));
+void RectTransform::changeDraggingCenterToAltOrigin() {
+	changeDraggingCenter(getAltOriginInTransformSpace() * glm::vec2(m_aspectRatioWhenDraggingStarted / getAspectRatio() ,1.0f));
 }
 void RectTransform::switchDraggingToRatioFromScale() {
 	if (bDraggingScale) {

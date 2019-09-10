@@ -31,9 +31,8 @@ public:
 	void startDraggingAspectRatio(glm::vec2 dragCenterInDrawingBoardSpace);
 	void unlockUAspectRatio();
 	void unlockVAspectRatio();
-	void changeDraggingRatioOrigin(glm::vec2 newRatioOriginInTransformSpace);
-	void revertDraggingRatioToInitialOrigin();
-	void changeDraggingRatioToAltOrigin();
+	void changeDraggingCenter(glm::vec2 newDraggingCenterInTransformSpace) override;
+	void changeDraggingCenterToAltOrigin() override;
 	void switchDraggingToRatioFromScale();
 	void switchDraggingToScaleFromRatio();
 	void checkDragging() override;

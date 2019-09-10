@@ -107,8 +107,7 @@ void LayerList::onKeyDown(Key key) {
 	switch (key)
 	{
 	case ALT:
-		selectedLayers.changeDraggingScaleToAltOrigin();
-		selectedLayers.changeDraggingRatioToAltOrigin();
+		selectedLayers.changeDraggingCenterToAltOrigin();
 		break;
 	case CTRL:
 		break;
@@ -126,8 +125,7 @@ void LayerList::onKeyUp(Key key) {
 	switch (key)
 	{
 	case ALT:
-		selectedLayers.revertDraggingScaleToInitialOrigin();
-		selectedLayers.revertDraggingRatioToInitialOrigin();
+		selectedLayers.revertDraggingCenterToInitialOrigin();
 		break;
 	case CTRL:
 		break;
@@ -223,18 +221,14 @@ void LayerList::onLeftClicDown() {
 			// Drag ratio
 			if (Input::keyIsDown(SHIFT)) {
 				selectedLayers.startDraggingAspectRatio(m_hoveredLayer->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f));
-				//Scale towards alt origin if ALT down
-				if(Input::keyIsDown(ALT)){
-					selectedLayers.changeDraggingRatioToAltOrigin();
-				}
 			}
 			// Drag scale
 			else {
 				selectedLayers.startDraggingScale(m_hoveredLayer->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f));
-				//Scale towards alt origin if ALT down
-				if (Input::keyIsDown(ALT)) {
-					selectedLayers.changeDraggingScaleToAltOrigin();
-				}
+			}
+			//Scale towards alt origin if ALT down
+			if (Input::keyIsDown(ALT)) {
+				selectedLayers.changeDraggingCenterToAltOrigin();
 			}
 		}
 	}

@@ -204,45 +204,25 @@ void GroupOfLayers::endDragging() {
 	}
 }
 
-void GroupOfLayers::changeDraggingScaleToAltOrigin() {
+void GroupOfLayers::changeDraggingCenterToAltOrigin() {
 	if (m_layers.size() == 1) {
-		m_layers[0]->m_transform.changeDraggingScaleToAltOrigin();
+		m_layers[0]->m_transform.changeDraggingCenterToAltOrigin();
 	}
 	else if (m_layers.size() > 1) {
-		m_transform.changeDraggingScaleToAltOrigin();
+		m_transform.changeDraggingCenterToAltOrigin();
 		for (int k = 0; k < m_layers.size(); ++k) {
-			m_layers[k]->m_transform.changeDraggingScaleOrigin(m_layers[k]->m_transform.getInverseMatrix() * glm::vec4(m_transform.getAltOriginInDrawingBoardSpace(), 0.0f, 1.0f));
+			m_layers[k]->m_transform.changeDraggingCenter(m_layers[k]->m_transform.getInverseMatrix() * glm::vec4(m_transform.getAltOriginInDrawingBoardSpace(), 0.0f, 1.0f));
 		}
 	}
 	else {
-		spdlog::warn("[Group of Layers] changeDraggingScaleToAltOrigin was called but there is actually no layer in the group !");
+		spdlog::warn("[Group of Layers] changeDraggingCenterToAltOrigin was called but there is actually no layer in the group !");
 	}
 }
 
-void GroupOfLayers::revertDraggingScaleToInitialOrigin() {
-	m_transform.revertDraggingScaleToInitialOrigin();
+void GroupOfLayers::revertDraggingCenterToInitialOrigin() {
+	m_transform.revertDraggingCenterToInitialOrigin();
 	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.revertDraggingScaleToInitialOrigin();
-	}
-}
-
-void GroupOfLayers::changeDraggingRatioToAltOrigin() {
-	if (m_layers.size() == 1) {
-		m_layers[0]->m_transform.changeDraggingRatioToAltOrigin();
-	}
-	else if (m_layers.size() > 1) {
-		for (int k = 0; k < m_layers.size(); ++k) {
-			m_layers[k]->m_transform.changeDraggingRatioOrigin(m_layers[k]->m_transform.getInverseMatrix() * glm::vec4(m_transform.getAltOriginInDrawingBoardSpace(), 0.0f, 1.0f));
-		}
-	}
-	else {
-		spdlog::warn("[Group of Layers] changeDraggingRatioToAltOrigin was called but there is actually no layer in the group !");
-	}
-}
-
-void GroupOfLayers::revertDraggingRatioToInitialOrigin() {
-	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.revertDraggingRatioToInitialOrigin();
+		m_layers[k]->m_transform.revertDraggingCenterToInitialOrigin();
 	}
 }
 
