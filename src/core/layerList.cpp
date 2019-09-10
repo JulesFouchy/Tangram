@@ -255,10 +255,10 @@ void LayerList::onLeftClicUp() {
 
 void LayerList::onScroll(float motion) {
 	if (motion < 0.0f) {
-		selectedLayers.scale(Settings::ZOOM_FACTOR);
+		selectedLayers.scaleAndPushChangeToHistory(Settings::ZOOM_FACTOR);
 	}
 	else {
-		selectedLayers.scale(1.0f / Settings::ZOOM_FACTOR);
+		selectedLayers.scaleAndPushChangeToHistory(1.0f / Settings::ZOOM_FACTOR);
 	}
 }
 

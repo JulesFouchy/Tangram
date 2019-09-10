@@ -49,7 +49,7 @@ public:
 	void switchDraggingToRatioFromScale();
 	void switchDraggingToScaleFromRatio();
 
-	void scale(float scaleFactor);
+	void scaleAndPushChangeToHistory(float scaleFactor);
 
 private:
 	int getIndex(Layer* layer);

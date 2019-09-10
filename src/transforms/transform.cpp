@@ -304,6 +304,34 @@ void Transform::scale(float scale, glm::vec2 originInDBspace) {
 	setTranslation(scale * m_translation + (1 - scale) * originInDBspace);
 	setScale(m_scale * scale);
 }
+void Transform::scaleAndPushChangeToHistory(float scaleFactor, glm::vec2 originInDBspace) {
+	// Get initial values
+	float initialScl = getScale();
+	glm::vec2 initialTrans = getTranslation();
+	// Apply scale
+	scale(scaleFactor, originInDBspace);
+	// Get new values
+	float scl = getScale();
+	glm::vec2 trans = getTranslation();
+	//
+	if (scl != initialScl) {
+		// Push state
+		DrawingBoard::history.addAction(Action(
+			// DO action
+			[this, scl, trans]()
+		{
+			setScale(scl);
+			setTranslation(trans);
+		},
+			// UNDO action
+			[this, initialScl, initialTrans]()
+		{
+			setScale(initialScl);
+			setTranslation(initialTrans);
+		}
+		));
+	}
+}
 void Transform::setRotation(float rotation) {
 	m_rotation = rotation;
 	bMatrixMustBeRecomputed = true;

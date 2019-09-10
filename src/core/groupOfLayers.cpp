@@ -250,19 +250,21 @@ void GroupOfLayers::switchDraggingToScaleFromRatio(){
 	}
 }
 
-void GroupOfLayers::scale(float scaleFactor) {
+void GroupOfLayers::scaleAndPushChangeToHistory(float scaleFactor) {
+	DrawingBoard::history.beginUndoGroup();
 	if (m_layers.size() == 1) {
-		m_layers[0]->m_transform.scale(scaleFactor, m_layers[0]->m_transform.getAltOriginInDrawingBoardSpace());
+		m_layers[0]->m_transform.scaleAndPushChangeToHistory(scaleFactor, m_layers[0]->m_transform.getAltOriginInDrawingBoardSpace());
 	}
 	else if (m_layers.size() > 1) {
 		m_transform.scale(scaleFactor, m_transform.getAltOriginInDrawingBoardSpace());
 		for (int k = 0; k < m_layers.size(); ++k) {
-			m_layers[k]->m_transform.scale(scaleFactor, glm::vec4(m_transform.getAltOriginInDrawingBoardSpace(), 0.0f, 1.0f));
+			m_layers[k]->m_transform.scaleAndPushChangeToHistory(scaleFactor, glm::vec4(m_transform.getAltOriginInDrawingBoardSpace(), 0.0f, 1.0f));
 		}
 	}
 	else {
 		spdlog::warn("[Group of Layers] scale was called but there is actually no layer in the group !");
 	}
+	DrawingBoard::history.endUndoGroup();
 }
 
 int GroupOfLayers::getIndex(Layer* layer) {

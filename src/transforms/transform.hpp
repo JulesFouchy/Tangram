@@ -42,6 +42,7 @@ public:
 	void setScale(float scale);
 	void scale(float scale);
 	void scale(float scale, glm::vec2 originInDBspace);
+	void scaleAndPushChangeToHistory(float scaleFactor, glm::vec2 originInDBspace);
 	inline float getScale() { return m_scale; };
 	void setRotation(float rotation);
 	void rotate(float rotation);
