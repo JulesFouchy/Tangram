@@ -38,7 +38,7 @@ public:
 	void startDraggingTranslation();
 	void startDraggingScale(glm::vec2 originInDBspace);
 	void startDraggingRotation();
-	void startDraggingAspectRatio(glm::vec2 originInDBspace);
+	void startDraggingAspectRatio(glm::vec2 originInDBspace, glm::vec2 uAxis, glm::vec2 vAxis);
 	void unlockUAspectRatio();
 	void unlockVAspectRatio();
 	void checkDragging();

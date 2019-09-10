@@ -17,7 +17,8 @@
 RectTransform::RectTransform(float aspectRatio)
 	: m_aspectRatio(aspectRatio), m_projectionMatrix(glm::ortho(-0.5f * m_aspectRatio, 0.5f * m_aspectRatio, -0.5f, 0.5f)), bMustRecomputeProjMat(false),
 	bDraggingAspectRatio(false), bAspectRatioUUnlocked(false), bAspectRatioVUnlocked(false), m_aspectRatioWhenDraggingStarted(aspectRatio),
-	m_oneOverInitialMouseRelPosProjOnU(0.0f), m_oneOverInitialMouseRelPosProjOnV(0.0f)
+	m_oneOverInitialMouseRelPosProjOnU(0.0f), m_oneOverInitialMouseRelPosProjOnV(0.0f),
+	m_uAxisForDragging(glm::vec2(0.0f)), m_vAxisForDragging(glm::vec2(0.0f))
 {
 }
 RectTransform::~RectTransform(){
@@ -58,10 +59,13 @@ void RectTransform::computeDraggingRatioVariables() {
 	m_oneOverInitialMouseRelPosProjOnU = 1.0f / glm::dot(m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getUAxis());
 	m_oneOverInitialMouseRelPosProjOnV = 1.0f / glm::dot(m_mousePosWhenDraggingStarted - m_dragCenterInWindowSpace, getVAxis());
 }
-void RectTransform::startDraggingAspectRatio(glm::vec2 dragCenterInDrawingBoardSpace) {
+void RectTransform::startDraggingAspectRatio(glm::vec2 dragCenterInDrawingBoardSpace, glm::vec2 uAxis, glm::vec2 vAxis) {
 	bDraggingAspectRatio = true;
 	startDraggingScaleOrAspectRatio(dragCenterInDrawingBoardSpace);
 	computeDraggingRatioVariables();
+
+	m_uAxisForDragging = uAxis;
+	m_vAxisForDragging = vAxis;
 }
 
 void RectTransform::unlockUAspectRatio() {
@@ -110,12 +114,12 @@ void RectTransform::checkDragging() {
 		float newScale = m_scaleWhenDraggingStarted;
 		glm::vec2 newTranslation = glm::vec2(0.0f);
 		if (bAspectRatioUUnlocked) {
-			float du = glm::dot((Input::getMousePosition() - m_dragCenterInWindowSpace), getUAxis()) * m_oneOverInitialMouseRelPosProjOnU;
+			float du = glm::dot((Input::getMousePosition() - m_dragCenterInWindowSpace), m_uAxisForDragging) * m_oneOverInitialMouseRelPosProjOnU;
 			newAspectRatio *= du;
 			newTranslation.x = m_dragCenterInTransformSpace.x * (1.0f - du);
 		}
 		if (bAspectRatioVUnlocked) {
-			float dv = glm::dot((Input::getMousePosition() - m_dragCenterInWindowSpace), getVAxis()) * m_oneOverInitialMouseRelPosProjOnV;
+			float dv = glm::dot((Input::getMousePosition() - m_dragCenterInWindowSpace), m_vAxisForDragging) * m_oneOverInitialMouseRelPosProjOnV;
 			newAspectRatio /= dv;
 			newScale *= dv;
 			newTranslation.x /= dv;

@@ -174,9 +174,10 @@ void GroupOfLayers::startDraggingRotation() {
 	}
 }
 
-void GroupOfLayers::startDraggingAspectRatio(glm::vec2 originInDBspace) {
+void GroupOfLayers::startDraggingAspectRatio(glm::vec2 originInDBspace, glm::vec2 uAxis, glm::vec2 vAxis) {
+	//m_transform.startDraggingScale(originInDBspace);
 	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.startDraggingAspectRatio(originInDBspace);
+		m_layers[k]->m_transform.startDraggingAspectRatio(originInDBspace, uAxis, vAxis);
 	}
 }
 

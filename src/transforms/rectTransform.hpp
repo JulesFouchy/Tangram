@@ -28,7 +28,7 @@ public:
 	inline bool isBusy() override { return Transform::isBusy() || bDraggingAspectRatio; }
 
 	void startDraggingScale(glm::vec2 dragCenterInDrawingBoardSpace) override;
-	void startDraggingAspectRatio(glm::vec2 dragCenterInDrawingBoardSpace);
+	void startDraggingAspectRatio(glm::vec2 dragCenterInDrawingBoardSpace, glm::vec2 uAxis, glm::vec2 vAxis);
 	void unlockUAspectRatio();
 	void unlockVAspectRatio();
 	void changeDraggingCenter(glm::vec2 newDraggingCenterInTransformSpace) override;
@@ -58,4 +58,6 @@ private:
 	float m_aspectRatioWhenDraggingStarted;
 	float m_oneOverInitialMouseRelPosProjOnU;
 	float m_oneOverInitialMouseRelPosProjOnV;
+	glm::vec2 m_uAxisForDragging;
+	glm::vec2 m_vAxisForDragging;
 };

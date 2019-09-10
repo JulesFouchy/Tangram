@@ -230,7 +230,7 @@ void LayerList::onLeftClicDown() {
 			}
 			// Drag ratio
 			if (Input::keyIsDown(SHIFT)) {
-				selectedLayers.startDraggingAspectRatio(m_hoveredLayer->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f));
+				selectedLayers.startDraggingAspectRatio(m_hoveredLayer->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f), m_hoveredLayer->m_transform.getUAxis(), m_hoveredLayer->m_transform.getVAxis());
 			}
 			// Drag scale
 			else {
