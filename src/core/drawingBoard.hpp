@@ -5,7 +5,7 @@
 
 #include "layer.hpp"
 #include "layerList.hpp"
-#include "history.hpp"
+#include "history/history.hpp"
 
 #include "graphics/frameBuffer.hpp"
 

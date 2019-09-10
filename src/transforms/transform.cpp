@@ -147,6 +147,28 @@ void Transform::checkDragging() {
 }
 bool Transform::endDragging() {
 	bool handled = bDraggingTranslation || bDraggingAltOrigin || bDraggingScale || bDraggingRotation;
+	// Set state in history
+	// N.B. : begin/end undoGroup are called by GroupOfLayers
+	if (bDraggingTranslation) {
+		// Get values
+		glm::vec2 translation = getTranslation();
+		glm::vec2 initialTranslation = m_translationWhenDraggingStarted;
+		if (translation != initialTranslation) {
+			// Save state
+			DrawingBoard::history.addAction(Action(
+				// DO action
+				[this, translation]()
+			{
+				setTranslation(translation);
+			},
+				// UNDO action
+				[this, initialTranslation]()
+			{
+				setTranslation(initialTranslation);
+			}
+			));
+		}
+	}
 	bDraggingTranslation = false;
 	bDraggingAltOrigin = false;
 	bDraggingScale = false;

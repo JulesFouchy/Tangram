@@ -100,6 +100,7 @@ void DrawingBoard::addLayer(const std::string imgFilePath) {
 
 void DrawingBoard::update() {
 	transform.checkDraggingTranslation();
+	//spdlog::info("current delimiter = {}", history.getCurrentDelimiter());
 }
 
 void DrawingBoard::onDoubleLeftClic() {
@@ -161,7 +162,7 @@ void DrawingBoard::onKeyDown(Key key) {
 		switch (*c) {
 		case 'z':
 			if(Input::keyIsDown(CTRL))
-				DrawingBoard::history.moveBack();
+				DrawingBoard::history.moveBackward();
 			else
 				layers.onKeyDown(key);
 			break;

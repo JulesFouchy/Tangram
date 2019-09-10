@@ -200,27 +200,13 @@ void GroupOfLayers::checkDragging() {
 }
 
 void GroupOfLayers::endDragging() {
-	// Set history
-	if (m_transform.isDraggingTranslation()) {
-		glm::vec2 trans0 = m_transform.getTranslation();
-		std::vector<glm::vec2> translations;
-		std::vector<Layer*> layers;
+	// N.B. : Each transform.endDragging adds an action to the undoGroup
+	DrawingBoard::history.beginUndoGroup();
+		m_transform.endDragging();
 		for (int k = 0; k < m_layers.size(); ++k) {
-			layers.push_back(m_layers[k]);
-			translations.push_back(m_layers[k]->m_transform.getTranslation());
+			m_layers[k]->m_transform.endDragging();
 		}
-		DrawingBoard::history.addUndoGroup([this, trans0, translations, layers]() {
-			m_transform.setTranslation(trans0);
-			for (int k = 0; k < layers.size(); ++k) {
-				layers[k]->m_transform.setTranslation(translations[k]);
-			}
-		});
-	}
-	// End dragging
-	m_transform.endDragging();
-	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.endDragging();
-	}
+	DrawingBoard::history.endUndoGroup();
 }
 
 void GroupOfLayers::changeDraggingCenterToAltOrigin() {
