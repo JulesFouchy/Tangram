@@ -222,7 +222,6 @@ int main(int argc, char* argv[])
 				if (e.button.button == SDL_BUTTON_LEFT) {
 					if (!imGuiIO.WantCaptureMouse) {
 						Input::onLeftClicUp();
-						DrawingBoard::onLeftClicUp();
 					}
 				}
 				else if (e.button.button == SDL_BUTTON_RIGHT){
@@ -233,7 +232,6 @@ int main(int argc, char* argv[])
 				if (e.button.button == SDL_BUTTON_LEFT) {
 					if (!imGuiIO.WantCaptureMouse) {
 						Input::onLeftClicDown();
-						DrawingBoard::onLeftClicDown();
 					}
 				}
 				else if (e.button.button == SDL_BUTTON_RIGHT) {

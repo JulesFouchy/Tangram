@@ -68,6 +68,9 @@ void Input::onLeftClicDown() {
 	if (timeSinceLastLeftClic.getAge() < 0.1f && glm::length(m_mousePosWhenLastLeftClic-mousePos) < 0.05f){
 		onDoubleLeftClic();
 	}
+	else {
+		DrawingBoard::onLeftClicDown();
+	}
 }
 void Input::onDoubleLeftClic() {
 	DrawingBoard::onDoubleLeftClic();
@@ -75,6 +78,7 @@ void Input::onDoubleLeftClic() {
 void Input::onLeftClicUp() {
 	m_leftClicIsDown = false;
 	timeSinceLastLeftClic.reset();
+	DrawingBoard::onLeftClicUp();
 }
 void Input::onStandardKeyDown(char key) {
 	if (key == ' ') {
