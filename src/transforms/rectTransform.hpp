@@ -37,6 +37,10 @@ public:
 	void switchDraggingToScaleFromRatio();
 	void checkDragging() override;
 	bool endDragging() override;
+	void pushStateInHistory() override;
+private:
+	void pushAspectRatioInHistory();
+public:
 
 	MousePositionRelativeToRect getMouseRelativePosition();
 

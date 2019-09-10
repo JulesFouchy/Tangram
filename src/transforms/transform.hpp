@@ -28,6 +28,14 @@ public:
 	virtual void checkDragging();
 	virtual bool endDragging();
 
+	virtual void pushStateInHistory();
+protected:
+	void pushTranslationInHistory();
+	void pushScaleInHistory();
+	void pushRotationInHistory();
+	void pushAltOriginInHistory();
+
+public:
 	void setTranslation(glm::vec2 translation);
 	void translate(glm::vec2 translation);
 	inline glm::vec2 getTranslation() { return m_translation; }

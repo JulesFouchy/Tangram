@@ -135,6 +135,36 @@ bool RectTransform::endDragging() {
 	return handled;
 }
 
+void RectTransform::pushStateInHistory() {
+	Transform::pushStateInHistory();
+	if (bDraggingAspectRatio) {
+		pushAspectRatioInHistory();
+		pushScaleInHistory();
+		pushTranslationInHistory();
+	}
+}
+
+void RectTransform::pushAspectRatioInHistory() {
+	// Get values
+	float ratio = getAspectRatio();
+	float initialRatio = m_aspectRatioWhenDraggingStarted;
+	if (ratio != initialRatio) {
+		// Push state
+		DrawingBoard::history.addAction(Action(
+			// DO action
+			[this, ratio]()
+		{
+			setAspectRatio(ratio);
+		},
+			// UNDO action
+			[this, initialRatio]()
+		{
+			setAspectRatio(initialRatio);
+		}
+		));
+	}
+}
+
 MousePositionRelativeToRect RectTransform::getMouseRelativePosition() {
 	glm::vec4 dl = glm::inverse(DrawingBoard::transform.getMatrix() * glm::scale(getMatrix(), glm::vec3(getAspectRatio(), 1.0f, 1.0f))) * glm::vec4(Input::getMousePosition(), 0.0f, 1.0f);
 	float margin = 0.025f;

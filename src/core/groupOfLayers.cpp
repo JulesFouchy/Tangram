@@ -200,11 +200,17 @@ void GroupOfLayers::checkDragging() {
 }
 
 void GroupOfLayers::endDragging() {
-	// N.B. : Each transform.endDragging adds an action to the undoGroup
-	DrawingBoard::history.beginUndoGroup();
 		m_transform.endDragging();
 		for (int k = 0; k < m_layers.size(); ++k) {
 			m_layers[k]->m_transform.endDragging();
+		}
+}
+
+void GroupOfLayers::pushStateInHistory() {
+	DrawingBoard::history.beginUndoGroup();
+		m_transform.pushStateInHistory();
+		for (int k = 0; k < m_layers.size(); ++k) {
+			m_layers[k]->m_transform.pushStateInHistory();
 		}
 	DrawingBoard::history.endUndoGroup();
 }

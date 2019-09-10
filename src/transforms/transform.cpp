@@ -60,6 +60,7 @@ void Transform::showAltOrigin() {
 void Transform::startDraggingTranslation() {
 	if (!bDraggingTranslation) {
 		bDraggingTranslation = true;
+		m_matrixWhenDraggingStarted = getMatrix();
 		m_mousePosWhenDraggingStarted = Input::getMousePosition();
 		m_translationWhenDraggingStarted = m_translation;
 	}
@@ -110,6 +111,7 @@ void Transform::changeDraggingCenterToAltOrigin() {
 void Transform::startDraggingRotation(glm::vec2 rotationOriginInDBspace) {
 	if (!bDraggingRotation) {
 		bDraggingRotation = true;
+		m_matrixWhenDraggingStarted = getMatrix();
 		m_mouseRelPosWhenDraggingStartedInWindowSpace = glm::vec4(Input::getMousePosition(), 0.0f, 0.0f) - DrawingBoard::transform.getMatrix() * glm::vec4(rotationOriginInDBspace, 0.0f, 1.0f);
 		m_rotationWhenDraggingStarted = m_rotation;
 		m_translationWhenDraggingStarted = m_translation;
@@ -147,33 +149,110 @@ void Transform::checkDragging() {
 }
 bool Transform::endDragging() {
 	bool handled = bDraggingTranslation || bDraggingAltOrigin || bDraggingScale || bDraggingRotation;
-	// Set state in history
-	// N.B. : begin/end undoGroup are called by GroupOfLayers
-	if (bDraggingTranslation) {
-		// Get values
-		glm::vec2 translation = getTranslation();
-		glm::vec2 initialTranslation = m_translationWhenDraggingStarted;
-		if (translation != initialTranslation) {
-			// Save state
-			DrawingBoard::history.addAction(Action(
-				// DO action
-				[this, translation]()
-			{
-				setTranslation(translation);
-			},
-				// UNDO action
-				[this, initialTranslation]()
-			{
-				setTranslation(initialTranslation);
-			}
-			));
-		}
-	}
 	bDraggingTranslation = false;
 	bDraggingAltOrigin = false;
 	bDraggingScale = false;
 	bDraggingRotation = false;
 	return handled;
+}
+
+void Transform::pushStateInHistory() {
+	// N.B. : begin/end undoGroup are called by GroupOfLayers
+	if (bDraggingTranslation) {
+		pushTranslationInHistory();
+	}
+	if (bDraggingRotation) {
+		pushRotationInHistory();
+		pushTranslationInHistory();
+	}
+	if(bDraggingScale){
+		pushScaleInHistory();
+		pushTranslationInHistory();
+	}
+	if (bDraggingAltOrigin && Settings::SAVE_ALT_ORIGIN_TRANSLATION_IN_HISTORY) {
+		pushAltOriginInHistory();
+	}
+}
+
+void Transform::pushTranslationInHistory() {
+	// Get values
+	glm::vec2 translation = getTranslation();
+	glm::vec2 initialTranslation = m_translationWhenDraggingStarted;
+	if (translation != initialTranslation) {
+	// Push state
+		DrawingBoard::history.addAction(Action(
+			// DO action
+			[this, translation]()
+		{
+			setTranslation(translation);
+		},
+			// UNDO action
+			[this, initialTranslation]()
+		{
+			setTranslation(initialTranslation);
+		}
+		));
+	}
+}
+void Transform::pushScaleInHistory() {
+	// Get values
+	float scl = getScale();
+	float initialScl = m_scaleWhenDraggingStarted;
+	if (scl != initialScl) {
+		// Push state
+		DrawingBoard::history.addAction(Action(
+			// DO action
+			[this, scl]()
+		{
+			setScale(scl);
+		},
+			// UNDO action
+			[this, initialScl]()
+		{
+			setScale(initialScl);
+		}
+		));
+	}
+}
+void Transform::pushRotationInHistory() {
+	// Get values
+	float rot = getRotation();
+	float initialRot = m_rotationWhenDraggingStarted;
+	if (rot != initialRot) {
+		// Push state
+		DrawingBoard::history.addAction(Action(
+			// DO action
+			[this, rot]()
+		{
+			setRotation(rot);
+		},
+			// UNDO action
+			[this, initialRot]()
+		{
+			setRotation(initialRot);
+		}
+		));
+	}
+}
+void Transform::pushAltOriginInHistory(){
+	// Get values
+	glm::vec2 altOrig = getAltOriginInTransformSpace();
+	glm::vec2 initialAltOrig = m_altOriginInTransformSpaceWhenDraggingStarted;
+	if (altOrig != initialAltOrig) {
+		// Push state
+		DrawingBoard::history.addAction(Action(
+			// DO action
+			[this, altOrig]()
+		{
+			setAltOrigin(altOrig);
+		},
+			// UNDO action
+			[this, initialAltOrig]()
+		{
+			setAltOrigin(initialAltOrig);
+		}
+		));
+	}
 }
 
 void Transform::setMatrix(glm::mat4x4 matrix) {

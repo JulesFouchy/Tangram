@@ -248,6 +248,7 @@ void LayerList::onLeftClicDown() {
 }
 
 void LayerList::onLeftClicUp() {
+	selectedLayers.pushStateInHistory();
 	selectedLayers.endDragging();
 	usedCursor = nullptr;
 }

@@ -43,6 +43,7 @@ public:
 	void unlockVAspectRatio();
 	void checkDragging();
 	void endDragging();
+	void pushStateInHistory();
 	void changeDraggingCenterToAltOrigin();
 	void revertDraggingCenterToInitialOrigin();
 	void switchDraggingToRatioFromScale();
