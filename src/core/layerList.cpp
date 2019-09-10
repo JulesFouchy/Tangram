@@ -104,38 +104,48 @@ bool LayerList::canDragRotation() {
 }
 
 void LayerList::onKeyDown(Key key) {
-	switch (key)
-	{
-	case ALT:
-		selectedLayers.changeDraggingCenterToAltOrigin();
-		break;
-	case CTRL:
-		break;
-	case SHIFT:
-		selectedLayers.switchDraggingToRatioFromScale();
-		break;
-	case SPACE:
-		break;
-	default:
-		break;
+	if (auto specialKey = std::get_if<SpecialKey>(&key)) { //Check if it's a special key
+		switch (*specialKey)
+		{
+		case ALT:
+			selectedLayers.changeDraggingCenterToAltOrigin();
+			break;
+		case CTRL:
+			break;
+		case SHIFT:
+			selectedLayers.switchDraggingToRatioFromScale();
+			break;
+		case SPACE:
+			break;
+		default:
+			break;
+		}
+	}
+	else if (auto c = std::get_if<char>(&key)) { //It's a char
+
 	}
 }
 
 void LayerList::onKeyUp(Key key) {
-	switch (key)
-	{
-	case ALT:
-		selectedLayers.revertDraggingCenterToInitialOrigin();
-		break;
-	case CTRL:
-		break;
-	case SHIFT:
-		selectedLayers.switchDraggingToScaleFromRatio();
-		break;
-	case SPACE:
-		break;
-	default:
-		break;
+	if (auto specialKey = std::get_if<SpecialKey>(&key)) { //Check if it's a special key
+		switch (*specialKey)
+		{
+		case ALT:
+			selectedLayers.revertDraggingCenterToInitialOrigin();
+			break;
+		case CTRL:
+			break;
+		case SHIFT:
+			selectedLayers.switchDraggingToScaleFromRatio();
+			break;
+		case SPACE:
+			break;
+		default:
+			break;
+		}
+	}
+	else if (auto c = std::get_if<char>(&key)) { //It's a char
+
 	}
 }
 

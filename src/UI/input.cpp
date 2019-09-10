@@ -39,22 +39,25 @@ bool Input::spaceBarIsDown() {
 }
 bool Input::keyIsDown(Key key) {
 	const Uint8* state = SDL_GetKeyboardState(NULL);
-	switch (key)
-	{
-	case ALT:
-		return state[SDL_SCANCODE_LALT] || state[SDL_SCANCODE_RALT];
-		break;
-	case CTRL:
-		return state[SDL_SCANCODE_LCTRL] || state[SDL_SCANCODE_RCTRL];
-		break;
-	case SHIFT:
-		return state[SDL_SCANCODE_LSHIFT] || state[SDL_SCANCODE_RSHIFT];
-		break;
-	default:
-		spdlog::error("[Input::keyIsDown] reached default case");
-		return false;
-		break;
+	if (auto specialKey = std::get_if<SpecialKey>(&key)) { //Check if it's a special key
+		switch (*specialKey)
+		{
+		case ALT:
+			return state[SDL_SCANCODE_LALT] || state[SDL_SCANCODE_RALT];
+			break;
+		case CTRL:
+			return state[SDL_SCANCODE_LCTRL] || state[SDL_SCANCODE_RCTRL];
+			break;
+		case SHIFT:
+			return state[SDL_SCANCODE_LSHIFT] || state[SDL_SCANCODE_RSHIFT];
+			break;
+		default:
+			spdlog::error("[Input::keyIsDown] reached default case");
+			return false;
+			break;
+		}
 	}
+	spdlog::error("[Input::keyIsDown] char keys not supported yet");
 }
 glm::vec2 Input::getMousePosWhenLastLeftClic(){
 	return m_mousePosWhenLastLeftClic;
@@ -80,13 +83,25 @@ void Input::onLeftClicUp() {
 	timeSinceLastLeftClic.reset();
 	DrawingBoard::onLeftClicUp();
 }
-void Input::onStandardKeyDown(char key) {
-	if (key == ' ') {
-		m_spaceBarIsDown = true;
+void Input::onKeyDown(Key key) {
+	if (auto specialKey = std::get_if<SpecialKey>(&key)) { //Check if it's a special key
+
 	}
+	else if (auto c = std::get_if<char>(&key)) { //It's a char
+		if (*c == ' ') {
+			m_spaceBarIsDown = true;
+		}
+	}
+	DrawingBoard::onKeyDown(key);
 }
-void Input::onStandardKeyUp(char key) {
-	if (key == ' ') {
-		m_spaceBarIsDown = false;
+void Input::onKeyUp(Key key) {
+	if (auto specialKey = std::get_if<SpecialKey>(&key)) { //Check if it's a special key
+
 	}
+	else if (auto c = std::get_if<char>(&key)) { //It's a char
+		if (*c == ' ') {
+			m_spaceBarIsDown = false;
+		}
+	}
+	DrawingBoard::onKeyUp(key);
 }

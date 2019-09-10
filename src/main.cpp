@@ -246,7 +246,7 @@ int main(int argc, char* argv[])
 
 			case SDL_KEYDOWN:
 				//spdlog::info(e.key.keysym.sym);
-				Input::onStandardKeyDown(e.key.keysym.sym);
+				Input::onKeyDown(e.key.keysym.sym);
 				if (e.key.keysym.sym == 'o') {
 					std::string imgFilepath = openfilename();
 					if (!imgFilepath.empty())
@@ -290,7 +290,7 @@ int main(int argc, char* argv[])
 				break;
 
 			case SDL_KEYUP:
-				Input::onStandardKeyUp(e.key.keysym.sym);
+				Input::onKeyUp(e.key.keysym.sym);
 				if (e.key.keysym.sym == ' ') {
 					DrawingBoard::onKeyUp(SPACE);
 				}

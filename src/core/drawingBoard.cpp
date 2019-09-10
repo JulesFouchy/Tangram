@@ -18,6 +18,7 @@ glm::vec4 DrawingBoard::outsideColor;
 
 bool DrawingBoard::m_bIsHandlingAnInput;
 CursorType* DrawingBoard::m_currentCursor;
+History DrawingBoard::history;
 DrawingBoardTransform DrawingBoard::transform(1.0f);
 LayerList DrawingBoard::layers;
 FrameBuffer* DrawingBoard::renderBuffer;
@@ -26,6 +27,7 @@ void DrawingBoard::Initialize(float whRatio)
 {
 	m_currentCursor = nullptr;
 	m_bIsHandlingAnInput = false;
+	history = History();
 	transform = DrawingBoardTransform(whRatio);
 	renderBuffer = new FrameBuffer(Display::getHeight() * whRatio, Display::getHeight());
 	backgroundColor = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
@@ -139,34 +141,60 @@ void DrawingBoard::onScroll(float motion) {
 }
 
 void DrawingBoard::onKeyDown(Key key) {
-	switch (key) {
-	case SPACE :
-		if (Input::leftClicIsDown() && !layers.isHandlingAnInput()) {
-			transform.startDraggingTranslation();
-			m_bIsHandlingAnInput = true;
-		}
-		else {
+	if (auto specialKey = std::get_if<SpecialKey>(&key)) { //Check if it's a special key
+		switch (*specialKey) {
+		case SPACE:
+			if (Input::leftClicIsDown() && !layers.isHandlingAnInput()) {
+				transform.startDraggingTranslation();
+				m_bIsHandlingAnInput = true;
+			}
+			else {
+				layers.onKeyDown(key);
+			}
+			break;
+		default:
 			layers.onKeyDown(key);
+			break;
 		}
-		break;
-	default:
-		layers.onKeyDown(key);
-		break;
+	}
+	else if (auto c = std::get_if<char>(&key)) { //It's a char
+		switch (*c) {
+		case 'z':
+			if(Input::keyIsDown(CTRL))
+				DrawingBoard::history.moveBack();
+			else
+				layers.onKeyDown(key);
+			break;
+		case 'y':
+			if (Input::keyIsDown(CTRL))
+				DrawingBoard::history.moveForward();
+			else
+				layers.onKeyDown(key);
+			break;
+		default:
+			layers.onKeyDown(key);
+			break;
+		}
 	}
 }
 
 void DrawingBoard::onKeyUp(Key key) {
-	switch (key)
-	{
-	case SPACE:
-		transform.endDragging();
-		m_bIsHandlingAnInput = false;
-		m_currentCursor = nullptr;
+	if (auto specialKey = std::get_if<SpecialKey>(&key)) { //Check if it's a special key
+		switch (*specialKey)
+		{
+		case SPACE:
+			transform.endDragging();
+			m_bIsHandlingAnInput = false;
+			m_currentCursor = nullptr;
+			layers.onKeyUp(key);
+			break;
+		default:
+			layers.onKeyUp(key);
+			break;
+		}
+	}
+	else if (auto c = std::get_if<char>(&key)) { //It's a char
 		layers.onKeyUp(key);
-		break;
-	default:
-		layers.onKeyUp(key);
-		break;
 	}
 }
 

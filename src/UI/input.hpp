@@ -23,8 +23,8 @@ public:
 	static void onLeftClicDown();
 	static void onLeftClicUp();
 	static void onDoubleLeftClic();
-	static void onStandardKeyDown(char key);
-	static void onStandardKeyUp(char key);
+	static void onKeyDown(Key key);
+	static void onKeyUp(Key key);
 private:
 	static bool m_leftClicIsDown;
 	static bool m_spaceBarIsDown;

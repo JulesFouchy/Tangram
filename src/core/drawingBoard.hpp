@@ -5,6 +5,7 @@
 
 #include "layer.hpp"
 #include "layerList.hpp"
+#include "history.hpp"
 
 #include "graphics/frameBuffer.hpp"
 
@@ -44,6 +45,8 @@ private:
 	static bool m_bIsHandlingAnInput;
 	static inline bool isHandlingAnInput() { return m_bIsHandlingAnInput; };
 	static CursorType* m_currentCursor;
+public:
+	static History history;
 public:
 	static DrawingBoardTransform transform;
 private:
