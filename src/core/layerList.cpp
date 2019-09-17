@@ -222,15 +222,11 @@ void LayerList::onLeftClicDown() {
 				break;
 			}
 			// Unlock the correct u and/or v aspect ratio in case we switch for dragging ratio
-			if (originInTransformSpace.x != 0.0f) {
-				selectedLayers.unlockUAspectRatio();
-			}
-			if (originInTransformSpace.y != 0.0f) {
-				selectedLayers.unlockVAspectRatio();
-			}
+			bool unlockUForClickedLayer = (originInTransformSpace.x != 0.0f);
+			bool unlockVForClickedLayer = (originInTransformSpace.y != 0.0f);
 			// Drag ratio
 			if (Input::keyIsDown(SHIFT)) {
-				selectedLayers.startDraggingAspectRatio(m_hoveredLayer->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f), m_hoveredLayer->m_transform.getUAxis(), m_hoveredLayer->m_transform.getVAxis());
+				selectedLayers.startDraggingAspectRatio(&(m_hoveredLayer->m_transform), m_hoveredLayer->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f), m_hoveredLayer->m_transform.getUAxis(), m_hoveredLayer->m_transform.getVAxis(), unlockUForClickedLayer, unlockVForClickedLayer);
 			}
 			// Drag scale
 			else {

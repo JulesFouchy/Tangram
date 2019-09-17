@@ -174,22 +174,10 @@ void GroupOfLayers::startDraggingRotation() {
 	}
 }
 
-void GroupOfLayers::startDraggingAspectRatio(glm::vec2 originInDBspace, glm::vec2 uAxis, glm::vec2 vAxis) {
-	//m_transform.startDraggingScale(originInDBspace);
+void GroupOfLayers::startDraggingAspectRatio(Transform* leadTransform, glm::vec2 originInDBspace, glm::vec2 uAxis, glm::vec2 vAxis, bool unlockU, bool unlockV) {
+	m_transform.startDraggingAspectRatio(leadTransform, originInDBspace, unlockU, unlockV);
 	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.startDraggingAspectRatio(originInDBspace, uAxis, vAxis);
-	}
-}
-
-void GroupOfLayers::unlockUAspectRatio() {
-	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.unlockUAspectRatio();
-	}
-}
-
-void GroupOfLayers::unlockVAspectRatio() {
-	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.unlockVAspectRatio();
+		m_layers[k]->m_transform.startDraggingAspectRatioLead(m_transform.getAspectRatioDraggingInfos(), originInDBspace);
 	}
 }
 

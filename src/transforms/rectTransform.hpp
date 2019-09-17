@@ -1,6 +1,8 @@
 #pragma once
 
 #include "transform.hpp"
+#include "groupTransform.hpp"
+#include "aspectRatioDraggingInfo.hpp"
 
 enum MousePositionRelativeToRect {
 	OUTSIDE,
@@ -25,12 +27,11 @@ public:
 	inline float getAspectRatio() { return m_aspectRatio; };
 	void setAspectRatio(float newAspectRatio);
 
-	inline bool isBusy() override { return Transform::isBusy() || bDraggingAspectRatio; }
+	inline bool isBusy() override { return Transform::isBusy() || bDraggingAspectRatioLead || bDraggingAspectRatioFollow; }
 
 	void startDraggingScale(glm::vec2 dragCenterInDrawingBoardSpace) override;
-	void startDraggingAspectRatio(glm::vec2 dragCenterInDrawingBoardSpace, glm::vec2 uAxis, glm::vec2 vAxis);
-	void unlockUAspectRatio();
-	void unlockVAspectRatio();
+	void startDraggingAspectRatioLead(AspectRatioDraggingInfo* infos, glm::vec2 originInDrawginBoardSpace);
+	void startDraggingAspectRatioFollow(AspectRatioDraggingInfo* infos, glm::vec2 originInDrawginBoardSpace);
 	void changeDraggingCenter(glm::vec2 newDraggingCenterInTransformSpace) override;
 	void changeDraggingCenterToAltOrigin() override;
 	void switchDraggingToRatioFromScale();
@@ -40,10 +41,11 @@ public:
 	void pushStateInHistory() override;
 private:
 	void pushAspectRatioInHistory();
+private:
+	void scaleU(float scaleFactor, glm::vec2 originInTransformSpace);
+	void scaleV(float scaleFactor, glm::vec2 originInTransformSpace);
 public:
-
 	MousePositionRelativeToRect getMouseRelativePosition();
-
 private:
 	float m_aspectRatio;
 	glm::mat4x4 m_projectionMatrix;
@@ -51,13 +53,8 @@ private:
 	bool bMustRecomputeProjMat;
 
 	void startDraggingScaleOrAspectRatio(glm::vec2 dragCenterInDrawingBoardSpace);
-	void computeDraggingRatioVariables();
-	bool bDraggingAspectRatio;
-	bool bAspectRatioUUnlocked;
-	bool bAspectRatioVUnlocked;
+	bool bDraggingAspectRatioLead;
+	bool bDraggingAspectRatioFollow;
 	float m_aspectRatioWhenDraggingStarted;
-	float m_oneOverInitialMouseRelPosProjOnU;
-	float m_oneOverInitialMouseRelPosProjOnV;
-	glm::vec2 m_uAxisForDragging;
-	glm::vec2 m_vAxisForDragging;
+	AspectRatioDraggingInfo* m_aspectRatioDraggingInfo;
 };
