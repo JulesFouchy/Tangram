@@ -28,6 +28,8 @@ public:
 	virtual void checkDragging();
 	virtual bool endDragging();
 
+	inline glm::vec2 getTranslationWhenDraggingStarted() { return m_translationWhenDraggingStarted; }
+
 	virtual void pushStateInHistory();
 protected:
 	void pushTranslationInHistory();

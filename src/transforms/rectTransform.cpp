@@ -112,7 +112,25 @@ void RectTransform::checkDragging() {
 	}
 
 	if (bDraggingAspectRatioFollow) {
-		setTranslation(m_translationWhenDraggingStarted + m_aspectRatioDraggingInfo->getTranslateAmount());
+		setAspectRatio(m_aspectRatioWhenDraggingStarted);
+		setScale(m_scaleWhenDraggingStarted);
+
+		float uScale = m_aspectRatioDraggingInfo->getUScaleFactor();
+		float vScale = m_aspectRatioDraggingInfo->getVScaleFactor();
+		glm::vec2 dl = m_translationWhenDraggingStarted - m_aspectRatioDraggingInfo->getTranslationWhenDraggingStarted();
+		setTranslation(	  m_translationWhenDraggingStarted
+						+ m_aspectRatioDraggingInfo->getTranslateAmount()
+						+ glm::dot(dl, m_aspectRatioDraggingInfo->getUAxis()) * uScale * m_aspectRatioDraggingInfo->getUAxis()
+						+ glm::dot(dl, m_aspectRatioDraggingInfo->getVAxis()) * vScale * m_aspectRatioDraggingInfo->getVAxis()
+						- dl
+		);
+		float t = Maths::modulo(getRotation() - m_aspectRatioDraggingInfo->getRotation(), Maths::PI) / Maths::PI;
+		if (t < 0.5f)
+			t *= 2.0f;
+		else
+			t = 2.0f * ( 1.0f - t);
+		scaleU( pow(uScale, 1.0f-t)*pow(vScale,t) , glm::vec2(0.0f));
+		scaleV( pow(uScale, t)*pow(vScale, 1.0f-t), glm::vec2(0.0f));
 	}
 }
 

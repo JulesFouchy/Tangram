@@ -10,6 +10,14 @@ float Maths::clamp(float x, float a, float b) {
 	return std::min(std::max(x, a), b);
 }
 
+float Maths::modulo(float x, float m) {
+	while (x > m)
+		x -= m;
+	while (x < 0)
+		x += m;
+	return x;
+}
+
 glm::vec2 Maths::rotate(glm::vec2 vec, float angle) {
 	float cos = std::cos(angle);
 	float sin = std::sin(angle);

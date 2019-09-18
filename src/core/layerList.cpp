@@ -226,7 +226,7 @@ void LayerList::onLeftClicDown() {
 			bool unlockVForClickedLayer = (originInTransformSpace.y != 0.0f);
 			// Drag ratio
 			if (Input::keyIsDown(SHIFT)) {
-				selectedLayers.startDraggingAspectRatio(&(m_hoveredLayer->m_transform), m_hoveredLayer->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f), m_hoveredLayer->m_transform.getUAxis(), m_hoveredLayer->m_transform.getVAxis(), unlockUForClickedLayer, unlockVForClickedLayer);
+				selectedLayers.startDraggingAspectRatio(m_hoveredLayer, m_hoveredLayer->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f), m_hoveredLayer->m_transform.getUAxis(), m_hoveredLayer->m_transform.getVAxis(), unlockUForClickedLayer, unlockVForClickedLayer);
 			}
 			// Drag scale
 			else {

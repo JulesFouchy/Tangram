@@ -13,6 +13,8 @@ public:
 	inline const glm::vec2& getVAxis() { return m_leadTransform->getVAxis(); }
 	//inline const glm::vec2& getOriginInDrawingBoardSpace() { return m_originInDrawingBoardSpace; }
 	glm::vec2 getTranslateAmount();
+	inline glm::vec2 getTranslationWhenDraggingStarted() { return m_leadTransform->getTranslationWhenDraggingStarted(); };
+	inline float getRotation() { return m_leadTransform->getRotation(); }
 	float getUScaleFactor();
 	float getVScaleFactor();
 private:
