@@ -30,7 +30,7 @@ public:
 
 	inline glm::vec2 getTranslationWhenDraggingStarted() { return m_translationWhenDraggingStarted; }
 
-	virtual void pushStateInHistory();
+	virtual void pushStateInHistoryAtTheEndOfDragging();
 protected:
 	void pushTranslationInHistory();
 	void pushScaleInHistory();

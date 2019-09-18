@@ -156,7 +156,7 @@ bool Transform::endDragging() {
 	return handled;
 }
 
-void Transform::pushStateInHistory() {
+void Transform::pushStateInHistoryAtTheEndOfDragging() {
 	// N.B. : begin/end undoGroup are called by GroupOfLayers
 	if (bDraggingTranslation) {
 		pushTranslationInHistory();

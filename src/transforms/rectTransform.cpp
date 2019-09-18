@@ -147,8 +147,8 @@ void RectTransform::reset() {
 	setAspectRatio(m_initialAspectRatio);
 }
 
-void RectTransform::pushStateInHistory() {
-	Transform::pushStateInHistory();
+void RectTransform::pushStateInHistoryAtTheEndOfDragging() {
+	Transform::pushStateInHistoryAtTheEndOfDragging();
 	if (bDraggingAspectRatioLead || bDraggingAspectRatioFollow) {
 		pushAspectRatioInHistory();
 		pushScaleInHistory();

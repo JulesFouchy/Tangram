@@ -40,7 +40,7 @@ public:
 	bool endDragging() override;
 
 	void reset() override;
-	void pushStateInHistory() override;
+	void pushStateInHistoryAtTheEndOfDragging() override;
 private:
 	void pushAspectRatioInHistory();
 private:

@@ -198,11 +198,11 @@ void GroupOfLayers::endDragging() {
 		}
 }
 
-void GroupOfLayers::pushStateInHistory() {
+void GroupOfLayers::pushStateInHistoryAtTheEndOfDragging() {
 	DrawingBoard::history.beginUndoGroup();
-		m_transform.pushStateInHistory();
+		m_transform.pushStateInHistoryAtTheEndOfDragging();
 		for (int k = 0; k < m_layers.size(); ++k) {
-			m_layers[k]->m_transform.pushStateInHistory();
+			m_layers[k]->m_transform.pushStateInHistoryAtTheEndOfDragging();
 		}
 	DrawingBoard::history.endUndoGroup();
 }
