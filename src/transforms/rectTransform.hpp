@@ -38,6 +38,8 @@ public:
 	void switchDraggingToScaleFromRatio();
 	void checkDragging() override;
 	bool endDragging() override;
+
+	void reset() override;
 	void pushStateInHistory() override;
 private:
 	void pushAspectRatioInHistory();
@@ -48,6 +50,7 @@ public:
 	MousePositionRelativeToRect getMouseRelativePosition();
 private:
 	float m_aspectRatio;
+	float m_initialAspectRatio;
 	glm::mat4x4 m_projectionMatrix;
 
 	bool bMustRecomputeProjMat;

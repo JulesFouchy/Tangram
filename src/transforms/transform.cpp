@@ -379,4 +379,5 @@ void Transform::reset() {
 	setTranslation(glm::vec2(0.0f));
 	setScale(1.0f);
 	setRotation(0.0f);
+	setAltOrigin(glm::vec2(0.0f));
 }

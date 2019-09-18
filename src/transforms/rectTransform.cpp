@@ -15,7 +15,8 @@
 
 #include "glm/gtc/matrix_inverse.hpp"
 RectTransform::RectTransform(float aspectRatio)
-	: m_aspectRatio(aspectRatio), m_projectionMatrix(glm::ortho(-0.5f * m_aspectRatio, 0.5f * m_aspectRatio, -0.5f, 0.5f)), bMustRecomputeProjMat(false),
+	: m_aspectRatio(aspectRatio), m_initialAspectRatio(aspectRatio), m_projectionMatrix(glm::ortho(-0.5f * m_aspectRatio, 0.5f * m_aspectRatio, -0.5f, 0.5f)),
+	bMustRecomputeProjMat(false),
 	m_aspectRatioWhenDraggingStarted(aspectRatio), m_aspectRatioDraggingInfo(),
 	bDraggingAspectRatioLead(false), bDraggingAspectRatioFollow(false)
 {
@@ -129,8 +130,8 @@ void RectTransform::checkDragging() {
 			t *= 2.0f;
 		else
 			t = 2.0f * ( 1.0f - t);
-		scaleU( pow(uScale, 1.0f-t)*pow(vScale,t) , glm::vec2(0.0f));
-		scaleV( pow(uScale, t)*pow(vScale, 1.0f-t), glm::vec2(0.0f));
+		scaleU( pow(abs(uScale), 1.0f-t)*pow(abs(vScale),t) , glm::vec2(0.0f));
+		scaleV( pow(abs(uScale), t)*pow(abs(vScale), 1.0f-t), glm::vec2(0.0f));
 	}
 }
 
@@ -139,6 +140,11 @@ bool RectTransform::endDragging() {
 	bDraggingAspectRatioLead = false;
 	bDraggingAspectRatioFollow = false;
 	return handled;
+}
+
+void RectTransform::reset() {
+	Transform::reset();
+	setAspectRatio(m_initialAspectRatio);
 }
 
 void RectTransform::pushStateInHistory() {

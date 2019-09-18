@@ -50,7 +50,7 @@ public:
 	void rotate(float rotation);
 	void rotate(float rotation, glm::vec2 origin);
 	inline float getRotation() { return m_rotation; }
-	void reset();
+	virtual void reset();
 
 	inline void setAltOrigin(glm::vec2 newAltOriginInTransformSpace) { m_altOriginInTransformSpace = newAltOriginInTransformSpace; }
 	glm::vec2 getAltOriginInWindowSpace();
