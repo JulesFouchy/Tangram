@@ -4,6 +4,7 @@
 #include "glm/gtx/norm.hpp"
 
 #include "UI/input.hpp"
+#include "UI/controls.hpp"
 
 #include "UI/log.hpp"
 
@@ -63,28 +64,11 @@ void RectTransform::reset(bool bPushChangeInHistory) {
 	setAspectRatio(m_initialAspectRatio, bPushChangeInHistory);
 }
 
-void RectTransform::startDraggingScaleOrAspectRatio(glm::vec2 dragCenterInDrawingBoardSpace) {
-	m_matrixWhenDraggingStarted = getMatrix();
-	m_scaleWhenDraggingStarted = getScale();
+void RectTransform::startDraggingScale(AspectRatioDraggingInfo* infos, glm::vec2 originInDrawginBoardSpace, bool bFollowingAnotherLayer) {
+	Transform::startDraggingScale(originInDrawginBoardSpace);
 	m_aspectRatioWhenDraggingStarted = getAspectRatio();
-	m_translationWhenDraggingStarted = getTranslation();
-	m_mousePosWhenDraggingStarted = Input::getMousePosition();
-
-	m_dragCenterInDrawingBoardSpace = dragCenterInDrawingBoardSpace;
-	m_dragCenterInTransformSpace = getInverseMatrix() * glm::vec4(m_dragCenterInDrawingBoardSpace, 0.0f, 1.0f);
-	m_initialDragCenterInTransformSpace = m_dragCenterInTransformSpace;
-	m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * glm::vec4(m_dragCenterInDrawingBoardSpace, 0.0f, 1.0f);
-}
-void RectTransform::startDraggingScale(glm::vec2 dragCenterInDrawingBoardSpace) {
-	bDraggingScale = true;
-	startDraggingScaleOrAspectRatio(dragCenterInDrawingBoardSpace);
-	computeDraggingScaleVariables(Input::getMousePosition());
-}
-void RectTransform::startDraggingAspectRatio(AspectRatioDraggingInfo* infos, glm::vec2 originInDrawginBoardSpace, bool bFollowingAnotherLayer) {
-	bDraggingAspectRatio = true;
 	m_dragRatioIsFollowingAnotherLayer = bFollowingAnotherLayer;
 	m_aspectRatioDraggingInfo = infos;
-	startDraggingScaleOrAspectRatio(originInDrawginBoardSpace);
 }
 
 void RectTransform::changeDraggingCenter(glm::vec2 newDraggingCenterInTransformSpace) {
@@ -93,31 +77,13 @@ void RectTransform::changeDraggingCenter(glm::vec2 newDraggingCenterInTransformS
 void RectTransform::changeDraggingCenterToAltOrigin() {
 	changeDraggingCenter(getAltOriginInTransformSpace() * glm::vec2(m_aspectRatioWhenDraggingStarted / getAspectRatio() ,1.0f));
 }
-void RectTransform::switchDraggingToRatioFromScale() {
-	if (bDraggingScale) {
-		bDraggingScale = false;
-		//bDraggingAspectRatio = true;
 
-		//computeDraggingRatioVariables();
-
-		checkDragging();
-	}
-}
-void RectTransform::switchDraggingToScaleFromRatio(){
-	if (bDraggingAspectRatio) {
-		bDraggingScale = true;
-		bDraggingAspectRatio = false;
+void RectTransform::updateScaleWhileDragging() {
+	if (Controls::draggingScaleRespectsAspectRatio()) {
 		setAspectRatio(m_aspectRatioWhenDraggingStarted);
-
-		computeDraggingScaleVariables(m_mousePosWhenDraggingStarted);
-
-		checkDragging();
+		Transform::updateScaleWhileDragging();
 	}
-}
-
-void RectTransform::checkDragging() {
-	Transform::checkDragging();
-	if (bDraggingAspectRatio) {
+	else {
 		if (!m_dragRatioIsFollowingAnotherLayer) {
 
 			float scaleFactorU = m_aspectRatioDraggingInfo->getUScaleFactor();
@@ -170,10 +136,8 @@ void RectTransform::pushStateInHistory() {
 void RectTransform::pushStateInHistoryAtTheEndOfDragging() {
 	// N.B. : begin/end undoGroup are called by GroupOfLayers
 	Transform::pushStateInHistoryAtTheEndOfDragging();
-	if (bDraggingAspectRatio) {
+	if (bDraggingScale && !Controls::draggingScaleRespectsAspectRatio()) {
 		pushAspectRatioInHistoryAtTheEndOfDragging();
-		pushScaleInHistoryAtTheEndOfDragging();
-		pushTranslationInHistoryAtTheEndOfDragging();
 	}
 }
 

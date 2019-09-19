@@ -36,16 +36,13 @@ public:
 	void resetAltOrigin();
 
 	void startDraggingTranslation();
-	void startDraggingScale(glm::vec2 originInDBspace);
+	void startDraggingScale(Layer* leadLayer, glm::vec2 originInDBspace, glm::vec2 uAxis, glm::vec2 vAxis, bool unlockU, bool unlockV);
 	void startDraggingRotation();
-	void startDraggingAspectRatio(Layer* leadLayer, glm::vec2 originInDBspace, glm::vec2 uAxis, glm::vec2 vAxis, bool unlockU, bool unlockV);
 	void checkDragging();
 	void endDragging();
 	void pushStateInHistoryAtTheEndOfDragging();
 	void changeDraggingCenterToAltOrigin();
 	void revertDraggingCenterToInitialOrigin();
-	void switchDraggingToRatioFromScale();
-	void switchDraggingToScaleFromRatio();
 
 	void scale(float scaleFactor, bool bPushChangeInHistory = false);
 

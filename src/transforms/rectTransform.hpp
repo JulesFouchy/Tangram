@@ -29,13 +29,12 @@ public:
 
 	inline bool isBusy() override { return Transform::isBusy() || bDraggingAspectRatio; }
 
-	void startDraggingScale(glm::vec2 dragCenterInDrawingBoardSpace) override;
-	void startDraggingAspectRatio(AspectRatioDraggingInfo* infos, glm::vec2 originInDrawginBoardSpace, bool bFollowingAnotherLayer);
+	void startDraggingScale(AspectRatioDraggingInfo* infos, glm::vec2 originInDrawginBoardSpace, bool bFollowingAnotherLayer);
 	void changeDraggingCenter(glm::vec2 newDraggingCenterInTransformSpace) override;
 	void changeDraggingCenterToAltOrigin() override;
-	void switchDraggingToRatioFromScale();
-	void switchDraggingToScaleFromRatio();
-	void checkDragging() override;
+protected:
+	void updateScaleWhileDragging() override;
+public:
 	bool endDragging() override;
 
 	void reset(bool bPushChangeInHistory = false) override;

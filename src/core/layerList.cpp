@@ -113,7 +113,6 @@ void LayerList::onKeyDown(Key key) {
 		case CTRL:
 			break;
 		case SHIFT:
-			selectedLayers.switchDraggingToRatioFromScale();
 			break;
 		case SPACE:
 			break;
@@ -136,7 +135,6 @@ void LayerList::onKeyUp(Key key) {
 		case CTRL:
 			break;
 		case SHIFT:
-			selectedLayers.switchDraggingToScaleFromRatio();
 			break;
 		case SPACE:
 			break;
@@ -224,14 +222,8 @@ void LayerList::onLeftClicDown() {
 			// Unlock the correct u and/or v aspect ratio in case we switch for dragging ratio
 			bool unlockUForClickedLayer = (originInTransformSpace.x != 0.0f);
 			bool unlockVForClickedLayer = (originInTransformSpace.y != 0.0f);
-			// Drag ratio
-			if (Input::keyIsDown(SHIFT)) {
-				selectedLayers.startDraggingAspectRatio(m_hoveredLayer, m_hoveredLayer->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f), m_hoveredLayer->m_transform.getUAxis(), m_hoveredLayer->m_transform.getVAxis(), unlockUForClickedLayer, unlockVForClickedLayer);
-			}
-			// Drag scale
-			else {
-				selectedLayers.startDraggingScale(m_hoveredLayer->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f));
-			}
+			// Start dragging
+			selectedLayers.startDraggingScale(m_hoveredLayer, m_hoveredLayer->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f), m_hoveredLayer->m_transform.getUAxis(), m_hoveredLayer->m_transform.getVAxis(), unlockUForClickedLayer, unlockVForClickedLayer);
 			//Scale towards alt origin if ALT down
 			if (Input::keyIsDown(ALT)) {
 				selectedLayers.changeDraggingCenterToAltOrigin();

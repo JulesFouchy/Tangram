@@ -2,4 +2,5 @@
 
 namespace Controls {
 	bool isRotationSegmented();
+	bool draggingScaleRespectsAspectRatio();
 }

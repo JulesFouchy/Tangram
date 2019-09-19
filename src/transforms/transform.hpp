@@ -25,8 +25,11 @@ public:
 	virtual void changeDraggingCenterToAltOrigin();
 	void startDraggingRotation(glm::vec2 rotationOriginInDBspace);
 	void startDraggingRotation();
-	virtual void checkDragging();
+	void checkDragging();
 	virtual bool endDragging();
+protected:
+	virtual void updateScaleWhileDragging();
+public:
 
 	inline glm::vec2 getTranslationWhenDraggingStarted() { return m_translationWhenDraggingStarted; }
 

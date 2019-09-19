@@ -152,13 +152,6 @@ void GroupOfLayers::startDraggingTranslation() {
 	}
 }
 
-void GroupOfLayers::startDraggingScale(glm::vec2 originInDBspace) {
-	m_transform.startDraggingScale(originInDBspace);
-	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.startDraggingScale(originInDBspace);
-	}
-}
-
 void GroupOfLayers::startDraggingRotation() {
 	if (m_layers.size() == 1) {
 		m_layers[0]->m_transform.startDraggingRotation();
@@ -174,13 +167,10 @@ void GroupOfLayers::startDraggingRotation() {
 	}
 }
 
-void GroupOfLayers::startDraggingAspectRatio(Layer* leadLayer, glm::vec2 originInDBspace, glm::vec2 uAxis, glm::vec2 vAxis, bool unlockU, bool unlockV) {
-	m_transform.startDraggingAspectRatio(&(leadLayer->m_transform), originInDBspace, unlockU, unlockV);
+void GroupOfLayers::startDraggingScale(Layer* leadLayer, glm::vec2 originInDBspace, glm::vec2 uAxis, glm::vec2 vAxis, bool unlockU, bool unlockV) {
+	m_transform.startDraggingScale(&(leadLayer->m_transform), originInDBspace, unlockU, unlockV);
 	for (int k = 0; k < m_layers.size(); ++k) {
-		if(m_layers[k] == leadLayer)
-			m_layers[k]->m_transform.startDraggingAspectRatio(m_transform.getAspectRatioDraggingInfos(), originInDBspace, false);
-		else
-			m_layers[k]->m_transform.startDraggingAspectRatio(m_transform.getAspectRatioDraggingInfos(), originInDBspace, true);
+		m_layers[k]->m_transform.startDraggingScale(m_transform.getAspectRatioDraggingInfos(), originInDBspace, m_layers[k] != leadLayer);
 	}
 }
 
@@ -226,18 +216,6 @@ void GroupOfLayers::revertDraggingCenterToInitialOrigin() {
 	m_transform.revertDraggingCenterToInitialOrigin();
 	for (int k = 0; k < m_layers.size(); ++k) {
 		m_layers[k]->m_transform.revertDraggingCenterToInitialOrigin();
-	}
-}
-
-
-void GroupOfLayers::switchDraggingToRatioFromScale() {
-	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.switchDraggingToRatioFromScale();
-	}
-}
-void GroupOfLayers::switchDraggingToScaleFromRatio(){
-	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.switchDraggingToScaleFromRatio();
 	}
 }
 

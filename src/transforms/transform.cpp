@@ -79,21 +79,19 @@ void Transform::computeDraggingScaleVariables(glm::vec2 mousePos) {
 	m_invDistToDragCenterSqWhenDraggingStartedinWindowSpace = 1.0f / glm::length2(m_mouseRelPosWhenDraggingStartedInWindowSpace);
 }
 void Transform::startDraggingScale(glm::vec2 scaleOriginInDrawingBoardSpace) {
-	if (!bDraggingScale) {
-		bDraggingScale = true;
+	bDraggingScale = true;
 
-		m_matrixWhenDraggingStarted = getMatrix();
-		m_scaleWhenDraggingStarted = getScale();
-		m_translationWhenDraggingStarted = getTranslation();
-		m_mousePosWhenDraggingStarted = Input::getMousePosition();
+	m_matrixWhenDraggingStarted = getMatrix();
+	m_scaleWhenDraggingStarted = getScale();
+	m_translationWhenDraggingStarted = getTranslation();
+	m_mousePosWhenDraggingStarted = Input::getMousePosition();
 
-		m_dragCenterInDrawingBoardSpace = scaleOriginInDrawingBoardSpace;
-		m_dragCenterInTransformSpace = getInverseMatrix() * glm::vec4(m_dragCenterInDrawingBoardSpace, 0.0f, 1.0f);
-		m_initialDragCenterInTransformSpace = m_dragCenterInTransformSpace;
-		m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * glm::vec4(m_dragCenterInDrawingBoardSpace, 0.0f, 1.0f);
+	m_dragCenterInDrawingBoardSpace = scaleOriginInDrawingBoardSpace;
+	m_dragCenterInTransformSpace = getInverseMatrix() * glm::vec4(m_dragCenterInDrawingBoardSpace, 0.0f, 1.0f);
+	m_initialDragCenterInTransformSpace = m_dragCenterInTransformSpace;
+	m_dragCenterInWindowSpace = DrawingBoard::transform.getMatrix() * glm::vec4(m_dragCenterInDrawingBoardSpace, 0.0f, 1.0f);
 
-		computeDraggingScaleVariables(Input::getMousePosition());
-	}
+	computeDraggingScaleVariables(Input::getMousePosition());
 }
 void Transform::changeDraggingCenter(glm::vec2 newDraggingCenter) {
 	m_dragCenterInTransformSpace = newDraggingCenter;
@@ -133,11 +131,7 @@ void Transform::checkDragging() {
 		m_altOriginInTransformSpace = m_altOriginInTransformSpaceWhenDraggingStarted + glm::vec2(dl.x, dl.y);
 	}
 	if (bDraggingScale) {
-		glm::vec2 mousePosRelToScaleOriginInWindowSpace = Input::getMousePosition() - m_dragCenterInWindowSpace;
-		float scaleFactor = glm::dot(mousePosRelToScaleOriginInWindowSpace, m_mouseRelPosWhenDraggingStartedInWindowSpace) * m_invDistToDragCenterSqWhenDraggingStartedinWindowSpace;
-
-		setTranslation(scaleFactor * m_translationWhenDraggingStarted + (1 - scaleFactor) * m_dragCenterInDrawingBoardSpace);
-		setScale(m_scaleWhenDraggingStarted * scaleFactor);
+		updateScaleWhileDragging();
 	}
 	if (bDraggingRotation) {
 		glm::vec2 mouseRelPos = Input::getMousePosition() - m_dragCenterInWindowSpace;
@@ -154,6 +148,13 @@ void Transform::checkDragging() {
 		setTranslation(m_translationWhenDraggingStarted);
 		rotate(angle, m_dragCenterInDrawingBoardSpace);
 	}
+}
+void Transform::updateScaleWhileDragging() {
+	glm::vec2 mousePosRelToScaleOriginInWindowSpace = Input::getMousePosition() - m_dragCenterInWindowSpace;
+	float scaleFactor = glm::dot(mousePosRelToScaleOriginInWindowSpace, m_mouseRelPosWhenDraggingStartedInWindowSpace) * m_invDistToDragCenterSqWhenDraggingStartedinWindowSpace;
+
+	setTranslation(scaleFactor * m_translationWhenDraggingStarted + (1 - scaleFactor) * m_dragCenterInDrawingBoardSpace);
+	setScale(m_scaleWhenDraggingStarted * scaleFactor);
 }
 bool Transform::endDragging() {
 	bool handled = bDraggingTranslation || bDraggingAltOrigin || bDraggingScale || bDraggingRotation;
