@@ -53,14 +53,16 @@ void History::addAction(Action action) {
 */
 
 void History::moveBackward() {
-	int prevDelimiter = m_currentDelimiterIndex == 0 ? -1 : m_undoGroupDelimiters[m_currentDelimiterIndex - 1];
-	int currDelimiter = m_undoGroupDelimiters[m_currentDelimiterIndex];
-	spdlog::info("back from {} to {}", currDelimiter, prevDelimiter);
-	for (int k = currDelimiter; k >= prevDelimiter + 1; --k) {
-		spdlog::info("undoing action {}", k);
-		m_actions[k].Undo();
+	if (m_currentDelimiterIndex != -1) {
+		int prevDelimiter = m_currentDelimiterIndex == 0 ? -1 : m_undoGroupDelimiters[m_currentDelimiterIndex - 1];
+		int currDelimiter = m_undoGroupDelimiters[m_currentDelimiterIndex];
+		spdlog::info("back from {} to {}", currDelimiter, prevDelimiter);
+		for (int k = currDelimiter; k >= prevDelimiter + 1; --k) {
+			spdlog::info("undoing action {}", k);
+			m_actions[k].Undo();
+		}
+		m_currentDelimiterIndex = m_currentDelimiterIndex == 0 ? 0 : m_currentDelimiterIndex - 1;
 	}
-	m_currentDelimiterIndex = m_currentDelimiterIndex == 0 ? 0 : m_currentDelimiterIndex - 1;
 }
 
 void History::moveForward() {
