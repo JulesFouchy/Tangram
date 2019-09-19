@@ -16,6 +16,7 @@
 #include "graphics/immediateDrawing.hpp"
 
 #include "UI/settings.hpp"
+#include "UI/controls.hpp"
 
 Transform::Transform() :
 	m_translation(glm::vec2(0.0f)), m_scale(1.0f), m_rotation(0.0f),
@@ -141,6 +142,13 @@ void Transform::checkDragging() {
 	if (bDraggingRotation) {
 		glm::vec2 mouseRelPos = Input::getMousePosition() - m_dragCenterInWindowSpace;
 		float angle = glm::orientedAngle(glm::normalize(m_mouseRelPosWhenDraggingStartedInWindowSpace), glm::normalize(mouseRelPos));
+		if (Controls::isRotationSegmented()) {
+			int N = Settings::NB_ANGLES_POSSIBLE_FOR_ROTATION;
+			angle = Maths::modulo(angle, Maths::TAU);
+			angle *= N / Maths::TAU;
+			angle = floor(angle+0.5f);
+			angle *= Maths::TAU / N;
+		}
 
 		setRotation(m_rotationWhenDraggingStarted);
 		setTranslation(m_translationWhenDraggingStarted);
