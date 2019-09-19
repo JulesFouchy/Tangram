@@ -129,16 +129,16 @@ void GroupOfLayers::startDraggingAltOrigin() {
 
 void GroupOfLayers::resetAltOrigin() {
 	if (m_layers.size() == 1) {
-		m_layers[0]->m_transform.setAltOrigin(glm::vec2(0.0f));
+		m_layers[0]->m_transform.setAltOrigin(glm::vec2(0.0f), true);
 	}
 	else if (m_layers.size() > 1) {
-		m_transform.setAltOrigin(glm::vec2(0.0f));
+		m_transform.setAltOrigin(glm::vec2(0.0f), true);
 		//Set in the middle of all layers
 		glm::vec2 newOriginInDBspace = glm::vec2(0.0f);
 		for (Layer* layer : m_layers)
 			newOriginInDBspace = glm::vec4(newOriginInDBspace,0.0f, 0.0f) + layer->m_transform.getMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 		newOriginInDBspace /= m_layers.size();
-		m_transform.setAltOrigin(glm::vec4(newOriginInDBspace, 0.0f, 1.0f)); //no need to convert back to transform space bc m_transform.getMatrix() == identity
+		m_transform.setAltOrigin(glm::vec4(newOriginInDBspace, 0.0f, 1.0f), true); //no need to convert back to transform space bc m_transform.getMatrix() == identity
 	}
 	else {
 		spdlog::warn("[Group of Layers] resetAltOrigin was called but there is actually no layer in the group !");
