@@ -17,6 +17,8 @@ public:
 	inline float getRotation() { return m_leadTransform->getRotation(); }
 	float getUScaleFactor();
 	float getVScaleFactor();
+
+	void updateOrigin();
 private:
 	Transform* m_leadTransform;
 	glm::vec2 m_originInLeadTransformSpace;

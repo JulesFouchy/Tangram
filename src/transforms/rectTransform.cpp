@@ -73,6 +73,9 @@ void RectTransform::startDraggingScale(AspectRatioDraggingInfo* infos, glm::vec2
 
 void RectTransform::changeDraggingCenter(glm::vec2 newDraggingCenterInTransformSpace) {
 	Transform::changeDraggingCenter(newDraggingCenterInTransformSpace);
+	if (!Controls::draggingScaleRespectsAspectRatio() && !m_dragRatioIsFollowingAnotherLayer) {
+		m_aspectRatioDraggingInfo->updateOrigin();
+	}
 }
 void RectTransform::changeDraggingCenterToAltOrigin() {
 	changeDraggingCenter(getAltOriginInTransformSpace() * glm::vec2(m_aspectRatioWhenDraggingStarted / getAspectRatio() ,1.0f));

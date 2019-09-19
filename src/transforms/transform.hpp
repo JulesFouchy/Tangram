@@ -32,6 +32,7 @@ protected:
 public:
 
 	inline glm::vec2 getTranslationWhenDraggingStarted() { return m_translationWhenDraggingStarted; }
+	inline glm::vec2 getDragOriginInDrawingBoardSpace() { return m_dragCenterInDrawingBoardSpace; }
 
 	virtual void pushStateInHistory();
 	virtual void pushStateInHistoryAtTheEndOfDragging();

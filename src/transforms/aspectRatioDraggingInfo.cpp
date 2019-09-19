@@ -12,7 +12,6 @@ AspectRatioDraggingInfo::AspectRatioDraggingInfo(Transform* leadTransform, glm::
 	m_mousePosWhenDraggingStarted = Input::getMousePosition();
 	m_oneOverInitialMouseRelPosProjOnU = 1.0f / glm::dot(m_mousePosWhenDraggingStarted - m_originInWindowSpace, getUAxis());
 	m_oneOverInitialMouseRelPosProjOnV = 1.0f / glm::dot(m_mousePosWhenDraggingStarted - m_originInWindowSpace, getVAxis());
-	int a = 0;
 }
 
 AspectRatioDraggingInfo::~AspectRatioDraggingInfo() {
@@ -39,4 +38,11 @@ float AspectRatioDraggingInfo::getVScaleFactor() {
 	}
 	else
 		return 1.0f;
+}
+
+void AspectRatioDraggingInfo::updateOrigin(){
+	m_originInLeadTransformSpace = m_leadTransform->getInverseMatrix() * glm::vec4(m_leadTransform->getDragOriginInDrawingBoardSpace(), 0.0f, 1.0f);
+	m_originInWindowSpace = DrawingBoard::transform.getMatrix() * glm::vec4(m_leadTransform->getDragOriginInDrawingBoardSpace(), 0.0f, 1.0f);
+	m_oneOverInitialMouseRelPosProjOnU = 1.0f / glm::dot(m_mousePosWhenDraggingStarted - m_originInWindowSpace, getUAxis());
+	m_oneOverInitialMouseRelPosProjOnV = 1.0f / glm::dot(m_mousePosWhenDraggingStarted - m_originInWindowSpace, getVAxis());
 }
