@@ -43,7 +43,9 @@ void UI_LayerList::show() {
 		ImGui::Checkbox("visible", layerList.getLayer(k)->getIsVisiblePointer());
 		// reset transform
 		if (ImGui::Button("Reset Transform")) {
-			layer->m_transform.reset();
+			DrawingBoard::history.beginUndoGroup();
+			layer->m_transform.reset(true);
+			DrawingBoard::history.endUndoGroup();
 		}
 		ImGui::PopID();
 		ImGui::EndChild();

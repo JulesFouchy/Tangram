@@ -156,25 +156,35 @@ bool Transform::endDragging() {
 	return handled;
 }
 
-void Transform::pushStateInHistoryAtTheEndOfDragging() {
-	// N.B. : begin/end undoGroup are called by GroupOfLayers
-	if (bDraggingTranslation) {
-		pushTranslationInHistory();
-	}
-	if (bDraggingRotation) {
-		pushRotationInHistory();
-		pushTranslationInHistory();
-	}
-	if(bDraggingScale){
-		pushScaleInHistory();
-		pushTranslationInHistory();
-	}
-	if (bDraggingAltOrigin && Settings::SAVE_ALT_ORIGIN_TRANSLATION_IN_HISTORY) {
-		pushAltOriginInHistory();
+void Transform::pushStateInHistory(){
+	// Don't forget to call this function between history.beginUndoGroup() and history.endUndoGroup() !!!
+	pushTranslationInHistoryAtTheEndOfDragging();
+	pushRotationInHistoryAtTheEndOfDragging();
+	pushScaleInHistoryAtTheEndOfDragging();
+	if (Settings::SAVE_ALT_ORIGIN_TRANSLATION_IN_HISTORY) {
+		pushAltOriginInHistoryAtTheEndOfDragging();
 	}
 }
 
-void Transform::pushTranslationInHistory() {
+void Transform::pushStateInHistoryAtTheEndOfDragging() {
+	// N.B. : begin/end undoGroup are called by GroupOfLayers
+	if (bDraggingTranslation) {
+		pushTranslationInHistoryAtTheEndOfDragging();
+	}
+	if (bDraggingRotation) {
+		pushRotationInHistoryAtTheEndOfDragging();
+		pushTranslationInHistoryAtTheEndOfDragging();
+	}
+	if(bDraggingScale){
+		pushScaleInHistoryAtTheEndOfDragging();
+		pushTranslationInHistoryAtTheEndOfDragging();
+	}
+	if (bDraggingAltOrigin && Settings::SAVE_ALT_ORIGIN_TRANSLATION_IN_HISTORY) {
+		pushAltOriginInHistoryAtTheEndOfDragging();
+	}
+}
+
+void Transform::pushTranslationInHistoryAtTheEndOfDragging() {
 	// Get values
 	glm::vec2 translation = getTranslation();
 	glm::vec2 initialTranslation = m_translationWhenDraggingStarted;
@@ -194,7 +204,7 @@ void Transform::pushTranslationInHistory() {
 		));
 	}
 }
-void Transform::pushScaleInHistory() {
+void Transform::pushScaleInHistoryAtTheEndOfDragging() {
 	// Get values
 	float scl = getScale();
 	float initialScl = m_scaleWhenDraggingStarted;
@@ -214,7 +224,7 @@ void Transform::pushScaleInHistory() {
 		));
 	}
 }
-void Transform::pushRotationInHistory() {
+void Transform::pushRotationInHistoryAtTheEndOfDragging() {
 	// Get values
 	float rot = getRotation();
 	float initialRot = m_rotationWhenDraggingStarted;
@@ -234,7 +244,7 @@ void Transform::pushRotationInHistory() {
 		));
 	}
 }
-void Transform::pushAltOriginInHistory(){
+void Transform::pushAltOriginInHistoryAtTheEndOfDragging(){
 	// Get values
 	glm::vec2 altOrig = getAltOriginInTransformSpace();
 	glm::vec2 initialAltOrig = m_altOriginInTransformSpaceWhenDraggingStarted;
@@ -256,6 +266,7 @@ void Transform::pushAltOriginInHistory(){
 }
 
 void Transform::setMatrix(glm::mat4x4 matrix) {
+	spdlog::warn("SET MATRIX USED : this curently destroys the reliability of getTranslation(), getScale() and getRotation() !!!!");
 	m_matrix = matrix;
 	bInverseMatrixMustBeRecomputed = true;
 }
@@ -284,66 +295,98 @@ const glm::vec2& Transform::getVAxis() {
 	return m_vAxis;
 }
 
-void Transform::setTranslation(glm::vec2 translation) {
-	m_translation = translation;
-	bMatrixMustBeRecomputed = true;
-	bInverseMatrixMustBeRecomputed = true;
-}
-void Transform::translate(glm::vec2 translation) {
-	setTranslation(m_translation + translation);
-}
-void Transform::setScale(float scale) {
-	m_scale = scale;
-	bMatrixMustBeRecomputed = true;
-	bInverseMatrixMustBeRecomputed = true;
-}
-void Transform::scale(float scale) {
-	setScale(m_scale * scale);
-}
-void Transform::scale(float scale, glm::vec2 originInDBspace) {
-	setTranslation(scale * m_translation + (1 - scale) * originInDBspace);
-	setScale(m_scale * scale);
-}
-void Transform::scaleAndPushChangeToHistory(float scaleFactor, glm::vec2 originInDBspace) {
-	// Get initial values
-	float initialScl = getScale();
-	glm::vec2 initialTrans = getTranslation();
-	// Apply scale
-	scale(scaleFactor, originInDBspace);
-	// Get new values
-	float scl = getScale();
-	glm::vec2 trans = getTranslation();
-	//
-	if (scl != initialScl) {
-		// Push state
-		DrawingBoard::history.addAction(Action(
-			// DO action
-			[this, scl, trans]()
-		{
-			setScale(scl);
-			setTranslation(trans);
-		},
-			// UNDO action
-			[this, initialScl, initialTrans]()
-		{
-			setScale(initialScl);
-			setTranslation(initialTrans);
+void Transform::setTranslation(glm::vec2 newTranslation, bool bPushChangeInHistory) {
+	if (bPushChangeInHistory) {
+		// Get initial value
+		glm::vec2 initialTranslation = getTranslation();
+		//
+		if (initialTranslation != newTranslation) {
+			// Push state
+			DrawingBoard::history.addAction(Action(
+				// DO action
+				[this, newTranslation]()
+			{
+				setTranslation(newTranslation);
+			},
+				// UNDO action
+				[this, initialTranslation]()
+			{
+				setTranslation(initialTranslation);
+			}
+			));
 		}
-		));
 	}
+	m_translation = newTranslation;
+	bMatrixMustBeRecomputed = true;
+	bInverseMatrixMustBeRecomputed = true;
 }
-void Transform::setRotation(float rotation) {
-	m_rotation = rotation;
+void Transform::translate(glm::vec2 translation, bool bPushChangeInHistory) {
+	setTranslation(m_translation + translation, bPushChangeInHistory);
+}
+void Transform::setScale(float newScale, bool bPushChangeInHistory) {
+	if (bPushChangeInHistory) {
+		// Get initial value
+		float initialScale = getScale();
+		//
+		if (initialScale != newScale) {
+			// Push state
+			DrawingBoard::history.addAction(Action(
+				// DO action
+				[this, newScale]()
+			{
+				setRotation(newScale);
+			},
+				// UNDO action
+				[this, initialScale]()
+			{
+				setRotation(initialScale);
+			}
+			));
+		}
+	}
+	m_scale = newScale;
+	bMatrixMustBeRecomputed = true;
+	bInverseMatrixMustBeRecomputed = true;
+}
+void Transform::scale(float scale, bool bPushChangeInHistory) {
+	setScale(m_scale * scale, bPushChangeInHistory);
+}
+void Transform::scale(float scale, glm::vec2 originInDBspace, bool bPushChangeInHistory) {
+	setTranslation(scale * m_translation + (1 - scale) * originInDBspace, bPushChangeInHistory);
+	setScale(m_scale * scale, bPushChangeInHistory);
+}
+void Transform::setRotation(float newRotation, bool bPushChangeInHistory) {
+	if (bPushChangeInHistory) {
+		// Get initial value
+		float initialRotation = getRotation();
+		//
+		if (initialRotation != newRotation) {
+			// Push state
+			DrawingBoard::history.addAction(Action(
+				// DO action
+				[this, newRotation]()
+			{
+				setRotation(newRotation);
+			},
+				// UNDO action
+				[this, initialRotation]()
+			{
+				setRotation(initialRotation);
+			}
+			));
+		}
+	}
+	m_rotation = newRotation;
 	bMatrixMustBeRecomputed = true;
 	bInverseMatrixMustBeRecomputed = true;
 	bAxesMustBeRecomputed = true;
 }
-void Transform::rotate(float rotation) {
-	setRotation(m_rotation + rotation);
+void Transform::rotate(float rotation, bool bPushChangeInHistory) {
+	setRotation(m_rotation + rotation, bPushChangeInHistory);
 }
-void Transform::rotate(float rotation, glm::vec2 origin) {
-	setTranslation(Maths::rotate(m_translation-origin,rotation) + origin);
-	setRotation(m_rotation + rotation);
+void Transform::rotate(float rotation, glm::vec2 origin, bool bPushChangeInHistory) {
+	setTranslation(Maths::rotate(m_translation-origin,rotation) + origin, bPushChangeInHistory);
+	setRotation(m_rotation + rotation, bPushChangeInHistory);
 }
 void Transform::computeMatrix() {
 	if (!bInverseMatrixMustBeRecomputed) {
@@ -375,9 +418,33 @@ void Transform::computeAxes() {
 	bAxesMustBeRecomputed = false;
 }
 
-void Transform::reset() {
-	setTranslation(glm::vec2(0.0f));
-	setScale(1.0f);
-	setRotation(0.0f);
-	setAltOrigin(glm::vec2(0.0f));
+void Transform::setAltOrigin(glm::vec2 newAltOriginInTransformSpace, bool bPushChangeInHistory) {
+	if (Settings::SAVE_ALT_ORIGIN_TRANSLATION_IN_HISTORY && bPushChangeInHistory) {
+		// Get initial value
+		glm::vec2 initialAltOrig = getAltOriginInTransformSpace();
+		//
+		if (initialAltOrig != newAltOriginInTransformSpace) {
+			// Push state
+			DrawingBoard::history.addAction(Action(
+				// DO action
+				[this, newAltOriginInTransformSpace]()
+			{
+				setAltOrigin(newAltOriginInTransformSpace);
+			},
+				// UNDO action
+				[this, initialAltOrig]()
+			{
+				setAltOrigin(initialAltOrig);
+			}
+			));
+		}
+	}
+	m_altOriginInTransformSpace = newAltOriginInTransformSpace;
+}
+
+void Transform::reset(bool bPushChangeInHistory) {
+	setTranslation(glm::vec2(0.0f), bPushChangeInHistory);
+	setScale(1.0f, bPushChangeInHistory);
+	setRotation(0.0f, bPushChangeInHistory);
+	setAltOrigin(glm::vec2(0.0f), bPushChangeInHistory);
 }

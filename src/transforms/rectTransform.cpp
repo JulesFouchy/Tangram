@@ -32,10 +32,35 @@ const glm::mat4x4& RectTransform::getProjectionMatrix() {
 	return m_projectionMatrix;
 }
 
-void RectTransform::setAspectRatio(float newAspectRatio) {
-	setAltOrigin(glm::vec2(getAltOriginInTransformSpace().x / m_aspectRatio * newAspectRatio, getAltOriginInTransformSpace().y));
+void RectTransform::setAspectRatio(float newAspectRatio, bool bPushChangeInHistory) {
+	setAltOrigin(glm::vec2(getAltOriginInTransformSpace().x / m_aspectRatio * newAspectRatio, getAltOriginInTransformSpace().y), bPushChangeInHistory);
+	if (bPushChangeInHistory) {
+		// Get initial value
+		float initialRatio = getAspectRatio();
+		//
+		if (initialRatio != newAspectRatio) {
+			// Push state
+			DrawingBoard::history.addAction(Action(
+				// DO action
+				[this, newAspectRatio]()
+			{
+				setAspectRatio(newAspectRatio);
+			},
+				// UNDO action
+				[this, initialRatio]()
+			{
+				setAspectRatio(initialRatio);
+			}
+			));
+		}
+	}
 	m_aspectRatio = newAspectRatio;
 	bMustRecomputeProjMat = true;
+}
+
+void RectTransform::reset(bool bPushChangeInHistory) {
+	Transform::reset(bPushChangeInHistory);
+	setAspectRatio(m_initialAspectRatio, bPushChangeInHistory);
 }
 
 void RectTransform::startDraggingScaleOrAspectRatio(glm::vec2 dragCenterInDrawingBoardSpace) {
@@ -142,21 +167,23 @@ bool RectTransform::endDragging() {
 	return handled;
 }
 
-void RectTransform::reset() {
-	Transform::reset();
-	setAspectRatio(m_initialAspectRatio);
+void RectTransform::pushStateInHistory() {
+	// Don't forget to call this function between history.beginUndoGroup() and history.endUndoGroup() !!!
+	Transform::pushStateInHistory();
+	pushAspectRatioInHistoryAtTheEndOfDragging();
 }
 
 void RectTransform::pushStateInHistoryAtTheEndOfDragging() {
+	// N.B. : begin/end undoGroup are called by GroupOfLayers
 	Transform::pushStateInHistoryAtTheEndOfDragging();
 	if (bDraggingAspectRatioLead || bDraggingAspectRatioFollow) {
-		pushAspectRatioInHistory();
-		pushScaleInHistory();
-		pushTranslationInHistory();
+		pushAspectRatioInHistoryAtTheEndOfDragging();
+		pushScaleInHistoryAtTheEndOfDragging();
+		pushTranslationInHistoryAtTheEndOfDragging();
 	}
 }
 
-void RectTransform::pushAspectRatioInHistory() {
+void RectTransform::pushAspectRatioInHistoryAtTheEndOfDragging() {
 	// Get values
 	float ratio = getAspectRatio();
 	float initialRatio = m_aspectRatioWhenDraggingStarted;
@@ -177,15 +204,14 @@ void RectTransform::pushAspectRatioInHistory() {
 	}
 }
 
-void RectTransform::scaleU(float scaleFactor, glm::vec2 originInTransformSpace) {
-	setAspectRatio(getAspectRatio() * scaleFactor);
-	translate(getMatrix() * glm::vec4(originInTransformSpace.x, 0.0f, 0.0f, 0.0f) * (1.0f - scaleFactor));
+void RectTransform::scaleU(float scaleFactor, glm::vec2 originInTransformSpace, bool bPushChangeInHistory) {
+	setAspectRatio(getAspectRatio() * scaleFactor, bPushChangeInHistory);
+	translate(getMatrix() * glm::vec4(originInTransformSpace.x, 0.0f, 0.0f, 0.0f) * (1.0f - scaleFactor), bPushChangeInHistory);
 }
-void RectTransform::scaleV(float scaleFactor, glm::vec2 originInTransformSpace) {
-	setAspectRatio(getAspectRatio() / scaleFactor);
-	setScale(getScale() * scaleFactor);
-	//newTranslation.x /= dVectU.y;
-	translate(getMatrix() * glm::vec4(0.0f, originInTransformSpace.y, 0.0f, 0.0f) * (1.0f / scaleFactor - 1.0f));
+void RectTransform::scaleV(float scaleFactor, glm::vec2 originInTransformSpace, bool bPushChangeInHistory) {
+	setAspectRatio(getAspectRatio() / scaleFactor, bPushChangeInHistory);
+	setScale(getScale() * scaleFactor, bPushChangeInHistory);
+	translate(getMatrix() * glm::vec4(0.0f, originInTransformSpace.y, 0.0f, 0.0f) * (1.0f / scaleFactor - 1.0f), bPushChangeInHistory);
 }
 
 MousePositionRelativeToRect RectTransform::getMouseRelativePosition() {

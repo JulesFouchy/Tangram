@@ -132,7 +132,7 @@ void GroupOfLayers::resetAltOrigin() {
 		m_layers[0]->m_transform.setAltOrigin(glm::vec2(0.0f));
 	}
 	else if (m_layers.size() > 1) {
-		m_transform.reset();
+		m_transform.setAltOrigin(glm::vec2(0.0f));
 		//Set in the middle of all layers
 		glm::vec2 newOriginInDBspace = glm::vec2(0.0f);
 		for (Layer* layer : m_layers)
@@ -241,21 +241,23 @@ void GroupOfLayers::switchDraggingToScaleFromRatio(){
 	}
 }
 
-void GroupOfLayers::scaleAndPushChangeToHistory(float scaleFactor) {
-	DrawingBoard::history.beginUndoGroup();
+void GroupOfLayers::scale(float scaleFactor, bool bPushChangeInHistory) {
+	if (bPushChangeInHistory)
+		DrawingBoard::history.beginUndoGroup();
 	if (m_layers.size() == 1) {
-		m_layers[0]->m_transform.scaleAndPushChangeToHistory(scaleFactor, m_layers[0]->m_transform.getAltOriginInDrawingBoardSpace());
+		m_layers[0]->m_transform.scale(scaleFactor, m_layers[0]->m_transform.getAltOriginInDrawingBoardSpace(), bPushChangeInHistory);
 	}
 	else if (m_layers.size() > 1) {
-		m_transform.scale(scaleFactor, m_transform.getAltOriginInDrawingBoardSpace());
+		m_transform.scale(scaleFactor, m_transform.getAltOriginInDrawingBoardSpace(), bPushChangeInHistory);
 		for (int k = 0; k < m_layers.size(); ++k) {
-			m_layers[k]->m_transform.scaleAndPushChangeToHistory(scaleFactor, glm::vec4(m_transform.getAltOriginInDrawingBoardSpace(), 0.0f, 1.0f));
+			m_layers[k]->m_transform.scale(scaleFactor, glm::vec4(m_transform.getAltOriginInDrawingBoardSpace(), 0.0f, 1.0f), bPushChangeInHistory);
 		}
 	}
 	else {
 		spdlog::warn("[Group of Layers] scale was called but there is actually no layer in the group !");
 	}
-	DrawingBoard::history.endUndoGroup();
+	if (bPushChangeInHistory)
+		DrawingBoard::history.endUndoGroup();
 }
 
 int GroupOfLayers::getIndex(Layer* layer) {

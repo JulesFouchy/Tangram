@@ -25,7 +25,7 @@ public:
 	const glm::mat4x4& getProjectionMatrix();
 
 	inline float getAspectRatio() { return m_aspectRatio; };
-	void setAspectRatio(float newAspectRatio);
+	void setAspectRatio(float newAspectRatio, bool bPushChangeInHistory = false);
 
 	inline bool isBusy() override { return Transform::isBusy() || bDraggingAspectRatioLead || bDraggingAspectRatioFollow; }
 
@@ -39,13 +39,14 @@ public:
 	void checkDragging() override;
 	bool endDragging() override;
 
-	void reset() override;
+	void reset(bool bPushChangeInHistory = false) override;
+	void pushStateInHistory() override;
 	void pushStateInHistoryAtTheEndOfDragging() override;
 private:
-	void pushAspectRatioInHistory();
+	void pushAspectRatioInHistoryAtTheEndOfDragging();
 private:
-	void scaleU(float scaleFactor, glm::vec2 originInTransformSpace);
-	void scaleV(float scaleFactor, glm::vec2 originInTransformSpace);
+	void scaleU(float scaleFactor, glm::vec2 originInTransformSpace, bool bPushChangeInHistory = false);
+	void scaleV(float scaleFactor, glm::vec2 originInTransformSpace, bool bPushChangeInHistory = false);
 public:
 	MousePositionRelativeToRect getMouseRelativePosition();
 private:

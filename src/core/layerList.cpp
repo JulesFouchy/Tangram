@@ -251,10 +251,10 @@ void LayerList::onLeftClicUp() {
 
 void LayerList::onScroll(float motion) {
 	if (motion < 0.0f) {
-		selectedLayers.scaleAndPushChangeToHistory(Settings::ZOOM_FACTOR);
+		selectedLayers.scale(Settings::ZOOM_FACTOR, true);
 	}
 	else {
-		selectedLayers.scaleAndPushChangeToHistory(1.0f / Settings::ZOOM_FACTOR);
+		selectedLayers.scale(1.0f / Settings::ZOOM_FACTOR, true);
 	}
 }
 

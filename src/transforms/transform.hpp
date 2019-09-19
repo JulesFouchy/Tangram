@@ -30,29 +30,29 @@ public:
 
 	inline glm::vec2 getTranslationWhenDraggingStarted() { return m_translationWhenDraggingStarted; }
 
+	virtual void pushStateInHistory();
 	virtual void pushStateInHistoryAtTheEndOfDragging();
 protected:
-	void pushTranslationInHistory();
-	void pushScaleInHistory();
-	void pushRotationInHistory();
-	void pushAltOriginInHistory();
+	void pushTranslationInHistoryAtTheEndOfDragging();
+	void pushScaleInHistoryAtTheEndOfDragging();
+	void pushRotationInHistoryAtTheEndOfDragging();
+	void pushAltOriginInHistoryAtTheEndOfDragging();
 
 public:
-	void setTranslation(glm::vec2 translation);
-	void translate(glm::vec2 translation);
+	void setTranslation(glm::vec2 newTranslation, bool bPushChangeInHistory = false);
+	void translate(glm::vec2 translation, bool bPushChangeInHistory = false);
 	inline glm::vec2 getTranslation() { return m_translation; }
-	void setScale(float scale);
-	void scale(float scale);
-	void scale(float scale, glm::vec2 originInDBspace);
-	void scaleAndPushChangeToHistory(float scaleFactor, glm::vec2 originInDBspace);
+	void setScale(float newScale, bool bPushChangeInHistory = false);
+	void scale(float scale, bool bPushChangeInHistory = false);
+	void scale(float scale, glm::vec2 originInDBspace, bool bPushChangeInHistory = false);
 	inline float getScale() { return m_scale; };
-	void setRotation(float rotation);
-	void rotate(float rotation);
-	void rotate(float rotation, glm::vec2 origin);
+	void setRotation(float newRotation, bool bPushChangeInHistory = false);
+	void rotate(float rotation, bool bPushChangeInHistory = false);
+	void rotate(float rotation, glm::vec2 origin, bool bPushChangeInHistory = false);
 	inline float getRotation() { return m_rotation; }
-	virtual void reset();
+	virtual void reset(bool bPushChangeInHistory = false);
 
-	inline void setAltOrigin(glm::vec2 newAltOriginInTransformSpace) { m_altOriginInTransformSpace = newAltOriginInTransformSpace; }
+	void setAltOrigin(glm::vec2 newAltOriginInTransformSpace, bool bPushChangeInHistory = false);
 	glm::vec2 getAltOriginInWindowSpace();
 	glm::vec2 getAltOriginInDrawingBoardSpace();
 	inline glm::vec2 getAltOriginInTransformSpace() { return m_altOriginInTransformSpace; }
