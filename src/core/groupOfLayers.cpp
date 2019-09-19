@@ -178,9 +178,9 @@ void GroupOfLayers::startDraggingAspectRatio(Layer* leadLayer, glm::vec2 originI
 	m_transform.startDraggingAspectRatio(&(leadLayer->m_transform), originInDBspace, unlockU, unlockV);
 	for (int k = 0; k < m_layers.size(); ++k) {
 		if(m_layers[k] == leadLayer)
-			m_layers[k]->m_transform.startDraggingAspectRatioLead(m_transform.getAspectRatioDraggingInfos(), originInDBspace);
+			m_layers[k]->m_transform.startDraggingAspectRatio(m_transform.getAspectRatioDraggingInfos(), originInDBspace, false);
 		else
-			m_layers[k]->m_transform.startDraggingAspectRatioFollow(m_transform.getAspectRatioDraggingInfos(), originInDBspace);
+			m_layers[k]->m_transform.startDraggingAspectRatio(m_transform.getAspectRatioDraggingInfos(), originInDBspace, true);
 	}
 }
 

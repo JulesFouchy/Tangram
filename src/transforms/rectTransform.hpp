@@ -27,11 +27,10 @@ public:
 	inline float getAspectRatio() { return m_aspectRatio; };
 	void setAspectRatio(float newAspectRatio, bool bPushChangeInHistory = false);
 
-	inline bool isBusy() override { return Transform::isBusy() || bDraggingAspectRatioLead || bDraggingAspectRatioFollow; }
+	inline bool isBusy() override { return Transform::isBusy() || bDraggingAspectRatio; }
 
 	void startDraggingScale(glm::vec2 dragCenterInDrawingBoardSpace) override;
-	void startDraggingAspectRatioLead(AspectRatioDraggingInfo* infos, glm::vec2 originInDrawginBoardSpace);
-	void startDraggingAspectRatioFollow(AspectRatioDraggingInfo* infos, glm::vec2 originInDrawginBoardSpace);
+	void startDraggingAspectRatio(AspectRatioDraggingInfo* infos, glm::vec2 originInDrawginBoardSpace, bool bFollowingAnotherLayer);
 	void changeDraggingCenter(glm::vec2 newDraggingCenterInTransformSpace) override;
 	void changeDraggingCenterToAltOrigin() override;
 	void switchDraggingToRatioFromScale();
@@ -57,8 +56,8 @@ private:
 	bool bMustRecomputeProjMat;
 
 	void startDraggingScaleOrAspectRatio(glm::vec2 dragCenterInDrawingBoardSpace);
-	bool bDraggingAspectRatioLead;
-	bool bDraggingAspectRatioFollow;
+	bool bDraggingAspectRatio;
+	bool m_dragRatioIsFollowingAnotherLayer;
 	float m_aspectRatioWhenDraggingStarted;
 	AspectRatioDraggingInfo* m_aspectRatioDraggingInfo;
 };

@@ -18,7 +18,7 @@ RectTransform::RectTransform(float aspectRatio)
 	: m_aspectRatio(aspectRatio), m_initialAspectRatio(aspectRatio), m_projectionMatrix(glm::ortho(-0.5f * m_aspectRatio, 0.5f * m_aspectRatio, -0.5f, 0.5f)),
 	bMustRecomputeProjMat(false),
 	m_aspectRatioWhenDraggingStarted(aspectRatio), m_aspectRatioDraggingInfo(),
-	bDraggingAspectRatioLead(false), bDraggingAspectRatioFollow(false)
+	bDraggingAspectRatio(false), m_dragRatioIsFollowingAnotherLayer(false)
 {
 }
 RectTransform::~RectTransform(){
@@ -80,22 +80,15 @@ void RectTransform::startDraggingScale(glm::vec2 dragCenterInDrawingBoardSpace) 
 	startDraggingScaleOrAspectRatio(dragCenterInDrawingBoardSpace);
 	computeDraggingScaleVariables(Input::getMousePosition());
 }
-void RectTransform::startDraggingAspectRatioLead(AspectRatioDraggingInfo* infos, glm::vec2 originInDrawginBoardSpace) {
-	bDraggingAspectRatioLead = true;
-	m_aspectRatioDraggingInfo = infos;
-	startDraggingScaleOrAspectRatio(originInDrawginBoardSpace);
-}
-void RectTransform::startDraggingAspectRatioFollow(AspectRatioDraggingInfo* infos, glm::vec2 originInDrawginBoardSpace) {
-	bDraggingAspectRatioFollow = true;
+void RectTransform::startDraggingAspectRatio(AspectRatioDraggingInfo* infos, glm::vec2 originInDrawginBoardSpace, bool bFollowingAnotherLayer) {
+	bDraggingAspectRatio = true;
+	m_dragRatioIsFollowingAnotherLayer = bFollowingAnotherLayer;
 	m_aspectRatioDraggingInfo = infos;
 	startDraggingScaleOrAspectRatio(originInDrawginBoardSpace);
 }
 
 void RectTransform::changeDraggingCenter(glm::vec2 newDraggingCenterInTransformSpace) {
 	Transform::changeDraggingCenter(newDraggingCenterInTransformSpace);
-	if (bDraggingAspectRatioLead) {
-		//computeDraggingRatioVariables();
-	}
 }
 void RectTransform::changeDraggingCenterToAltOrigin() {
 	changeDraggingCenter(getAltOriginInTransformSpace() * glm::vec2(m_aspectRatioWhenDraggingStarted / getAspectRatio() ,1.0f));
@@ -111,9 +104,9 @@ void RectTransform::switchDraggingToRatioFromScale() {
 	}
 }
 void RectTransform::switchDraggingToScaleFromRatio(){
-	if (bDraggingAspectRatioLead) {
+	if (bDraggingAspectRatio) {
 		bDraggingScale = true;
-		bDraggingAspectRatioLead = false;
+		bDraggingAspectRatio = false;
 		setAspectRatio(m_aspectRatioWhenDraggingStarted);
 
 		computeDraggingScaleVariables(m_mousePosWhenDraggingStarted);
@@ -124,46 +117,47 @@ void RectTransform::switchDraggingToScaleFromRatio(){
 
 void RectTransform::checkDragging() {
 	Transform::checkDragging();
-	if (bDraggingAspectRatioLead) {
+	if (bDraggingAspectRatio) {
+		if (!m_dragRatioIsFollowingAnotherLayer) {
 
-		float scaleFactorU = m_aspectRatioDraggingInfo->getUScaleFactor();
-		float scaleFactorV = m_aspectRatioDraggingInfo->getVScaleFactor();
+			float scaleFactorU = m_aspectRatioDraggingInfo->getUScaleFactor();
+			float scaleFactorV = m_aspectRatioDraggingInfo->getVScaleFactor();
 
-		setAspectRatio(m_aspectRatioWhenDraggingStarted);
-		setScale(m_scaleWhenDraggingStarted);
-		setTranslation(m_translationWhenDraggingStarted);
+			setAspectRatio(m_aspectRatioWhenDraggingStarted);
+			setScale(m_scaleWhenDraggingStarted);
+			setTranslation(m_translationWhenDraggingStarted);
 
-		scaleU(scaleFactorU, m_dragCenterInTransformSpace);
-		scaleV(scaleFactorV, m_dragCenterInTransformSpace);
-	}
+			scaleU(scaleFactorU, m_dragCenterInTransformSpace);
+			scaleV(scaleFactorV, m_dragCenterInTransformSpace);
+		}
 
-	if (bDraggingAspectRatioFollow) {
-		setAspectRatio(m_aspectRatioWhenDraggingStarted);
-		setScale(m_scaleWhenDraggingStarted);
+		else {
+			setAspectRatio(m_aspectRatioWhenDraggingStarted);
+			setScale(m_scaleWhenDraggingStarted);
 
-		float uScale = m_aspectRatioDraggingInfo->getUScaleFactor();
-		float vScale = m_aspectRatioDraggingInfo->getVScaleFactor();
-		glm::vec2 dl = m_translationWhenDraggingStarted - m_aspectRatioDraggingInfo->getTranslationWhenDraggingStarted();
-		setTranslation(	  m_translationWhenDraggingStarted
-						+ m_aspectRatioDraggingInfo->getTranslateAmount()
-						+ glm::dot(dl, m_aspectRatioDraggingInfo->getUAxis()) * uScale * m_aspectRatioDraggingInfo->getUAxis()
-						+ glm::dot(dl, m_aspectRatioDraggingInfo->getVAxis()) * vScale * m_aspectRatioDraggingInfo->getVAxis()
-						- dl
-		);
-		float t = Maths::modulo(getRotation() - m_aspectRatioDraggingInfo->getRotation(), Maths::PI) / Maths::PI;
-		if (t < 0.5f)
-			t *= 2.0f;
-		else
-			t = 2.0f * ( 1.0f - t);
-		scaleU( pow(abs(uScale), 1.0f-t)*pow(abs(vScale),t) , glm::vec2(0.0f));
-		scaleV( pow(abs(uScale), t)*pow(abs(vScale), 1.0f-t), glm::vec2(0.0f));
+			float uScale = m_aspectRatioDraggingInfo->getUScaleFactor();
+			float vScale = m_aspectRatioDraggingInfo->getVScaleFactor();
+			glm::vec2 dl = m_translationWhenDraggingStarted - m_aspectRatioDraggingInfo->getTranslationWhenDraggingStarted();
+			setTranslation(m_translationWhenDraggingStarted
+				+ m_aspectRatioDraggingInfo->getTranslateAmount()
+				+ glm::dot(dl, m_aspectRatioDraggingInfo->getUAxis()) * uScale * m_aspectRatioDraggingInfo->getUAxis()
+				+ glm::dot(dl, m_aspectRatioDraggingInfo->getVAxis()) * vScale * m_aspectRatioDraggingInfo->getVAxis()
+				- dl
+			);
+			float t = Maths::modulo(getRotation() - m_aspectRatioDraggingInfo->getRotation(), Maths::PI) / Maths::PI;
+			if (t < 0.5f)
+				t *= 2.0f;
+			else
+				t = 2.0f * (1.0f - t);
+			scaleU(pow(abs(uScale), 1.0f - t) * pow(abs(vScale), t), glm::vec2(0.0f));
+			scaleV(pow(abs(uScale), t) * pow(abs(vScale), 1.0f - t), glm::vec2(0.0f));
+		}
 	}
 }
 
 bool RectTransform::endDragging() {
-	bool handled = Transform::endDragging() || bDraggingAspectRatioLead ||bDraggingAspectRatioFollow;
-	bDraggingAspectRatioLead = false;
-	bDraggingAspectRatioFollow = false;
+	bool handled = Transform::endDragging() || bDraggingAspectRatio;
+	bDraggingAspectRatio = false;
 	return handled;
 }
 
@@ -176,7 +170,7 @@ void RectTransform::pushStateInHistory() {
 void RectTransform::pushStateInHistoryAtTheEndOfDragging() {
 	// N.B. : begin/end undoGroup are called by GroupOfLayers
 	Transform::pushStateInHistoryAtTheEndOfDragging();
-	if (bDraggingAspectRatioLead || bDraggingAspectRatioFollow) {
+	if (bDraggingAspectRatio) {
 		pushAspectRatioInHistoryAtTheEndOfDragging();
 		pushScaleInHistoryAtTheEndOfDragging();
 		pushTranslationInHistoryAtTheEndOfDragging();
