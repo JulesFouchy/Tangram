@@ -4,6 +4,7 @@
 
 LoadedImageLayer::LoadedImageLayer(const std::string& imgFilePath)
 	: Layer(0.1f, imgFilePath), m_filePath(imgFilePath)
+	 //      î dummy initialization of Layer's aspectRatio because we need to read image to know it
 {
 	spdlog::info("[Opening image] " + imgFilePath);
 	// Load file 
@@ -15,7 +16,7 @@ LoadedImageLayer::LoadedImageLayer(const std::string& imgFilePath)
 	Log::separationLine();
 	// Initialize members
 	m_displayTexture.Initialize(width, height, BPP, pixels);
-	m_transform = RectTransform((float) width / (float) height);	
+	m_transform = RectTransform((float) width / height);	
 }
 
 LoadedImageLayer::~LoadedImageLayer() {

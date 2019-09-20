@@ -14,8 +14,10 @@ public:
 	void compile();
 
 	//Uniforms
+private:
 	std::unordered_map<std::string, int> m_UniformLocationCache;
 	int getUniformLocation(const std::string& uniformName);
+public:
 	void setUniform1i(const std::string& uniformName, int v);
 	void setUniform1f(const std::string& uniformName, float v);
 	void setUniform2f(const std::string& uniformName, glm::vec2 v);

@@ -124,8 +124,8 @@ int main(int argc, char* argv[])
 	DrawingBoard::Initialize(1.5f);
 	DrawingBoard::transform.setScale(0.9f);
 
-	DrawingBoard::getLayerList().createLoadedImageLayer("res/img/test3.jpg");
-	DrawingBoard::getLayerList().createLoadedImageLayer("res/img/test2.png");
+	DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test3.jpg");
+	DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test2.png");
 
 	ImmediateDrawing::Initialize();
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat());
