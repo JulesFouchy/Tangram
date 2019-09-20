@@ -12,13 +12,10 @@ LoadedImageLayer::LoadedImageLayer(const std::string& imgFilePath)
 	unsigned char* pixels = stbi_load(imgFilePath.c_str(), &width, &height, &BPP, Texture2D::bytesPerPixel(RGBA));
 	if (!pixels)
 		spdlog::warn("Couldn't open " + imgFilePath);
-	// Init texture
-	m_displayTexture.Initialize(width, height, BPP, pixels);
 	Log::separationLine();
 	// Initialize members
-	m_transform = RectTransform((float) width / (float) height);
-	// 
-	
+	m_displayTexture.Initialize(width, height, BPP, pixels);
+	m_transform = RectTransform((float) width / (float) height);	
 }
 
 LoadedImageLayer::~LoadedImageLayer() {

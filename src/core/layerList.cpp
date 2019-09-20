@@ -11,6 +11,9 @@
 #include "utilities/display.hpp"
 #include "graphics/immediateDrawing.hpp"
 
+#include "layer/loadedImageLayer.hpp"
+#include "layer/copyLayer.hpp"
+
 LayerList::LayerList()
 	: m_hoveredLayer(nullptr), m_mousePosRelToHoveredLayer(OUTSIDE), usedCursor(nullptr)
 {
@@ -61,6 +64,11 @@ void LayerList::createLoadedImageLayer(const std::string& imgFilePath) {
 	Layer* layer = new LoadedImageLayer(imgFilePath);
 	layers.addLayer(layer);
 	setSelectedLayer(layer);
+}
+
+void LayerList::createCopyLayer(Layer* childLayer) {
+	Layer* layer = new CopyLayer(childLayer);
+	layers.addLayer(layer);
 }
 
 Layer* LayerList::getLayer(int index) {
@@ -121,7 +129,16 @@ void LayerList::onKeyDown(Key key) {
 		}
 	}
 	else if (auto c = std::get_if<char>(&key)) { //It's a char
-
+		if (Input::keyIsDown(CTRL)) {
+			switch (*c) {
+			case 'd':
+				for (int k = 0; k < selectedLayers.size(); ++k) {
+					createCopyLayer(selectedLayers[k]);
+				}
+			default:
+				break;
+			}
+		}
 	}
 }
 

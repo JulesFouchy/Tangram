@@ -1,7 +1,6 @@
 #pragma once
 
 #include "layer/layer.hpp"
-#include "layer/loadedImageLayer.hpp"
 
 #include "groupOfLayers.hpp"
 
@@ -22,6 +21,7 @@ public:
 	void showInDrawingBoardSpace();
 
 	void createLoadedImageLayer(const std::string& imgFilePath);
+	void createCopyLayer(Layer* childLayer);
 	Layer* getLayer(int index);
 	void setSelectedLayer(Layer* layer);
 

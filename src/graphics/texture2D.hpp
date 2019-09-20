@@ -32,6 +32,10 @@ public:
 	void save(const std::string& filePath);
 
 	inline float getAspectRatio() { return m_aspectRatio; }
+	inline int getWidth() { return m_width; }
+	inline int getHeight() { return m_height; }
+	inline int getBPP() { return m_BPP; }
+	inline unsigned char* getPixels() { return m_pixels; }
 
 	inline unsigned int getID() { return m_textureID; }
 
