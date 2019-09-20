@@ -1,6 +1,6 @@
 #pragma once
 
-#include "layer.hpp"
+#include "layer/layer.hpp"
 
 #include "transforms/groupTransform.hpp"
 

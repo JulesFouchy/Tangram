@@ -1,6 +1,7 @@
 #pragma once
 
-#include "layer.hpp"
+#include "layer/layer.hpp"
+#include "layer/loadedImageLayer.hpp"
 
 #include "groupOfLayers.hpp"
 
@@ -20,7 +21,7 @@ public:
 	void show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix);
 	void showInDrawingBoardSpace();
 
-	void addLayer(std::string imgFilePath);
+	void createLoadedImageLayer(const std::string& imgFilePath);
 	Layer* getLayer(int index);
 	void setSelectedLayer(Layer* layer);
 

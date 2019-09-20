@@ -11,7 +11,6 @@
 #include "graphics/immediateDrawing.hpp"
 #include "graphics/shader.hpp"
 #include "graphics/texture2D.hpp"
-#include "graphics/loadedImage.hpp"
 #include "UI/input.hpp"
 
 #include "UI/settings.hpp"
@@ -121,12 +120,12 @@ int main(int argc, char* argv[])
 	Input::Initialize();
 	Log::Initialize();
 
-	Texture2D::Initialize();
+	Texture2D::ClassInitialization();
 	DrawingBoard::Initialize(1.5f);
 	DrawingBoard::transform.setScale(0.9f);
 
-	DrawingBoard::addLayer("res/img/test3.jpg");
-	DrawingBoard::addLayer("res/img/test2.png");
+	DrawingBoard::getLayerList().createLoadedImageLayer("res/img/test3.jpg");
+	DrawingBoard::getLayerList().createLoadedImageLayer("res/img/test2.png");
 
 	ImmediateDrawing::Initialize();
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat());
@@ -250,7 +249,7 @@ int main(int argc, char* argv[])
 				if (e.key.keysym.sym == 'o') {
 					std::string imgFilepath = openfilename();
 					if (!imgFilepath.empty())
-						DrawingBoard::addLayer(imgFilepath);
+						DrawingBoard::getLayerList().createLoadedImageLayer(imgFilepath);
 				}
 				else if (e.key.keysym.sym == 's') {
 					std::string imgFilepath = savefilename();

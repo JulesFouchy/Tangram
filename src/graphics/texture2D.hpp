@@ -16,8 +16,10 @@ enum PixelFormat {
 };
 
 class Texture2D {
+friend class Layer;
+friend class FrameBuffer;
 public:
-	static void Initialize();
+	static void ClassInitialization();
 
 	void Initialize(int width, int height, int BPP, unsigned char* pixels = nullptr);
 	virtual ~Texture2D();
@@ -35,7 +37,6 @@ public:
 
 protected:
 	Texture2D();
-	friend class FrameBuffer;
 protected:
 	std::string m_debugName;
 	unsigned char* m_pixels;
@@ -46,10 +47,6 @@ protected:
 	int m_BPP;
 
 	unsigned int m_textureID;
-
-	static unsigned int bytesPerPixel(PixelFormat format);
-	static GLint GLpixelInternalFormat(PixelFormat format);
-	static GLenum GLpixelFormat(PixelFormat format);
 
 	//For rendering
 	unsigned int m_quadVBid;
@@ -62,4 +59,9 @@ protected:
 	float lastTexCoordMaxY;
 private:
 	void computeAndSendVertexBuffer(float texCoordMinX = 0.0f, float texCoordMaxX = 1.0f, float texCoordMinY = 0.0f, float texCoordMaxY = 1.0f);
+
+public:
+	static unsigned int bytesPerPixel(PixelFormat format);
+	static GLint GLpixelInternalFormat(PixelFormat format);
+	static GLenum GLpixelFormat(PixelFormat format);
 };

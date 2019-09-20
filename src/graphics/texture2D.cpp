@@ -49,7 +49,7 @@ void Texture2D::Initialize(int width, int height, int BPP, unsigned char* pixels
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void Texture2D::Initialize() {
+void Texture2D::ClassInitialization() {
 	//Shaders must be compiled after openGl was initialized
 	standardShader.compile();
 }

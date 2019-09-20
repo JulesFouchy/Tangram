@@ -1,6 +1,6 @@
 #include "layer.hpp"
 
-#include "drawingBoard.hpp"
+#include "core/drawingBoard.hpp"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -11,8 +11,8 @@
 
 #include "graphics/immediateDrawing.hpp"
 
-Layer::Layer(std::string imgFilePath, std::string layerName)
-	: m_bVisible(true), m_image(imgFilePath), m_name(layerName), m_transform(m_image.getAspectRatio()),	m_initialAspectRatio(m_image.getAspectRatio())
+Layer::Layer(float aspectRatio, const std::string& layerName)
+	: m_bVisible(true), m_name(layerName), m_displayTexture(), m_transform(aspectRatio)
 {
 }
 
@@ -21,11 +21,11 @@ Layer::~Layer() {
 }
 
 void Layer::show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix) {
-	m_image.show(viewMatrix * glm::scale(m_transform.getMatrix(), glm::vec3(m_transform.getAspectRatio()/m_initialAspectRatio, 1.0f, 1.0f)), projMatrix);
+	getTexture().show(viewMatrix * glm::scale(m_transform.getMatrix(), glm::vec3(m_transform.getAspectRatio()/ m_transform.getInitialAspectRatio(), 1.0f, 1.0f)), projMatrix);
 }
 
 void Layer::showInDrawingBoardSpace() {
-	m_image.show(m_transform.getMatrix(), DrawingBoard::transform.getProjectionMatrix());
+	getTexture().show(m_transform.getMatrix(), DrawingBoard::transform.getProjectionMatrix());
 }
 
 void Layer::showFrame() {

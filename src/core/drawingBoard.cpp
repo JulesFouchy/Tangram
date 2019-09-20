@@ -94,10 +94,6 @@ void DrawingBoard::save(int approxNbPixels, std::string filePath) {
 	saveBuffer.unbind();
 }
 
-void DrawingBoard::addLayer(const std::string imgFilePath) {
-	layers.addLayer(imgFilePath);
-}
-
 void DrawingBoard::update() {
 	transform.checkDraggingTranslation();
 	//spdlog::info("current delimiter = {}", history.getCurrentDelimiter());

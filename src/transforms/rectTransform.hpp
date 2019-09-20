@@ -24,7 +24,8 @@ public:
 
 	const glm::mat4x4& getProjectionMatrix();
 
-	inline float getAspectRatio() { return m_aspectRatio; };
+	inline float getAspectRatio() { return m_aspectRatio; }
+	inline float getInitialAspectRatio() { return m_initialAspectRatio; }
 	void setAspectRatio(float newAspectRatio, bool bPushChangeInHistory = false);
 
 	inline bool isBusy() override { return Transform::isBusy() || bDraggingAspectRatio; }
