@@ -20,12 +20,19 @@ Layer::~Layer() {
 	spdlog::warn("[Destructed Layer] {}", getName());
 }
 
-void Layer::show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix) {
-	getTexture().show(viewMatrix * glm::scale(m_transform.getMatrix(), glm::vec3(m_transform.getAspectRatio()/ m_transform.getInitialAspectRatio(), 1.0f, 1.0f)), projMatrix);
+void Layer::show(const glm::mat4x4& modelMatrix, const glm::mat4x4& viewMatrix, const glm::mat4x4& projMatrix) {
+	getTexture().show(viewMatrix * modelMatrix, projMatrix);
 }
 
+void Layer::show(const glm::mat4x4& viewMatrix, const glm::mat4x4& projMatrix) {
+	show(glm::scale(m_transform.getMatrix(), glm::vec3(m_transform.getAspectRatio() / m_transform.getInitialAspectRatio(), 1.0f, 1.0f)), viewMatrix, projMatrix);
+}
+
+void Layer::showInDrawingBoardSpace(const glm::mat4x4& modelMatrix) {
+	getTexture().show(modelMatrix, DrawingBoard::transform.getProjectionMatrix());
+}
 void Layer::showInDrawingBoardSpace() {
-	getTexture().show(m_transform.getMatrix(), DrawingBoard::transform.getProjectionMatrix());
+	showInDrawingBoardSpace(m_transform.getMatrix());
 }
 
 void Layer::showFrame() {

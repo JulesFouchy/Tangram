@@ -255,7 +255,7 @@ int main(int argc, char* argv[])
 					std::string imgFilepath = savefilename();
 					if (!imgFilepath.empty()) {
 						spdlog::info("[Saving image] " + imgFilepath);
-						DrawingBoard::save(2500000,imgFilepath);
+						DrawingBoard::save(1000000,imgFilepath);
 						Log::separationLine();
 					}
 				}

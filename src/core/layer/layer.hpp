@@ -13,8 +13,10 @@ friend class DrawingBoard;
 public:
 	~Layer();
 
-	void show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix);
-	void showInDrawingBoardSpace(); // used when saving
+	void show(const glm::mat4x4& modelMatrix, const glm::mat4x4& viewMatrix, const glm::mat4x4& projMatrix); // used by copy layer to use it's own modelMatrix
+	virtual void show(const glm::mat4x4& viewMatrix, const glm::mat4x4& projMatrix);
+	void showInDrawingBoardSpace(const glm::mat4x4& modelMatrix);
+	virtual void showInDrawingBoardSpace(); // used when saving
 	void showFrame();
 
 	inline const std::string& getName() { return m_name; }
@@ -23,7 +25,7 @@ public:
 	inline void setVisibility(bool visible) { m_bVisible = visible; }
 	inline bool* getIsVisiblePointer() { return &m_bVisible; } //For ImGui
 
-	inline Texture2D& getTexture() { return m_displayTexture; }
+	virtual inline Texture2D& getTexture() { return m_displayTexture; }
 
 private:
 	bool m_bVisible;

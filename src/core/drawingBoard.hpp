@@ -23,8 +23,6 @@ public:
 	static void showForSaving();
 	static void save(int approxNbPixels, std::string filePath);
 
-	static void addLayer(const std::string imgFilePath);
-
 	inline static LayerList& getLayerList() { return layers; };
 
 	static void update();
