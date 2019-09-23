@@ -12,7 +12,7 @@
 #include "graphics/immediateDrawing.hpp"
 
 Layer::Layer(float aspectRatio, const std::string& layerName)
-	: m_bVisible(true), m_name(layerName), m_displayTexture(), m_transform(aspectRatio)
+	: m_bVisible(true), m_name(layerName), m_renderBuffer(), m_transform(aspectRatio)
 {
 }
 

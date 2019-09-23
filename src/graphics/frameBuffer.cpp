@@ -8,21 +8,26 @@
 
 #include "utilities/display.hpp"
 
-FrameBuffer::FrameBuffer(int width, int height)
+FrameBuffer::FrameBuffer()
+	: m_frameBufferId(0), m_texture(), m_prevViewportSettings()
 {
 	// Gen Buffer
 	glGenFramebuffers(1, &m_frameBufferId);
 	// Bind
 	glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferId);
-	// Gen texture
-	m_texture.Initialize(width, height, 4);
 	// Attach texture to framebuffer
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture.getID(), 0);
+	// Unbind
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+FrameBuffer::FrameBuffer(int width, int height)
+	: FrameBuffer()
+{
+	m_texture.Initialize(width, height, 4);
 	// Check for completeness
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		spdlog::error("Framebuffer is not complete!");
-	// Unbind
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 FrameBuffer::~FrameBuffer() {

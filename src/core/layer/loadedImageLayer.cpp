@@ -15,7 +15,7 @@ LoadedImageLayer::LoadedImageLayer(const std::string& imgFilePath)
 		spdlog::warn("Couldn't open " + imgFilePath);
 	Log::separationLine();
 	// Initialize members
-	m_displayTexture.Initialize(width, height, BPP, pixels);
+	m_renderBuffer.getTexture().Initialize(width, height, BPP, pixels);
 	m_transform = RectTransform((float) width / height);	
 }
 

@@ -22,6 +22,7 @@ public:
 
 	void createLoadedImageLayer(const std::string& imgFilePath);
 	void createCopyLayer(Layer* childLayer);
+	void createShaderLayer(const std::string& fragmentShaderFilepath);
 	Layer* getLayer(int index);
 	void setSelectedLayer(Layer* layer);
 

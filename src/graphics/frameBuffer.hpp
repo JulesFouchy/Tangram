@@ -4,7 +4,9 @@
 
 class FrameBuffer {
 public: 
+	FrameBuffer();
 	FrameBuffer(int width, int height);
+	void Initialize(int width, int height);
 	~FrameBuffer();
 
 	void bind();
@@ -12,7 +14,7 @@ public:
 
 	void clear();
 
-	inline const Texture2D& getTexture() { return m_texture; }
+	inline Texture2D& getTexture() { return m_texture; }
 
 private:
 	unsigned int m_frameBufferId;

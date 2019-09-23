@@ -11,6 +11,7 @@ class RectVAO {
 public:
 	RectVAO() = default;
 	RectVAO(float aspectRatio, CoordinateSystem coordSystem);
+	void Initialize(float minX, float maxX, float minY, float maxY, float aspectRatio, CoordinateSystem coordSystem);
 	void Initialize(float aspectRatio, CoordinateSystem coordSystem);
 	~RectVAO();
 

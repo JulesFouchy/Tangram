@@ -3,6 +3,7 @@
 #include "layer.hpp"
 
 #include "graphics/shader.hpp"
+#include "graphics/rectVAO.hpp"
 
 class ShaderLayer : public Layer {
 public:
@@ -12,4 +13,5 @@ private:
 	void drawShaderOnTexture();
 private:
 	Shader m_shader;
+	RectVAO m_rectVAO;
 };

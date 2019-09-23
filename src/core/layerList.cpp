@@ -13,6 +13,7 @@
 
 #include "layer/loadedImageLayer.hpp"
 #include "layer/copyLayer.hpp"
+#include "layer/shaderLayer.hpp"
 
 LayerList::LayerList()
 	: m_hoveredLayer(nullptr), m_mousePosRelToHoveredLayer(OUTSIDE), usedCursor(nullptr)
@@ -63,11 +64,16 @@ void LayerList::showInDrawingBoardSpace() {
 void LayerList::createLoadedImageLayer(const std::string& imgFilePath) {
 	Layer* layer = new LoadedImageLayer(imgFilePath);
 	layers.addLayer(layer);
-	setSelectedLayer(layer);
 }
 
 void LayerList::createCopyLayer(Layer* childLayer) {
 	Layer* layer = new CopyLayer(childLayer);
+	layers.addLayer(layer);
+}
+
+void LayerList::createShaderLayer(const std::string& fragmentShaderFilepath) {
+	// TODO set preview size properly, and recompute the image at full size when saving !
+	Layer* layer = new ShaderLayer(50, 50, fragmentShaderFilepath);
 	layers.addLayer(layer);
 }
 

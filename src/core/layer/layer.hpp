@@ -3,7 +3,7 @@
 #include "glm/glm.hpp"
 
 #include "transforms/rectTransform.hpp"
-#include "graphics/texture2D.hpp"
+#include "graphics/frameBuffer.hpp"
 
 class Layer {
 friend class LayerList;
@@ -25,14 +25,14 @@ public:
 	inline void setVisibility(bool visible) { m_bVisible = visible; }
 	inline bool* getIsVisiblePointer() { return &m_bVisible; } //For ImGui
 
-	virtual inline Texture2D& getTexture() { return m_displayTexture; }
+	virtual inline Texture2D& getTexture() { return m_renderBuffer.getTexture(); }
 
 private:
 	bool m_bVisible;
 protected:
 	std::string m_name;
 protected:
-	Texture2D m_displayTexture;
+	FrameBuffer m_renderBuffer;
 public:
 	RectTransform m_transform;
 protected:

@@ -10,18 +10,18 @@ RectVAO::RectVAO(float aspectRatio, CoordinateSystem coordSystem)
 	Initialize(aspectRatio, coordSystem);
 }
 
-void RectVAO::Initialize(float aspectRatio, CoordinateSystem coordSystem)
+void RectVAO::Initialize(float aspectRatio, CoordinateSystem coordSystem) {
+	// The rect will fit in the window's Y (when drawingBoard.scale = 1 and transform.scale = 1) and respects aspect ratio
+	Initialize(Display::getMinY() * aspectRatio, Display::getMaxY() * aspectRatio, Display::getMinY(), Display::getMaxY(), aspectRatio, coordSystem);
+}
+
+void RectVAO::Initialize(float minX, float maxX, float minY, float maxY, float aspectRatio, CoordinateSystem coordSystem)
 {
 	// Vertex Array
 	glGenVertexArrays(1, &m_vertexArray);
 	glBindVertexArray(m_vertexArray);
 
 	// Vertex buffer
-	// The rect will fit in the window's Y (when drawingBoard.scale = 1 and transform.scale = 1) and respects aspect ratio
-	float minX = Display::getMinY() * aspectRatio;
-	float maxX = Display::getMaxY() * aspectRatio;
-	float minY = Display::getMinY();
-	float maxY = Display::getMaxY();
 
 	float texCoordMinX;
 	float texCoordMaxX;
