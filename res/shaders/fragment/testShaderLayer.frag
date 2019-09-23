@@ -1,9 +1,13 @@
 #version 440 core
 
-layout(location = 0) out vec4 color;
+layout(location = 0) out vec4 fragColor;
+
+uniform float u_Radius;
 
 in vec2 v_texCoord;
 
 void main() {
-	color = vec4(v_texCoord, 0.0, 1.0);
+	float d = length(v_texCoord);
+	vec3 color = vec3(1.0 - smoothstep(d-0.9,-0.02,0.02));
+	fragColor = vec4(color, 1.0);
 }

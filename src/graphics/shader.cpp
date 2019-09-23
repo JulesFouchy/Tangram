@@ -72,6 +72,23 @@ void Shader::setUniform4f(const std::string& uniformName, glm::vec4 v) {
 void Shader::setUniformMat4f(const std::string& uniformName, glm::mat4& mat) {
 	glUniformMatrix4fv(getUniformLocation(uniformName), 1, GL_FALSE, &mat[0][0]);
 }
+void Shader::setUniform(const Uniform& uniform) {
+	if (auto myInt = std::get_if<int>(&uniform.getValue())) {
+		glUniform1i(uniform.getLocation(), *myInt);
+	}
+	else if (auto myFloat = std::get_if<float>(&uniform.getValue())) {
+		glUniform1f(uniform.getLocation(), *myFloat);
+	}
+	else if (auto myVec2 = std::get_if<glm::vec2>(&uniform.getValue())) {
+		glUniform2f(uniform.getLocation(), myVec2->x, myVec2->y);
+	}
+	else if (auto myVec3 = std::get_if<glm::vec3>(&uniform.getValue())) {
+		glUniform3f(uniform.getLocation(), myVec3->x, myVec3->y, myVec3->z);
+	}
+	else if (auto myVec4 = std::get_if<glm::vec4>(&uniform.getValue())) {
+		glUniform4f(uniform.getLocation(), myVec4->x, myVec4->y, myVec4->z, myVec4->w);
+	}
+}
 
 /* Utilities to open files and compile shaders */
 

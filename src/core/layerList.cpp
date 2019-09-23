@@ -73,7 +73,7 @@ void LayerList::createCopyLayer(Layer* childLayer) {
 
 void LayerList::createShaderLayer(const std::string& fragmentShaderFilepath) {
 	// TODO set preview size properly, and recompute the image at full size when saving !
-	Layer* layer = new ShaderLayer(50, 50, fragmentShaderFilepath);
+	Layer* layer = new ShaderLayer(500, 500, fragmentShaderFilepath);
 	layers.addLayer(layer);
 }
 
