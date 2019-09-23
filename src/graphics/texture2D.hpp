@@ -17,18 +17,15 @@ enum PixelFormat {
 };
 
 class Texture2D {
-	friend class Layer;
-	friend class FrameBuffer;
 public:
 	static void ClassInitialization();
+	Texture2D();
 	void Initialize(int width, int height, int BPP, unsigned char* pixels = nullptr);
 	~Texture2D();
 
 	void show(glm::mat4x4 transform, glm::mat4x4 projection);
 	void show(glm::mat4x4 transform);
-
 	void bind();
-
 	void save(const std::string& filePath);
 
 	inline float getAspectRatio() { return m_aspectRatio; }
@@ -38,10 +35,7 @@ public:
 	inline unsigned char* getPixels() { return m_pixels; }
 	inline unsigned int getID() { return m_textureID; }
 
-protected:
-	Texture2D();
-protected:
-	std::string m_debugName;
+private:
 	unsigned char* m_pixels;
 	int m_width;
 	int m_height;
@@ -51,7 +45,6 @@ protected:
 
 	unsigned int m_textureID;
 
-	//For rendering
 	RectVAO m_rectVertexArray;
 	static Shader standardShader;
 

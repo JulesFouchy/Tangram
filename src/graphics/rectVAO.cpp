@@ -23,8 +23,6 @@ void RectVAO::Initialize(float aspectRatio, CoordinateSystem coordSystem)
 	float minY = Display::getMinY();
 	float maxY = Display::getMaxY();
 
-	spdlog::info("{} {} {} {}", minX, maxX, minY, maxY);
-
 	float texCoordMinX;
 	float texCoordMaxX;
 	float texCoordMinY;

@@ -9,13 +9,14 @@ public:
 
 	void bind();
 	void unbind();
-	void bindTexture();
 
 	void clear();
 
-public:
+	inline const Texture2D& getTexture() { return m_texture; }
+
+private:
 	unsigned int m_frameBufferId;
 	Texture2D m_texture;
-private:
-	int prevViewportSettings[4];
+
+	int m_prevViewportSettings[4];
 };

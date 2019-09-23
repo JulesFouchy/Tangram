@@ -11,7 +11,7 @@
 Shader Texture2D::standardShader = Shader("res/shaders/vertex/texture.vert", "res/shaders/fragment/texture_standard.frag", false);
 
 Texture2D::Texture2D()
-	: m_debugName("texture2D"), m_pixels(nullptr), m_width(0), m_height(0), m_aspectRatio(1.0f), m_pixelFormat(RGBA), m_textureID(0), m_rectVertexArray(), m_BPP(0)
+	: m_pixels(nullptr), m_width(0), m_height(0), m_aspectRatio(1.0f), m_pixelFormat(RGBA), m_textureID(0), m_rectVertexArray(), m_BPP(0)
 {
 	// Gen texture
 	glGenTextures(1, &m_textureID);
@@ -45,7 +45,7 @@ void Texture2D::ClassInitialization() {
 Texture2D::~Texture2D() {
 	glDeleteTextures(1, &m_textureID);
 	if (m_pixels)
-		spdlog::warn("pixels of {} not freed !", m_debugName);
+		spdlog::warn("[Texture 2D] pixels not freed !");
 }
 
 void Texture2D::show(glm::mat4x4 transform, glm::mat4x4 projection) {
