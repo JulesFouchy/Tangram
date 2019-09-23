@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GL/glew.h"
+#include "rectVAO.hpp"
 
 #include <iostream>
 
@@ -53,8 +54,7 @@ protected:
 	unsigned int m_textureID;
 
 	//For rendering
-	unsigned int m_quadVBid;
-	unsigned int m_quadIBOid;
+	RectVAO m_rectVertexArray;
 	static Shader standardShader;
 	//
 	float lastTexCoordMinX;

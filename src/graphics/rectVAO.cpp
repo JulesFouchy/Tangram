@@ -1,6 +1,5 @@
 #include "rectVAO.hpp"
 
-#include "GL/glew.h"
 #include "utilities/display.hpp"
 
 #include "UI/log.hpp"
@@ -8,12 +7,23 @@
 RectVAO::RectVAO(float aspectRatio, CoordinateSystem coordSystem)
 	: m_vertexBuffer(0), m_indexBuffer(0), m_vertexArray(0)
 {
+	Initialize(aspectRatio, coordSystem);
+}
+
+void RectVAO::Initialize(float aspectRatio, CoordinateSystem coordSystem)
+{
+	// Vertex Array
+	glGenVertexArrays(1, &m_vertexArray);
+	glBindVertexArray(m_vertexArray);
+
 	// Vertex buffer
 	// The rect will fit in the window's Y (when drawingBoard.scale = 1 and transform.scale = 1) and respects aspect ratio
 	float minX = Display::getMinY() * aspectRatio;
 	float maxX = Display::getMaxY() * aspectRatio;
 	float minY = Display::getMinY();
 	float maxY = Display::getMaxY();
+
+	spdlog::info("{} {} {} {}", minX, maxX, minY, maxY);
 
 	float texCoordMinX;
 	float texCoordMaxX;
@@ -47,7 +57,14 @@ RectVAO::RectVAO(float aspectRatio, CoordinateSystem coordSystem)
 	glGenBuffers(1, &m_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, 4 * 4 * sizeof(float), vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// Vertex attributes
+		// Position
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+		// Texture coordinates
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (const void*)(2 * sizeof(float)));
 
 	// Index buffer
 	unsigned int indices[] = {
@@ -57,17 +74,10 @@ RectVAO::RectVAO(float aspectRatio, CoordinateSystem coordSystem)
 	glGenBuffers(1, &m_indexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	// Array buffer
-	glGenVertexArrays(1, &m_vertexArray);
-	glBindVertexArray(m_vertexArray);
-		// Position
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-		// Texture coordinates
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (const void*)(2 * sizeof(float)));
+	// Unbind
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
 
@@ -77,14 +87,9 @@ RectVAO::~RectVAO() {
 	glDeleteVertexArrays(1, &m_vertexArray);
 }
 
-void RectVAO::DrawCall() {
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-}
-
-inline void RectVAO::bind() {
+void RectVAO::binddrawunbind() {
 	glBindVertexArray(m_vertexArray);
-}
-
-inline void RectVAO::unbind() {
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 }
