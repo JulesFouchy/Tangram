@@ -17,16 +17,15 @@ enum PixelFormat {
 };
 
 class Texture2D {
-friend class Layer;
-friend class FrameBuffer;
+	friend class Layer;
+	friend class FrameBuffer;
 public:
 	static void ClassInitialization();
-
 	void Initialize(int width, int height, int BPP, unsigned char* pixels = nullptr);
-	virtual ~Texture2D();
+	~Texture2D();
 
-	void show(glm::mat4x4 transform, glm::mat4x4 projection, float texCoordMinX = 0.0f, float texCoordMaxX = 1.0f, float texCoordMinY = 0.0f, float texCoordMaxY = 1.0f);
-	void show(glm::mat4x4 transform, float texCoordMinX = 0.0f, float texCoordMaxX = 1.0f, float texCoordMinY = 0.0f, float texCoordMaxY = 1.0f);
+	void show(glm::mat4x4 transform, glm::mat4x4 projection);
+	void show(glm::mat4x4 transform);
 
 	void bind();
 
@@ -37,7 +36,6 @@ public:
 	inline int getHeight() { return m_height; }
 	inline int getBPP() { return m_BPP; }
 	inline unsigned char* getPixels() { return m_pixels; }
-
 	inline unsigned int getID() { return m_textureID; }
 
 protected:
@@ -56,13 +54,6 @@ protected:
 	//For rendering
 	RectVAO m_rectVertexArray;
 	static Shader standardShader;
-	//
-	float lastTexCoordMinX;
-	float lastTexCoordMaxX;
-	float lastTexCoordMinY;
-	float lastTexCoordMaxY;
-private:
-	void computeAndSendVertexBuffer(float texCoordMinX = 0.0f, float texCoordMaxX = 1.0f, float texCoordMinY = 0.0f, float texCoordMaxY = 1.0f);
 
 public:
 	static unsigned int bytesPerPixel(PixelFormat format);

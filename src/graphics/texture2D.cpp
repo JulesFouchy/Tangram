@@ -11,8 +11,7 @@
 Shader Texture2D::standardShader = Shader("res/shaders/vertex/texture.vert", "res/shaders/fragment/texture_standard.frag", false);
 
 Texture2D::Texture2D()
-	: m_debugName("texture2D"), m_pixels(nullptr), m_width(0), m_height(0), m_aspectRatio(1.0f), m_pixelFormat(RGBA), m_textureID(0), m_rectVertexArray(),
-	lastTexCoordMinX(0.0f), lastTexCoordMaxX(1.0f), lastTexCoordMinY(0.0f), lastTexCoordMaxY(1.0f), m_BPP(0)
+	: m_debugName("texture2D"), m_pixels(nullptr), m_width(0), m_height(0), m_aspectRatio(1.0f), m_pixelFormat(RGBA), m_textureID(0), m_rectVertexArray(), m_BPP(0)
 {
 	// Gen texture
 	glGenTextures(1, &m_textureID);
@@ -49,23 +48,20 @@ Texture2D::~Texture2D() {
 		spdlog::warn("pixels of {} not freed !", m_debugName);
 }
 
-void Texture2D::show(glm::mat4x4 transform, glm::mat4x4 projection, float texCoordMinX, float texCoordMaxX, float texCoordMinY, float texCoordMaxY) {
-	//Bind texture
+void Texture2D::show(glm::mat4x4 transform, glm::mat4x4 projection) {
+	// Bind texture
 	bind();
-	//Shader
+	// Shader
 	standardShader.bind();
 	standardShader.setUniform1i("u_textureSlot", 0);
-
 	glm::mat4x4 mvp = projection * transform;
 	standardShader.setUniformMat4f("u_mvp", mvp);
-
 	// Vertex array
 	m_rectVertexArray.binddrawunbind();
-
 }
 
-void Texture2D::show(glm::mat4x4 transform, float texCoordMinX, float texCoordMaxX, float texCoordMinY, float texCoordMaxY) {
-	show(transform, Display::getProjMat(), texCoordMinX, texCoordMaxX, texCoordMinY, texCoordMaxY);
+void Texture2D::show(glm::mat4x4 transform) {
+	show(transform, Display::getProjMat());
 }
 
 void Texture2D::bind() {
