@@ -18,6 +18,7 @@ public:
 	void showInDrawingBoardSpace(const glm::mat4x4& modelMatrix);
 	virtual void showInDrawingBoardSpace(); // used when saving
 	void showFrame();
+	virtual void showUI();
 
 	inline const std::string& getName() { return m_name; }
 

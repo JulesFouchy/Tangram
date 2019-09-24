@@ -15,6 +15,8 @@ public:
 	void bind();
 	void compile();
 
+	inline unsigned int getID() const { return m_shaderId; }
+
 	//Uniforms
 private:
 	std::unordered_map<std::string, int> m_UniformLocationCache;

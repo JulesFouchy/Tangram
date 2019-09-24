@@ -11,13 +11,15 @@ typedef std::variant<int, float, glm::vec2, glm::vec3, glm::vec4> uniformType;
 
 class Uniform {
 public:
-	Uniform(GLuint shaderID, const std::string name, uniformType value);
+	Uniform(GLuint shaderID, const std::string name, float value);
 	~Uniform() = default;
 
+	inline const std::string& getName() const { return m_name; }
 	inline int getLocation() const { return m_location; }
-	inline uniformType getValue() const { return m_value; }
+	float getValue() const { return m_value; }
+	inline float* getValuePointer() { return &m_value; }
 private:
 	std::string m_name;
 	int m_location;
-	uniformType m_value;
+	float m_value;
 };

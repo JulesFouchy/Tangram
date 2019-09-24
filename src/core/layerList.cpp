@@ -46,6 +46,11 @@ void LayerList::showInDrawingBoardSpace() {
 	}
 }
 
+void LayerList::showUI() {
+	if (selectedLayers.size() == 1)
+		selectedLayers[0]->showUI();
+}
+
 /*void LayerList::showFrames() {
 	//for (int k = 0; k < layers.size(); ++k) {
 	//	layers[k]->showFrame();
@@ -73,7 +78,7 @@ void LayerList::createCopyLayer(Layer* childLayer) {
 
 void LayerList::createShaderLayer(const std::string& fragmentShaderFilepath) {
 	// TODO set preview size properly, and recompute the image at full size when saving !
-	Layer* layer = new ShaderLayer(500, 500, fragmentShaderFilepath);
+	Layer* layer = new ShaderLayer(1500, 1000, fragmentShaderFilepath);
 	layers.addLayer(layer);
 }
 
