@@ -25,7 +25,7 @@ ShaderLayer::~ShaderLayer() {
 void ShaderLayer::drawShaderOnTexture() {
 	m_shader.bind();
 	for (Uniform& uniform : m_uniforms)
-		m_shader.setUniform(uniform);
+		uniform.set();
 	m_renderBuffer.bind();
 	m_rectVAO.binddrawunbind();
 	m_renderBuffer.unbind();
@@ -37,10 +37,9 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 		std::string line;
 
 		while (std::getline(file, line)) {
-			size_t posInString = 0U;
-			// Parse uniform line
-			if ( (posInString = line.find("uniform")) != std::string::npos) {
-				size_t posBeginUniform = line.find("uniform");
+			// Parse uniform
+			size_t posBeginUniform = line.find("uniform");
+			if (posBeginUniform != std::string::npos) {
 				// Get type
 				size_t posBeginType = posBeginUniform + std::string("uniform").size() + 1;
 				size_t posEndType = line.find(' ', posBeginType);
@@ -50,9 +49,25 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 				size_t posEndName = std::min(line.find(' ', posBeginName), line.find(';', posBeginName));
 				std::string s_name = line.substr(posBeginName, posEndName - posBeginName);
 				// Add uniform
-				m_uniforms.push_back(Uniform(m_shader.getID(), s_name, 0.0f));
+				if (s_type == "int") {
+					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, 0));
+				}
+				else if (s_type == "float") {
+					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, 0.0f));
+				}
+				else if (s_type == "vec2") {
+					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, glm::vec2(0.0f)));
+				}
+				else if (s_type == "vec3") {
+					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, glm::vec3(0.0f)));
+				}
+				else if (s_type == "vec4") {
+					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, glm::vec4(0.0f)));
+				}
+				else {
+					spdlog::error("unsupported uniform type : {} ; in shaderLayer {}", s_type, getName());
+				}
 			}
-			//else if (line.find("carte") != std::string::npos) { m_mapPath += line.substr(6, line.size()); }
 		}
 
 	}
@@ -61,7 +76,7 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 void ShaderLayer::showUI() {
 	ImGui::Begin(( "Uniforms of " + getName() ).c_str());
 		for (Uniform& uniform : m_uniforms) {
-			if (ImGui::SliderFloat(uniform.getName().c_str(), uniform.getValuePointer(), 0.0f, 1.0f))
+			if (uniform.ImGuiDragValue())
 				drawShaderOnTexture();
 		}
 	ImGui::End();
