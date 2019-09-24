@@ -27,6 +27,7 @@ void ShaderLayer::drawShaderOnTexture() {
 	for (Uniform& uniform : m_uniforms)
 		uniform.set();
 	m_renderBuffer.bind();
+	m_renderBuffer.clear();
 	m_rectVAO.binddrawunbind();
 	m_renderBuffer.unbind();
 }
