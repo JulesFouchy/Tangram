@@ -16,6 +16,8 @@ public:
 	void showUI() override;
 private:
 	void drawShaderOnTexture();
+
+	void parseShader(const std::string& filepath);
 private:
 	Shader m_shader;
 	std::vector<Uniform> m_uniforms;
