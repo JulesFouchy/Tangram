@@ -39,7 +39,8 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 		while (std::getline(file, line)) {
 			// Parse uniform
 			size_t posBeginUniform = line.find("uniform");
-			if (posBeginUniform != std::string::npos) {
+			size_t posBeginComment = line.find("//");
+			if (posBeginUniform != std::string::npos && posBeginUniform < posBeginComment) {
 				// Get type
 				size_t posBeginType = posBeginUniform + std::string("uniform").size() + 1;
 				size_t posEndType = line.find(' ', posBeginType);
