@@ -5,7 +5,7 @@
 #include "UI/log.hpp"
 
 #include <fstream>
-#include "utilities/parseShader.hpp"
+#include "utilities/string.hpp"
 
 ShaderLayer::ShaderLayer(int previewWidth, int previewHeight, const std::string& fragmentFilePath)
 	: Layer((float) previewWidth / previewHeight, fragmentFilePath), m_shader("res/shaders/vertex/shaderLayer.vert", fragmentFilePath),
@@ -56,18 +56,22 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 				UniformType initialValue;
 				if (posBeginComment != std::string::npos) {
 					spdlog::info("looking for options");
-					size_t beginningWord = ParseShader::beginningOfNextWord(line, ParseShader::endOfNextWord(line, posBeginComment) + 1);
-					while (beginningWord < line.size()) {
-						size_t endWord = ParseShader::endOfNextWord(line, beginningWord);
-						std::string arg = line.substr(beginningWord, endWord - beginningWord);
+					size_t currentPos = ParseShader::beginningOfNextWord(line, ParseShader::endOfNextWord(line, posBeginComment) + 1);
+					while (currentPos < line.size()) {
+						std::string arg = ParseShader::getNextWord(line, &currentPos);
 						spdlog::info("|" + arg + "|");
 						if (arg == "default") {
-							size_t beginValue = ParseShader::beginningOfNextWord(line, endWord);
-							endWord = ParseShader::endOfNextWord(line, beginValue);
-							initialValue = std::stof(line.substr(beginValue, endWord - beginValue));
+							if (s_type == "float") {
+								std::string s_value = ParseShader::getNextWord(line, &currentPos);
+								initialValue = std::stof(s_value);
+							}
+							else if (s_type == "vec3") {
+								float x = std::stof(ParseShader::getNextWord(line, &currentPos));
+								float y = std::stof(ParseShader::getNextWord(line, &currentPos));
+								float z = std::stof(ParseShader::getNextWord(line, &currentPos));
+								initialValue = glm::vec3(x, y, z);
+							}
 						}
-						beginningWord = ParseShader::beginningOfNextWord(line,endWord);
-						
 					}
 				}
 				// Add uniform
@@ -81,7 +85,7 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, glm::vec2(0.0f)));
 				}
 				else if (s_type == "vec3") {
-					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, glm::vec3(0.0f)));
+					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, initialValue));
 				}
 				else if (s_type == "vec4") {
 					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, glm::vec4(0.0f)));
