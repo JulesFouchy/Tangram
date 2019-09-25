@@ -46,10 +46,10 @@ bool Uniform::ImGuiDragValue() {
 		return ImGui::SliderFloat2(getName().c_str(), glm::value_ptr(*myVec2), 0.0f, 1.0f);
 	}
 	else if (auto myVec3 = std::get_if<glm::vec3>(getValuePointer())) {
-		return ImGui::SliderFloat3(getName().c_str(), glm::value_ptr(*myVec3), 0.0f, 1.0f);
+		return ImGui::ColorPicker3(getName().c_str(), glm::value_ptr(*myVec3));
 	}
 	else if (auto myVec4 = std::get_if<glm::vec4>(getValuePointer())) {
-		return ImGui::SliderFloat4(getName().c_str(), glm::value_ptr(*myVec4), 0.0f, 1.0f);
+		return ImGui::ColorPicker4(getName().c_str(), glm::value_ptr(*myVec4));
 	}
 	else {
 		spdlog::error(" {} : unknown uniform type", getName());

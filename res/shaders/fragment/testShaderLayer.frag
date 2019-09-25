@@ -2,8 +2,8 @@
 
 layout(location = 0) out vec4 fragColor;
 
-uniform float u_Radius;
-uniform vec3 u_Color;
+  uniform   float           u_Radius;//; // default 0.8 min 0.0
+     uniform     vec3    u_Color  ;   //    min    0.3;   
 //uniform int N;
 
 in vec2 v_texCoord;

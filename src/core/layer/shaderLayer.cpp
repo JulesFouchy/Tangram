@@ -5,7 +5,7 @@
 #include "UI/log.hpp"
 
 #include <fstream>
-#include "utilities/string.hpp"
+#include "utilities/parseShader.hpp"
 
 ShaderLayer::ShaderLayer(int previewWidth, int previewHeight, const std::string& fragmentFilePath)
 	: Layer((float) previewWidth / previewHeight, fragmentFilePath), m_shader("res/shaders/vertex/shaderLayer.vert", fragmentFilePath),
@@ -38,24 +38,44 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 		std::string line;
 
 		while (std::getline(file, line)) {
+			spdlog::info("NEW LINE");
 			// Parse uniform
 			size_t posBeginUniform = line.find("uniform");
 			size_t posBeginComment = line.find("//");
 			if (posBeginUniform != std::string::npos && posBeginUniform < posBeginComment) {
 				// Get type
-				size_t posBeginType = posBeginUniform + std::string("uniform").size() + 1;
-				size_t posEndType = line.find(' ', posBeginType);
+				size_t posBeginType = ParseShader::beginningOfNextWord(line, ParseShader::endOfNextWord(line, posBeginUniform) + 1);
+				size_t posEndType = ParseShader::endOfNextWord(line, posBeginType);
 				const std::string s_type = line.substr(posBeginType, posEndType - posBeginType);
 				// Get name
-				size_t posBeginName = posEndType + 1;
-				size_t posEndName = std::min(line.find(' ', posBeginName), line.find(';', posBeginName));
+				size_t posBeginName = ParseShader::beginningOfNextWord(line, posEndType);
+				size_t posEndName = ParseShader::endOfNextWord(line, posBeginName);
 				std::string s_name = line.substr(posBeginName, posEndName - posBeginName);
+				spdlog::info("found uniform {}", s_name);
+				// Get options
+				UniformType initialValue;
+				if (posBeginComment != std::string::npos) {
+					spdlog::info("looking for options");
+					size_t beginningWord = ParseShader::beginningOfNextWord(line, ParseShader::endOfNextWord(line, posBeginComment) + 1);
+					while (beginningWord < line.size()) {
+						size_t endWord = ParseShader::endOfNextWord(line, beginningWord);
+						std::string arg = line.substr(beginningWord, endWord - beginningWord);
+						spdlog::info("|" + arg + "|");
+						if (arg == "default") {
+							size_t beginValue = ParseShader::beginningOfNextWord(line, endWord);
+							endWord = ParseShader::endOfNextWord(line, beginValue);
+							initialValue = std::stof(line.substr(beginValue, endWord - beginValue));
+						}
+						beginningWord = ParseShader::beginningOfNextWord(line,endWord);
+						
+					}
+				}
 				// Add uniform
 				if (s_type == "int") {
 					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, 0));
 				}
 				else if (s_type == "float") {
-					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, 0.0f));
+					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, initialValue));
 				}
 				else if (s_type == "vec2") {
 					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, glm::vec2(0.0f)));
