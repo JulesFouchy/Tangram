@@ -17,9 +17,14 @@ public:
 private:
 	void drawShaderOnTexture();
 
-	void parseShader(const std::string& filepath);
 private:
 	Shader m_shader;
 	std::vector<Uniform> m_uniforms;
 	RectVAO m_rectVAO;
+
+private:
+	// Parsing
+	void parseShader(const std::string& filepath);
+	static OpenGLType stringToOpenGLType(const std::string& s_type);
+	static UniformType readValue_s_(OpenGLType type, const std::string& str, size_t* currentPosPtr);
 };

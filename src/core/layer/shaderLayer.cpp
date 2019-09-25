@@ -22,6 +22,15 @@ ShaderLayer::~ShaderLayer() {
 
 }
 
+void ShaderLayer::showUI() {
+	ImGui::Begin(("Uniforms of " + getName()).c_str());
+	for (Uniform& uniform : m_uniforms) {
+		if (uniform.ImGuiDragValue())
+			drawShaderOnTexture();
+	}
+	ImGui::End();
+}
+
 void ShaderLayer::drawShaderOnTexture() {
 	m_shader.bind();
 	for (Uniform& uniform : m_uniforms)
@@ -46,14 +55,16 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 				// Get type
 				size_t posBeginType = ParseShader::beginningOfNextWord(line, ParseShader::endOfNextWord(line, posBeginUniform) + 1);
 				size_t posEndType = ParseShader::endOfNextWord(line, posBeginType);
-				const std::string s_type = line.substr(posBeginType, posEndType - posBeginType);
+				OpenGLType type = stringToOpenGLType(line.substr(posBeginType, posEndType - posBeginType));
 				// Get name
 				size_t posBeginName = ParseShader::beginningOfNextWord(line, posEndType);
 				size_t posEndName = ParseShader::endOfNextWord(line, posBeginName);
 				std::string s_name = line.substr(posBeginName, posEndName - posBeginName);
 				spdlog::info("found uniform {}", s_name);
 				// Get options
-				UniformType initialValue;
+				UniformType initialValue = Uniform::zero(type);
+				UniformType minValue = Uniform::zero(type);
+				UniformType maxValue = Uniform::one(type);
 				if (posBeginComment != std::string::npos) {
 					spdlog::info("looking for options");
 					size_t currentPos = ParseShader::beginningOfNextWord(line, ParseShader::endOfNextWord(line, posBeginComment) + 1);
@@ -61,49 +72,75 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 						std::string arg = ParseShader::getNextWord(line, &currentPos);
 						spdlog::info("|" + arg + "|");
 						if (arg == "default") {
-							if (s_type == "float") {
-								std::string s_value = ParseShader::getNextWord(line, &currentPos);
-								initialValue = std::stof(s_value);
-							}
-							else if (s_type == "vec3") {
-								float x = std::stof(ParseShader::getNextWord(line, &currentPos));
-								float y = std::stof(ParseShader::getNextWord(line, &currentPos));
-								float z = std::stof(ParseShader::getNextWord(line, &currentPos));
-								initialValue = glm::vec3(x, y, z);
-							}
+							initialValue = readValue_s_(type, line, &currentPos);
+						}
+						else if (arg == "min") {
+							minValue = readValue_s_(type, line, &currentPos);
+						}
+						else if (arg == "max") {
+							maxValue = readValue_s_(type, line, &currentPos);
 						}
 					}
 				}
 				// Add uniform
-				if (s_type == "int") {
-					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, 0));
-				}
-				else if (s_type == "float") {
-					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, initialValue));
-				}
-				else if (s_type == "vec2") {
-					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, glm::vec2(0.0f)));
-				}
-				else if (s_type == "vec3") {
-					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, initialValue));
-				}
-				else if (s_type == "vec4") {
-					m_uniforms.push_back(Uniform(m_shader.getID(), s_name, glm::vec4(0.0f)));
-				}
-				else {
-					spdlog::error("unsupported uniform type : {} ; in shaderLayer {}", s_type, getName());
-				}
+				m_uniforms.push_back(Uniform(m_shader.getID(), s_name, initialValue, minValue, maxValue));
 			}
 		}
 
 	}
 }
 
-void ShaderLayer::showUI() {
-	ImGui::Begin(( "Uniforms of " + getName() ).c_str());
-		for (Uniform& uniform : m_uniforms) {
-			if (uniform.ImGuiDragValue())
-				drawShaderOnTexture();
-		}
-	ImGui::End();
+OpenGLType ShaderLayer::stringToOpenGLType(const std::string& s_type) {
+	if (s_type == "int") {
+		return Int;
+	}
+	else if (s_type == "float") {
+		return Float;
+	}
+	else if (s_type == "vec2") {
+		return Vec2;
+	}
+	else if (s_type == "vec3") {
+		return Vec3;
+	}
+	else if (s_type == "vec4") {
+		return Vec4;
+	}
+	else {
+		spdlog::error("[stringToOpenGLType] unknown type : {}", s_type);
+	}
+}
+
+UniformType ShaderLayer::readValue_s_(OpenGLType type, const std::string& str, size_t* currentPosPtr) {
+	float x, y, z, w;
+	switch (type)
+	{
+	case Int:
+		return std::stoi(ParseShader::getNextWord(str, currentPosPtr));
+		break;
+	case Float:
+		return std::stof(ParseShader::getNextWord(str, currentPosPtr));
+		break;
+	case Vec2:
+		x = std::stof(ParseShader::getNextWord(str, currentPosPtr));
+		y = std::stof(ParseShader::getNextWord(str, currentPosPtr));
+		return glm::vec2(x, y);
+		break;
+	case Vec3:
+		x = std::stof(ParseShader::getNextWord(str, currentPosPtr));
+		y = std::stof(ParseShader::getNextWord(str, currentPosPtr));
+		z = std::stof(ParseShader::getNextWord(str, currentPosPtr));
+		return glm::vec3(x, y, z);
+		break;
+	case Vec4:
+		x = std::stof(ParseShader::getNextWord(str, currentPosPtr));
+		y = std::stof(ParseShader::getNextWord(str, currentPosPtr));
+		z = std::stof(ParseShader::getNextWord(str, currentPosPtr));
+		w = std::stof(ParseShader::getNextWord(str, currentPosPtr));
+		return glm::vec4(x, y, z, w);
+		break;
+	default:
+		spdlog::error("[ShaderLayer::readValue_s_] unknown OpenGLType");
+		break;
+	}
 }
