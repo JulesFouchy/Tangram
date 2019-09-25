@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
 
 	//DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test3.jpg");
 	//DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test2.png");
-	DrawingBoard::getLayerList().createShaderLayer("res/shaders/fragment/testShaderLayer.frag");
+	DrawingBoard::getLayerList().createShaderLayer("res/shaders/fragment/gradient.frag");
 
 	ImmediateDrawing::Initialize();
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat());

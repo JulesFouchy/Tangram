@@ -45,7 +45,7 @@ bool Uniform::ImGuiDragValue() {
 		return ImGui::SliderFloat(getName().c_str(), myFloat, std::get<float>(m_minValue), std::get<float>(m_maxValue));
 	}
 	else if (auto myVec2 = std::get_if<glm::vec2>(getValuePointer())) {
-		return ImGui::SliderFloat2(getName().c_str(), glm::value_ptr(*myVec2), std::get<glm::vec2>(m_minValue).x, std::get<glm::vec2>(m_minValue).y);
+		return ImGui::SliderFloat2(getName().c_str(), glm::value_ptr(*myVec2), std::get<glm::vec2>(m_minValue).x, std::get<glm::vec2>(m_maxValue).x);
 	}
 	else if (auto myVec3 = std::get_if<glm::vec3>(getValuePointer())) {
 		return ImGui::ColorPicker3(getName().c_str(), glm::value_ptr(*myVec3));
