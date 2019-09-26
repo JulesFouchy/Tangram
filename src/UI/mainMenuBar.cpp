@@ -2,6 +2,8 @@
 
 #include "imgui/imgui.h"
 
+#include "core/drawingBoardGUI.hpp"
+
 void UI::showMainMenuBar() {
 	if (ImGui::BeginMainMenuBar())
 	{
@@ -69,9 +71,11 @@ void UI::showMainMenuBar() {
 			if (ImGui::MenuItem("Quit", "Alt+F4")) {}
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Edit"))
+		if (ImGui::BeginMenu("New"))
 		{
-			if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
+			if (ImGui::MenuItem("Shader Layer")) {
+				DrawingBoardGUI::OpenCreateShaderLayerWindow();
+			}
 			if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
 			ImGui::Separator();
 			if (ImGui::MenuItem("Cut", "CTRL+X")) {}

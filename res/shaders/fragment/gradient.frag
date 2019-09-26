@@ -6,7 +6,6 @@ uniform float u_angle; // default 0 | min 0 | max 6.2831853
 uniform vec2 u_center; // default 0 0 | min -5 -5 | max 5 5
 uniform vec3 u_Color1; // default 0 0 0
 uniform vec3 u_Color2; // default 1 1 1
-//uniform int N;
 
 in vec2 v_texCoord;
 

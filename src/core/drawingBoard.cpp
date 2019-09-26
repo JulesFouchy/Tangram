@@ -13,6 +13,8 @@
 
 #include "GL/glew.h"
 
+#include "imgui/imgui.h"
+
 glm::vec4 DrawingBoard::backgroundColor;
 glm::vec4 DrawingBoard::outsideColor;
 
