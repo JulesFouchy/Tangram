@@ -30,7 +30,6 @@ void GUI_LayerCreation::ImGuiChoose_Ratio_Width_Height() {
 	ImGui::Text("Aspect Ratio : "); ImGui::SameLine();
 	ImGui::PushID(0);
 	if (ImGui::InputScalar("", ImGuiDataType_U32, m_aspectRatio.getNumeratorPtr(), NULL, NULL, "%u")) {
-		m_aspectRatio.updateRatio();
 		updateWidthOrHeight();
 	}
 	ImGui::SameLine();
@@ -38,14 +37,12 @@ void GUI_LayerCreation::ImGuiChoose_Ratio_Width_Height() {
 	ImGui::Text("/"); ImGui::SameLine();
 	ImGui::PushID(1);
 	if (ImGui::InputScalar("", ImGuiDataType_U32, m_aspectRatio.getDenominatorPtr(), NULL, NULL, "%u")) {
-		m_aspectRatio.updateRatio();
 		updateWidthOrHeight();
 	}
 	ImGui::PopID();
 	ImGui::SameLine();
 	if (ImGui::Button("Same as DrawingBoard's")) {
-		spdlog::warn("This button is not really working ! ...");
-		m_aspectRatio = Ratio(3, 2);//DrawingBoard::transform.getAspectRatio();
+		m_aspectRatio = DrawingBoard::transform.getAspectRatio();
 		updateWidthOrHeight();
 	}
 	ImGui::PopItemWidth();

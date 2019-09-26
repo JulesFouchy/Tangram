@@ -2,9 +2,11 @@
 
 #include "rectTransform.hpp"
 
+#include "utilities/ratio.hpp"
+
 class DrawingBoardTransform : public RectTransform {
 public:
-	DrawingBoardTransform(float aspectRatio);
+	DrawingBoardTransform(Ratio aspectRatio);
 
 	void zoomIn();
 	void zoomIn(glm::vec2 origin);

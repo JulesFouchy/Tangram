@@ -6,7 +6,7 @@
 
 #include "UI/settings.hpp"
 
-DrawingBoardTransform::DrawingBoardTransform(float aspectRatio)
+DrawingBoardTransform::DrawingBoardTransform(Ratio aspectRatio)
 	: RectTransform(aspectRatio)
 {
 }

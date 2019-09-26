@@ -11,13 +11,15 @@
 
 #include "transforms/drawingBoardTransform.hpp"
 
+#include "utilities/ratio.hpp"
+
 #include "UI/cursor.hpp"
 
 #include "UI/keys.hpp"
 
 class DrawingBoard {
 public:
-	static void Initialize(float whRatio);
+	static void Initialize(Ratio aspectRatio);
 
 	static void show();
 	static void showForSaving();

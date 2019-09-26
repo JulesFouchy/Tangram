@@ -25,13 +25,13 @@ DrawingBoardTransform DrawingBoard::transform(1.0f);
 LayerList DrawingBoard::layers;
 FrameBuffer* DrawingBoard::renderBuffer;
 
-void DrawingBoard::Initialize(float whRatio) 
+void DrawingBoard::Initialize(Ratio aspectRatio) 
 {
 	m_currentCursor = nullptr;
 	m_bIsHandlingAnInput = false;
 	history = History();
-	transform = DrawingBoardTransform(whRatio);
-	renderBuffer = new FrameBuffer(Display::getHeight() * whRatio, Display::getHeight());
+	transform = DrawingBoardTransform(aspectRatio);
+	renderBuffer = new FrameBuffer(Display::getHeight() * aspectRatio, Display::getHeight());
 	backgroundColor = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
 	outsideColor = glm::vec4(0.45f, 0.55f, 0.6f, 1.0f);
 }

@@ -15,7 +15,7 @@
 #include <algorithm>
 
 #include "glm/gtc/matrix_inverse.hpp"
-RectTransform::RectTransform(float aspectRatio)
+RectTransform::RectTransform(Ratio aspectRatio)
 	: m_aspectRatio(aspectRatio), m_initialAspectRatio(aspectRatio), m_projectionMatrix(glm::ortho(-0.5f * m_aspectRatio, 0.5f * m_aspectRatio, -0.5f, 0.5f)),
 	bMustRecomputeProjMat(false),
 	m_aspectRatioWhenDraggingStarted(aspectRatio), m_aspectRatioDraggingInfo(),
@@ -55,7 +55,7 @@ void RectTransform::setAspectRatio(float newAspectRatio, bool bPushChangeInHisto
 			));
 		}
 	}
-	m_aspectRatio = newAspectRatio;
+	m_aspectRatio.set(newAspectRatio);
 	bMustRecomputeProjMat = true;
 }
 
@@ -66,7 +66,7 @@ void RectTransform::reset(bool bPushChangeInHistory) {
 
 void RectTransform::startDraggingScale(AspectRatioDraggingInfo* infos, glm::vec2 originInDrawginBoardSpace, bool bFollowingAnotherLayer) {
 	Transform::startDraggingScale(originInDrawginBoardSpace);
-	m_aspectRatioWhenDraggingStarted = getAspectRatio();
+	m_aspectRatioWhenDraggingStarted.set(getAspectRatio());
 	m_dragRatioIsFollowingAnotherLayer = bFollowingAnotherLayer;
 	m_aspectRatioDraggingInfo = infos;
 }

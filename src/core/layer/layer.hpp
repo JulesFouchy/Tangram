@@ -5,6 +5,8 @@
 #include "transforms/rectTransform.hpp"
 #include "graphics/frameBuffer.hpp"
 
+#include "utilities/ratio.hpp"
+
 class Layer {
 friend class LayerList;
 friend class GroupOfLayers;
@@ -37,5 +39,5 @@ protected:
 public:
 	RectTransform m_transform;
 protected:
-	Layer(float aspectRatio, const std::string& layerName = "New layer"); //Each derived class should initialize aspectRatio and Name in their own way
+	Layer(Ratio aspectRatio, const std::string& layerName = "New layer"); //Each derived class should initialize aspectRatio and Name in their own way
 };

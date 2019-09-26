@@ -4,6 +4,8 @@
 #include "groupTransform.hpp"
 #include "aspectRatioDraggingInfo.hpp"
 
+#include "utilities/ratio.hpp"
+
 enum MousePositionRelativeToRect {
 	OUTSIDE,
 	INSIDE,
@@ -19,12 +21,12 @@ enum MousePositionRelativeToRect {
 
 class RectTransform : public Transform {
 public:
-	RectTransform(float aspectRatio);
+	RectTransform(Ratio aspectRatio);
 	virtual ~RectTransform();
 
 	const glm::mat4x4& getProjectionMatrix();
 
-	inline float getAspectRatio() { return m_aspectRatio; }
+	inline Ratio getAspectRatio() { return m_aspectRatio; }
 	inline float getInitialAspectRatio() { return m_initialAspectRatio; }
 	void setAspectRatio(float newAspectRatio, bool bPushChangeInHistory = false);
 
@@ -49,8 +51,8 @@ private:
 public:
 	MousePositionRelativeToRect getMouseRelativePosition();
 private:
-	float m_aspectRatio;
-	float m_initialAspectRatio;
+	Ratio m_aspectRatio;
+	Ratio m_initialAspectRatio;
 	glm::mat4x4 m_projectionMatrix;
 
 	bool bMustRecomputeProjMat;
@@ -58,6 +60,6 @@ private:
 	void startDraggingScaleOrAspectRatio(glm::vec2 dragCenterInDrawingBoardSpace);
 	bool bDraggingAspectRatio;
 	bool m_dragRatioIsFollowingAnotherLayer;
-	float m_aspectRatioWhenDraggingStarted;
+	Ratio m_aspectRatioWhenDraggingStarted;
 	AspectRatioDraggingInfo* m_aspectRatioDraggingInfo;
 };

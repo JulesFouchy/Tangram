@@ -122,7 +122,7 @@ int main(int argc, char* argv[])
 	Log::Initialize();
 
 	Texture2D::ClassInitialization();
-	DrawingBoard::Initialize(1.5f);
+	DrawingBoard::Initialize(Ratio(3,2));
 	DrawingBoard::transform.setScale(0.9f);
 
 	//DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test3.jpg");
