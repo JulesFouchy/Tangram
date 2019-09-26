@@ -19,7 +19,7 @@ public:
 
 	void show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix);
 	void showInDrawingBoardSpace();
-	void showUI();
+	void showSelectedLayerGUI();
 
 	void createLoadedImageLayer(const std::string& imgFilePath);
 	void createCopyLayer(Layer* childLayer);

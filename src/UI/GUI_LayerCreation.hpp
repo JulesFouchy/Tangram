@@ -1,6 +1,6 @@
 #pragma once
 
-class DrawingBoardGUI {
+class GUI_LayerCreation {
 public:
 	static void Show();
 	static void OpenCreateShaderLayerWindow();
@@ -11,6 +11,6 @@ private:
 	static bool m_bShaderLayerCreationWindow;
 
 private:
-	DrawingBoardGUI() = default;
-	~DrawingBoardGUI() = default;
+	GUI_LayerCreation() = default;
+	~GUI_LayerCreation() = default;
 };

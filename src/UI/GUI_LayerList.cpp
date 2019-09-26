@@ -1,4 +1,4 @@
-#include "UI_LayerList.hpp"
+#include "GUI_LayerList.hpp"
 
 #include "imgui/imgui.h"
 
@@ -7,7 +7,7 @@
 
 #include "core/drawingBoard.hpp"
 
-void UI_LayerList::show() {
+void GUI_LayerList::show() {
 
 	LayerList& layerList = DrawingBoard::getLayerList();
 
@@ -58,7 +58,7 @@ void UI_LayerList::show() {
 
 }
 
-void UI_LayerList::dragDropSourceReorderLayer(Layer* layer) {
+void GUI_LayerList::dragDropSourceReorderLayer(Layer* layer) {
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 	{
 		ImGui::SetDragDropPayload("Reordering layer", &layer, sizeof(Layer*));
@@ -67,7 +67,7 @@ void UI_LayerList::dragDropSourceReorderLayer(Layer* layer) {
 	}
 }
 
-void UI_LayerList::dragDropTargetReorderLayer(int layerIndex) {
+void GUI_LayerList::dragDropTargetReorderLayer(int layerIndex) {
 	if (ImGui::BeginDragDropTarget())
 	{
 		if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("Reordering layer"))

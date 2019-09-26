@@ -2,9 +2,9 @@
 
 #include "imgui/imgui.h"
 
-#include "core/drawingBoardGUI.hpp"
+#include "UI/GUI_LayerCreation.hpp"
 
-void UI::showMainMenuBar() {
+void GUI::showMainMenuBar() {
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
@@ -74,7 +74,7 @@ void UI::showMainMenuBar() {
 		if (ImGui::BeginMenu("New"))
 		{
 			if (ImGui::MenuItem("Shader Layer")) {
-				DrawingBoardGUI::OpenCreateShaderLayerWindow();
+				GUI_LayerCreation::OpenCreateShaderLayerWindow();
 			}
 			if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
 			ImGui::Separator();

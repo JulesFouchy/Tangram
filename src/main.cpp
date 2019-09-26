@@ -26,9 +26,9 @@
 
 #include "UI/fileBrowser.hpp"
 #include "UI/cursor.hpp"
-#include "UI/UI_LayerList.hpp"
+#include "UI/GUI_LayerList.hpp"
 #include "UI/mainMenuBar.hpp"
-#include "core/drawingBoardGUI.hpp"
+#include "UI/GUI_LayerCreation.hpp"
 
 #include "core/drawingBoard.hpp"
 
@@ -142,10 +142,10 @@ int main(int argc, char* argv[])
 		ImGui_ImplSDL2_NewFrame(window);
 		ImGui::NewFrame();
 
-		UI_LayerList::show();
-		UI::showMainMenuBar();
-		DrawingBoard::getLayerList().showUI();
-		DrawingBoardGUI::Show();
+		GUI_LayerList::show();
+		GUI::showMainMenuBar();
+		DrawingBoard::getLayerList().showSelectedLayerGUI();
+		GUI_LayerCreation::Show();
 
 		// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 		if (show_demo_window)

@@ -22,7 +22,7 @@ ShaderLayer::~ShaderLayer() {
 
 }
 
-void ShaderLayer::showUI() {
+void ShaderLayer::showGUI() {
 	ImGui::Begin(("Uniforms of " + getName()).c_str());
 	for (Uniform& uniform : m_uniforms) {
 		if (uniform.ImGuiDragValue())

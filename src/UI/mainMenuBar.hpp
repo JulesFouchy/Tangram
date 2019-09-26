@@ -1,5 +1,5 @@
 #pragma once
 
-namespace UI {
+namespace GUI {
 	void showMainMenuBar();
 }

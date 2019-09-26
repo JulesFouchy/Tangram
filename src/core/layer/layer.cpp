@@ -41,6 +41,6 @@ void Layer::showFrame() {
 	ImmediateDrawing::rectOutline(0.0f, 0.0f, m_transform.getAspectRatio(), 1.0f, 0.002f);
 }
 
-void Layer::showUI() {
+void Layer::showGUI() {
 	// nothing by default !
 }

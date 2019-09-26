@@ -13,7 +13,7 @@ public:
 	ShaderLayer(int previewWidth, int previewHeight, const std::string& fragmentFilePath);
 	~ShaderLayer();
 
-	void showUI() override;
+	void showGUI() override;
 private:
 	void drawShaderOnTexture();
 

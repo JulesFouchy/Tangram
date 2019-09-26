@@ -46,9 +46,9 @@ void LayerList::showInDrawingBoardSpace() {
 	}
 }
 
-void LayerList::showUI() {
+void LayerList::showSelectedLayerGUI() {
 	if (selectedLayers.size() == 1)
-		selectedLayers[0]->showUI();
+		selectedLayers[0]->showGUI();
 }
 
 /*void LayerList::showFrames() {
