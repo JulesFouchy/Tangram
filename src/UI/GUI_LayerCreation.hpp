@@ -1,5 +1,7 @@
 #pragma once
 
+#include "utilities/ratio.hpp"
+
 enum WidthOrHeight {
 	Width,
 	Height
@@ -17,14 +19,11 @@ private:
 private:
 	static bool m_bWindow_ShaderLayerCreation;
 
-	static unsigned int m_aspectRatioNumerator;
-	static unsigned int m_aspectRatioDenominator;
+	static Ratio m_aspectRatio;
 	static unsigned int m_width;
 	static unsigned int m_height;
 	static WidthOrHeight m_lastModified;
 	static void updateWidthOrHeight();
-
-	static float getAspectRatio() { return (float) m_aspectRatioNumerator / m_aspectRatioDenominator; }
 
 private:
 	GUI_LayerCreation() = default;

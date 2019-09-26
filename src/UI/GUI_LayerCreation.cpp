@@ -4,8 +4,7 @@
 #include "imgui/imgui.h"
 
 bool GUI_LayerCreation::m_bWindow_ShaderLayerCreation = true;
-unsigned int GUI_LayerCreation::m_aspectRatioNumerator = 1;
-unsigned int GUI_LayerCreation::m_aspectRatioDenominator = 1;
+Ratio GUI_LayerCreation::m_aspectRatio(1, 1);
 unsigned int GUI_LayerCreation::m_width = 1000;
 unsigned int GUI_LayerCreation::m_height = 1000;
 WidthOrHeight GUI_LayerCreation::m_lastModified = Height;
@@ -30,22 +29,23 @@ void GUI_LayerCreation::ImGuiChoose_Ratio_Width_Height() {
 	// Aspect ratio
 	ImGui::Text("Aspect Ratio : "); ImGui::SameLine();
 	ImGui::PushID(0);
-	if (ImGui::InputScalar("", ImGuiDataType_U32, &m_aspectRatioNumerator, NULL, NULL, "%u")) {
+	if (ImGui::InputScalar("", ImGuiDataType_U32, m_aspectRatio.getNumeratorPtr(), NULL, NULL, "%u")) {
+		m_aspectRatio.updateRatio();
 		updateWidthOrHeight();
 	}
 	ImGui::SameLine();
 	ImGui::PopID();
 	ImGui::Text("/"); ImGui::SameLine();
 	ImGui::PushID(1);
-	if (ImGui::InputScalar("", ImGuiDataType_U32, &m_aspectRatioDenominator, NULL, NULL, "%u")) {
+	if (ImGui::InputScalar("", ImGuiDataType_U32, m_aspectRatio.getDenominatorPtr(), NULL, NULL, "%u")) {
+		m_aspectRatio.updateRatio();
 		updateWidthOrHeight();
 	}
 	ImGui::PopID();
 	ImGui::SameLine();
 	if (ImGui::Button("Same as DrawingBoard's")) {
 		spdlog::warn("This button is not really working ! ...");
-		m_aspectRatioNumerator = 3;
-		m_aspectRatioDenominator = 2;
+		m_aspectRatio = Ratio(3, 2);//DrawingBoard::transform.getAspectRatio();
 		updateWidthOrHeight();
 	}
 	ImGui::PopItemWidth();
@@ -73,10 +73,10 @@ void GUI_LayerCreation::ImGuiChoose_Ratio_Width_Height() {
 void GUI_LayerCreation::updateWidthOrHeight() {
 	switch (m_lastModified){
 	case Width:
-		m_height = m_width / getAspectRatio();
+		m_height = m_width / m_aspectRatio;
 		break;
 	case Height:
-		m_width = m_height * getAspectRatio();
+		m_width = m_height * m_aspectRatio;
 		break;
 	default:
 		break;
