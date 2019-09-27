@@ -14,6 +14,8 @@ public:
 	~ShaderLayer();
 
 	void showGUI() override;
+
+	inline bool createdSuccessfully() override { return m_shader.createdSuccessfully(); }
 private:
 	void drawShaderOnTexture();
 

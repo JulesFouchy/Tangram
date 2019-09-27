@@ -8,7 +8,8 @@
 #include "UI/log.hpp"
 
 Shader::Shader(const std::string& vertexShaderFilepath, const std::string& fragmentShaderFilepath, bool compileShader)
-	: m_shaderId(-1), m_vertexShaderFilepath(vertexShaderFilepath), m_fragmentShaderFilepath(fragmentShaderFilepath)
+	: m_shaderId(-1), m_vertexShaderFilepath(vertexShaderFilepath), m_fragmentShaderFilepath(fragmentShaderFilepath),
+	  m_bCreatedSuccessfully(true)
 {
 	if (compileShader) {
 		compile();
@@ -79,6 +80,7 @@ std::string Shader::parseFile(const std::string& filepath) {
 	std::ifstream stream(filepath);
 	if (!stream.is_open()) {
 		spdlog::warn("Failed to open file |{}|", filepath);
+		m_bCreatedSuccessfully = false;
 		return "";
 	}
 
@@ -100,6 +102,7 @@ unsigned int Shader::compileShader(unsigned int type, const std::string& source)
 	int result;
 	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
 	if (result == GL_FALSE) {
+		m_bCreatedSuccessfully = false;
 		int length;
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 		char* message = (char*)alloca(length * sizeof(char));

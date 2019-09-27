@@ -24,6 +24,8 @@ public:
 
 	inline const std::string& getName() { return m_name; }
 
+	virtual inline bool createdSuccessfully() { return true; };
+
 	inline bool isVisible() { return m_bVisible; }
 	inline void setVisibility(bool visible) { m_bVisible = visible; }
 	inline bool* getIsVisiblePointer() { return &m_bVisible; } //For ImGui

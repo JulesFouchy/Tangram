@@ -13,6 +13,8 @@ public:
 	void bind();
 	void compile();
 
+	inline bool createdSuccessfully() { return m_bCreatedSuccessfully; }
+
 	inline unsigned int getID() const { return m_shaderId; }
 
 	//Uniforms
@@ -34,4 +36,6 @@ private:
 	/* Utilities to open files and compile shaders */
 	std::string parseFile(const std::string& filepath);
 	unsigned int compileShader(unsigned int type, const std::string& source);
+
+	bool m_bCreatedSuccessfully;
 };
