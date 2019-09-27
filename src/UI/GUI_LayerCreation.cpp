@@ -28,23 +28,15 @@ void GUI_LayerCreation::Window_ShaderLayerCreation() {
 
 	ImGui::Begin("Creating a ShaderLayer", &m_bWindow_ShaderLayerCreation);
 	// get width and height
-	//if (ImGui::TreeNode("Size")){
-		ImGuiChoose_Ratio_Width_Height();
-		ImGui::Separator();
-	//	ImGui::TreePop();
-	//}
+	ImGuiChoose_Ratio_Width_Height();
+	ImGui::Separator();
 
 	// get filepath
-	//if (ImGui::TreeNode("File")) {
-		ImGui::Text("Fragment file path : "); ImGui::SameLine();
-		ImGui::InputText("", &m_filepath);
-		if (ImGui::Button("Choose file")) {
-			m_filepath = openfilename();
-		}
+	ImGui::Text("Fragment file path : "); ImGui::SameLine();
+	ImGuiOpenFileButton();
+	ImGui::Separator();
 
-	//	ImGui::TreePop();
-	//}
-
+	// creation	
 	if (ImGui::Button("OK !")) {
 		DrawingBoard::getLayerList().createShaderLayer(m_width, m_height, m_filepath);
 		m_bWindow_ShaderLayerCreation = false;
@@ -52,6 +44,18 @@ void GUI_LayerCreation::Window_ShaderLayerCreation() {
 	ImGui::End();
 }
 
+void GUI_LayerCreation::updateWidthOrHeight() {
+	switch (m_lastModified) {
+	case Width:
+		m_height = m_width / m_aspectRatio;
+		break;
+	case Height:
+		m_width = m_height * m_aspectRatio;
+		break;
+	default:
+		break;
+	}
+}
 void GUI_LayerCreation::ImGuiChoose_Ratio_Width_Height() {
 	ImGui::PushItemWidth(25.f);
 	// Aspect ratio
@@ -71,6 +75,11 @@ void GUI_LayerCreation::ImGuiChoose_Ratio_Width_Height() {
 	ImGui::SameLine();
 	if (ImGui::Button("Same as DrawingBoard's")) {
 		m_aspectRatio = DrawingBoard::transform.getAspectRatio();
+		updateWidthOrHeight();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Square")) {
+		m_aspectRatio.set(1,1);
 		updateWidthOrHeight();
 	}
 	ImGui::PopItemWidth();
@@ -94,15 +103,9 @@ void GUI_LayerCreation::ImGuiChoose_Ratio_Width_Height() {
 	ImGui::PopItemWidth();
 }
 
-void GUI_LayerCreation::updateWidthOrHeight() {
-	switch (m_lastModified){
-	case Width:
-		m_height = m_width / m_aspectRatio;
-		break;
-	case Height:
-		m_width = m_height * m_aspectRatio;
-		break;
-	default:
-		break;
+void GUI_LayerCreation::ImGuiOpenFileButton() {
+	ImGui::InputText("", &m_filepath);
+	if (ImGui::Button("Choose file")) {
+		m_filepath = openfilename();
 	}
 }

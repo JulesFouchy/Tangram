@@ -17,6 +17,7 @@ private:
 	static void Window_ShaderLayerCreation();
 
 	static void ImGuiChoose_Ratio_Width_Height();
+	static void ImGuiOpenFileButton();
 
 private:
 	static bool m_bWindow_ShaderLayerCreation;

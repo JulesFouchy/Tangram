@@ -27,6 +27,12 @@ void Ratio::set(float newRatio) {
 	m_bMustRecomputeNumAndDenom = true;
 }
 
+void Ratio::set(unsigned int num, unsigned int denom) {
+	m_numerator = num;
+	m_denominator = denom;
+	m_bMustRecomputeAspectRatio = true;
+}
+
 void Ratio::recomputeAspectRatio() {
 	m_ratio = (float)m_numerator / m_denominator;
 	m_bMustRecomputeAspectRatio = false;
