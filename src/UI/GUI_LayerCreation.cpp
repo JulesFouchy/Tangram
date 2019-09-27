@@ -8,6 +8,7 @@
 #include "imgui/misc/cpp/imgui_stdlib.h"
 
 bool GUI_LayerCreation::m_bWindow_ShaderLayerCreation = false;
+bool GUI_LayerCreation::m_bWindow_DrawingBoardSaving = false;
 Ratio GUI_LayerCreation::m_aspectRatio(1, 1);
 unsigned int GUI_LayerCreation::m_width = 1000;
 unsigned int GUI_LayerCreation::m_height = 1000;
@@ -18,14 +19,28 @@ std::string GUI_LayerCreation::m_filepath = "";
 void GUI_LayerCreation::Show() {
 	if (m_bWindow_ShaderLayerCreation)
 		Window_ShaderLayerCreation();
+	if (m_bWindow_DrawingBoardSaving)
+		Window_DrawingBoardSaving();
 }
 
 void GUI_LayerCreation::OpenCreateShaderLayerWindow() {
-	m_bWindow_ShaderLayerCreation = true;
+	if (!isBusy()) { // can only open one window at a time because they share member variables
+		m_bWindow_ShaderLayerCreation = true;
+		m_aspectRatio = DrawingBoard::transform.getAspectRatio();
+		updateWidthOrHeight();
+	}
+}
+
+void GUI_LayerCreation::OpenSaveDrawingBoardWindow() {
+	if (!isBusy()) { // can only open one window at a time because they share member variables
+		m_bWindow_DrawingBoardSaving = true;
+		m_aspectRatio = DrawingBoard::transform.getAspectRatio();
+		updateWidthOrHeight();
+		m_filepath = "";
+	}
 }
 
 void GUI_LayerCreation::Window_ShaderLayerCreation() {
-
 	ImGui::Begin("Creating a ShaderLayer", &m_bWindow_ShaderLayerCreation);
 	// get width and height
 	ImGuiChoose_Ratio_Width_Height();
@@ -44,6 +59,26 @@ void GUI_LayerCreation::Window_ShaderLayerCreation() {
 	ImGui::End();
 }
 
+void GUI_LayerCreation::Window_DrawingBoardSaving() {
+
+	ImGui::Begin("Saving", &m_bWindow_DrawingBoardSaving);
+	// get width and height
+	ImGuiChoose_Width_Height();
+	ImGui::Separator();
+
+	// get filepath
+	ImGui::Text("Save as : "); ImGui::SameLine();
+	ImGuiSaveFileNameButton();
+	ImGui::Separator();
+
+	// creation	
+	if (ImGui::Button("OK !")) {
+		DrawingBoard::save(m_width, m_height, m_filepath);
+		m_bWindow_DrawingBoardSaving = false;
+	}
+	ImGui::End();
+}
+
 void GUI_LayerCreation::updateWidthOrHeight() {
 	switch (m_lastModified) {
 	case Width:
@@ -56,34 +91,7 @@ void GUI_LayerCreation::updateWidthOrHeight() {
 		break;
 	}
 }
-void GUI_LayerCreation::ImGuiChoose_Ratio_Width_Height() {
-	ImGui::PushItemWidth(25.f);
-	// Aspect ratio
-	ImGui::Text("Aspect Ratio : "); ImGui::SameLine();
-	ImGui::PushID(0);
-	if (ImGui::InputScalar("", ImGuiDataType_U32, m_aspectRatio.getNumeratorPtr(), NULL, NULL, "%u")) {
-		updateWidthOrHeight();
-	}
-	ImGui::SameLine();
-	ImGui::PopID();
-	ImGui::Text("/"); ImGui::SameLine();
-	ImGui::PushID(1);
-	if (ImGui::InputScalar("", ImGuiDataType_U32, m_aspectRatio.getDenominatorPtr(), NULL, NULL, "%u")) {
-		updateWidthOrHeight();
-	}
-	ImGui::PopID();
-	ImGui::SameLine();
-	if (ImGui::Button("Same as DrawingBoard's")) {
-		m_aspectRatio = DrawingBoard::transform.getAspectRatio();
-		updateWidthOrHeight();
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Square")) {
-		m_aspectRatio.set(1,1);
-		updateWidthOrHeight();
-	}
-	ImGui::PopItemWidth();
-	// Width and Height
+void GUI_LayerCreation::ImGuiChoose_Width_Height() {
 	ImGui::PushItemWidth(100.f);
 	ImGui::Text("Width : "); ImGui::SameLine();
 	ImGui::PushID(2);
@@ -102,10 +110,47 @@ void GUI_LayerCreation::ImGuiChoose_Ratio_Width_Height() {
 	ImGui::PopID();
 	ImGui::PopItemWidth();
 }
+void GUI_LayerCreation::ImGuiChoose_Ratio_Width_Height() {
+	ImGui::PushItemWidth(25.f);
+	// Aspect ratio
+	ImGui::Text("Aspect Ratio : "); ImGui::SameLine();
+	ImGui::PushID(0);
+	if (ImGui::InputScalar("", ImGuiDataType_U32, m_aspectRatio.getNumeratorPtr(), NULL, NULL, "%u")) {
+		updateWidthOrHeight();
+	}
+	ImGui::SameLine();
+	ImGui::PopID();
+	ImGui::Text("/"); ImGui::SameLine();
+	ImGui::PushID(1);
+	if (ImGui::InputScalar("", ImGuiDataType_U32, m_aspectRatio.getDenominatorPtr(), NULL, NULL, "%u")) {
+		updateWidthOrHeight();
+	}
+	ImGui::PopID();
+	ImGui::SameLine();
+	if (ImGui::Button("Square")) {
+		m_aspectRatio.set(1,1);
+		updateWidthOrHeight();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Same as DrawingBoard's")) {
+		m_aspectRatio = DrawingBoard::transform.getAspectRatio();
+		updateWidthOrHeight();
+	}
+	ImGui::PopItemWidth();
+	// Width and Height
+	ImGuiChoose_Width_Height();
+}
 
 void GUI_LayerCreation::ImGuiOpenFileButton() {
 	ImGui::InputText("", &m_filepath);
 	if (ImGui::Button("Choose file")) {
 		m_filepath = openfilename();
+	}
+}
+
+void GUI_LayerCreation::ImGuiSaveFileNameButton() {
+	ImGui::InputText("", &m_filepath);
+	if (ImGui::Button("Choose destination")) {
+		m_filepath = savefilename();
 	}
 }

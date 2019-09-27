@@ -24,7 +24,6 @@
 #include "helper/display.hpp"
 #include "helper/timestamp.hpp"
 
-#include "UI/fileBrowser.hpp"
 #include "UI/cursor.hpp"
 #include "UI/GUI_LayerList.hpp"
 #include "UI/mainMenuBar.hpp"
@@ -250,20 +249,7 @@ int main(int argc, char* argv[])
 			case SDL_KEYDOWN:
 				if (!imGuiIO.WantCaptureKeyboard) {
 					Input::onKeyDown(e.key.keysym.sym);
-					if (e.key.keysym.sym == 'o') {
-						std::string imgFilepath = openfilename();
-						if (!imgFilepath.empty())
-							DrawingBoard::getLayerList().createLoadedImageLayer(imgFilepath);
-					}
-					else if (e.key.keysym.sym == 's') {
-						std::string imgFilepath = savefilename();
-						if (!imgFilepath.empty()) {
-							spdlog::info("[Saving image] " + imgFilepath);
-							DrawingBoard::save(1000000, imgFilepath);
-							Log::separationLine();
-						}
-					}
-					else if (e.key.keysym.scancode == SDL_SCANCODE_LALT && e.key.repeat == 0) {
+					if (e.key.keysym.scancode == SDL_SCANCODE_LALT && e.key.repeat == 0) {
 						DrawingBoard::onKeyDown(ALT);
 					}
 					else if (e.key.keysym.scancode == SDL_SCANCODE_LSHIFT && e.key.repeat == 0) {

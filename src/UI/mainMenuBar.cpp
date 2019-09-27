@@ -73,7 +73,7 @@ void GUI::showMainMenuBar() {
 		}
 		if (ImGui::BeginMenu("New"))
 		{
-			if (ImGui::MenuItem("Shader Layer")) {
+			if (ImGui::MenuItem("Shader Layer", "CTRL + F")) {
 				GUI_LayerCreation::OpenCreateShaderLayerWindow();
 			}
 			if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item

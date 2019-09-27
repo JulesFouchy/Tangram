@@ -8,6 +8,8 @@
 
 #include "UI/input.hpp"
 #include "UI/log.hpp"
+#include "UI/fileBrowser.hpp"
+#include "UI/GUI_LayerCreation.hpp"
 
 #include "stb_image/stb_image_write.h"
 
@@ -76,24 +78,37 @@ void DrawingBoard::showFrame() {
 	ImmediateDrawing::rectOutline(0.0f, 0.0f, transform.getAspectRatio(), 1.0f, 0.002f);
 }
 
-void DrawingBoard::save(int approxNbPixels, std::string filePath) {
-	//Compute output width and height
+void DrawingBoard::save(int approxNbPixels, const std::string& filePath) {
+	// Compute output width and height
 	float w = sqrt(approxNbPixels * transform.getAspectRatio());
 	float h = w / transform.getAspectRatio();
 	int width = floor(w);
 	int height = floor(h);
-	//Bind frameBuffer to render and save
-	FrameBuffer saveBuffer(width, height);
-	saveBuffer.bind();
-	saveBuffer.clear();
-	showForSaving();
-	//
-	unsigned char* data = new unsigned char[4*width*height];
-	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	stbi_flip_vertically_on_write(1);
-	stbi_write_png(filePath.c_str(), width, height, 4, data, 0);
-	//
-	saveBuffer.unbind();
+	// Save
+	save(width, height, filePath);
+}
+
+void DrawingBoard::save(unsigned int width, unsigned int height, const std::string& filePath) {
+	if (!filePath.empty()) {
+		spdlog::info("[Saving image] " + filePath);
+		//Bind frameBuffer to render and save
+		FrameBuffer saveBuffer(width, height);
+		saveBuffer.bind();
+		saveBuffer.clear();
+		showForSaving();
+		//
+		unsigned char* data = new unsigned char[4 * width * height];
+		glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		stbi_flip_vertically_on_write(1);
+		stbi_write_png(filePath.c_str(), width, height, 4, data, 0);
+		//
+		saveBuffer.unbind();
+		//
+		Log::separationLine();
+	}
+	else {
+		spdlog::warn("[DrawingBoard::save] invalid file path : |{}|", filePath);
+	}
 }
 
 void DrawingBoard::update() {
@@ -102,9 +117,9 @@ void DrawingBoard::update() {
 }
 
 void DrawingBoard::onDoubleLeftClic() {
+	layers.onDoubleLeftClic();
 	//Center the point we doucle-clicked on
 	//transform.translate(-Input::getMousePosition());
-	layers.onDoubleLeftClic();
 }
 
 void DrawingBoard::onLeftClicDown() {
@@ -167,6 +182,28 @@ void DrawingBoard::onKeyDown(Key key) {
 		case 'y':
 			if (Input::keyIsDown(CTRL))
 				DrawingBoard::history.moveForward();
+			else
+				layers.onKeyDown(key);
+			break;
+		case 'o':
+			if (Input::keyIsDown(CTRL)) {
+				std::string imgFilepath = openfilename();
+				if (!imgFilepath.empty())
+					getLayerList().createLoadedImageLayer(imgFilepath);
+			}
+			else
+				layers.onKeyDown(key);
+			break;
+		case 's':
+			if (Input::keyIsDown(CTRL)) {
+				GUI_LayerCreation::OpenSaveDrawingBoardWindow();
+			}
+			else
+				layers.onKeyDown(key);
+			break;
+		case 'f':
+			if (Input::keyIsDown(CTRL))
+				GUI_LayerCreation::OpenCreateShaderLayerWindow();
 			else
 				layers.onKeyDown(key);
 			break;
