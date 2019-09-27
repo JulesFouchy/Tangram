@@ -33,7 +33,30 @@ void Ratio::recomputeAspectRatio() {
 }
 
 void Ratio::recomputeNumAndDenom() {
-	spdlog::error("Ratio::recomputeNumAndDenom not iplemented yet !");
+	// following this article : https://begriffs.com/pdf/dec2frac.pdf
+	float precision = 0.00001f;
+	float n = 1;
+	float Z_n = m_ratio;
+	int D_n_minus_one = 0;
+	int D_n = 1;
+	int N_n = round(m_ratio * D_n);
+	while (n < 5 && abs(m_ratio - (float)D_n / N_n) > precision) {
+		n++;
+		float tmp = Z_n - floor(Z_n);
+		if (abs(tmp) > precision) {
+			Z_n = 1.0f / (tmp);
+			int tmpD_n = D_n;
+			D_n = D_n * floor(Z_n) + D_n_minus_one;
+			D_n_minus_one = tmpD_n;
+			N_n = round(m_ratio * D_n);
+		}
+		else {
+			break;
+		}
+	}
+	m_numerator = N_n;
+	m_denominator = D_n;
+	spdlog::warn("{} is approx {} / {}", m_ratio, m_numerator, m_denominator);
 }
 
 unsigned int* Ratio::getNumeratorPtr() {
