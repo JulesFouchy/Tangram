@@ -77,8 +77,8 @@ void Shader::setUniformMat4f(const std::string& uniformName, glm::mat4& mat) {
 
 std::string Shader::parseFile(const std::string& filepath) {
 	std::ifstream stream(filepath);
-	if (!stream) {
-		spdlog::warn("Failed to open file " + filepath);
+	if (!stream.is_open()) {
+		spdlog::warn("Failed to open file |{}|", filepath);
 		return "";
 	}
 

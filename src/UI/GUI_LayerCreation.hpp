@@ -2,6 +2,8 @@
 
 #include "utilities/ratio.hpp"
 
+#include <string>
+
 enum WidthOrHeight {
 	Width,
 	Height
@@ -24,6 +26,8 @@ private:
 	static unsigned int m_height;
 	static WidthOrHeight m_lastModified;
 	static void updateWidthOrHeight();
+
+	static std::string m_filepath;
 
 private:
 	GUI_LayerCreation() = default;

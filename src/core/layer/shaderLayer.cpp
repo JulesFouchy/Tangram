@@ -8,7 +8,7 @@
 #include "utilities/string.hpp"
 
 ShaderLayer::ShaderLayer(int previewWidth, int previewHeight, const std::string& fragmentFilePath)
-	: Layer((float) previewWidth / previewHeight, fragmentFilePath), m_shader("res/shaders/vertex/shaderLayer.vert", fragmentFilePath),
+	: Layer((float) previewWidth / previewHeight, fragmentFilePath), m_shader("C:/Dev/Tangram/res/shaders/vertex/shaderLayer.vert", fragmentFilePath),
 	  m_uniforms(), m_rectVAO()
 {
 	parseShader(fragmentFilePath);
@@ -53,12 +53,12 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 			size_t posBeginComment = line.find("//");
 			if (posBeginUniform != std::string::npos && posBeginUniform < posBeginComment) {
 				// Get type
-				size_t posBeginType = ParseShader::beginningOfNextWord(line, ParseShader::endOfNextWord(line, posBeginUniform) + 1);
-				size_t posEndType = ParseShader::endOfNextWord(line, posBeginType);
+				size_t posBeginType = String::beginningOfNextWord(line, String::endOfNextWord(line, posBeginUniform) + 1);
+				size_t posEndType = String::endOfNextWord(line, posBeginType);
 				OpenGLType type = stringToOpenGLType(line.substr(posBeginType, posEndType - posBeginType));
 				// Get name
-				size_t posBeginName = ParseShader::beginningOfNextWord(line, posEndType);
-				size_t posEndName = ParseShader::endOfNextWord(line, posBeginName);
+				size_t posBeginName = String::beginningOfNextWord(line, posEndType);
+				size_t posEndName = String::endOfNextWord(line, posBeginName);
 				std::string s_name = line.substr(posBeginName, posEndName - posBeginName);
 				spdlog::info("found uniform {}", s_name);
 				// Get options
@@ -67,9 +67,9 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 				UniformType maxValue = Uniform::one(type);
 				if (posBeginComment != std::string::npos) {
 					spdlog::info("looking for options");
-					size_t currentPos = ParseShader::beginningOfNextWord(line, ParseShader::endOfNextWord(line, posBeginComment) + 1);
+					size_t currentPos = String::beginningOfNextWord(line, String::endOfNextWord(line, posBeginComment) + 1);
 					while (currentPos < line.size()) {
-						std::string arg = ParseShader::getNextWord(line, &currentPos);
+						std::string arg = String::getNextWord(line, &currentPos);
 						spdlog::info("|" + arg + "|");
 						if (arg == "default") {
 							initialValue = readValue_s_(type, line, &currentPos);
@@ -116,27 +116,27 @@ UniformType ShaderLayer::readValue_s_(OpenGLType type, const std::string& str, s
 	switch (type)
 	{
 	case Int:
-		return std::stoi(ParseShader::getNextWord(str, currentPosPtr));
+		return std::stoi(String::getNextWord(str, currentPosPtr));
 		break;
 	case Float:
-		return std::stof(ParseShader::getNextWord(str, currentPosPtr));
+		return std::stof(String::getNextWord(str, currentPosPtr));
 		break;
 	case Vec2:
-		x = std::stof(ParseShader::getNextWord(str, currentPosPtr));
-		y = std::stof(ParseShader::getNextWord(str, currentPosPtr));
+		x = std::stof(String::getNextWord(str, currentPosPtr));
+		y = std::stof(String::getNextWord(str, currentPosPtr));
 		return glm::vec2(x, y);
 		break;
 	case Vec3:
-		x = std::stof(ParseShader::getNextWord(str, currentPosPtr));
-		y = std::stof(ParseShader::getNextWord(str, currentPosPtr));
-		z = std::stof(ParseShader::getNextWord(str, currentPosPtr));
+		x = std::stof(String::getNextWord(str, currentPosPtr));
+		y = std::stof(String::getNextWord(str, currentPosPtr));
+		z = std::stof(String::getNextWord(str, currentPosPtr));
 		return glm::vec3(x, y, z);
 		break;
 	case Vec4:
-		x = std::stof(ParseShader::getNextWord(str, currentPosPtr));
-		y = std::stof(ParseShader::getNextWord(str, currentPosPtr));
-		z = std::stof(ParseShader::getNextWord(str, currentPosPtr));
-		w = std::stof(ParseShader::getNextWord(str, currentPosPtr));
+		x = std::stof(String::getNextWord(str, currentPosPtr));
+		y = std::stof(String::getNextWord(str, currentPosPtr));
+		z = std::stof(String::getNextWord(str, currentPosPtr));
+		w = std::stof(String::getNextWord(str, currentPosPtr));
 		return glm::vec4(x, y, z, w);
 		break;
 	default:

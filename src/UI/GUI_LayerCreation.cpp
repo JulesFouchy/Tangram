@@ -1,13 +1,19 @@
 #include "GUI_LayerCreation.hpp"
 #include "core/drawingBoard.hpp"
 
-#include "imgui/imgui.h"
+#include "UI/fileBrowser.hpp"
+#include "utilities/string.hpp"
 
-bool GUI_LayerCreation::m_bWindow_ShaderLayerCreation = true;
+#include "imgui/imgui.h"
+#include "imgui/misc/cpp/imgui_stdlib.h"
+
+bool GUI_LayerCreation::m_bWindow_ShaderLayerCreation = false;
 Ratio GUI_LayerCreation::m_aspectRatio(1, 1);
 unsigned int GUI_LayerCreation::m_width = 1000;
 unsigned int GUI_LayerCreation::m_height = 1000;
 WidthOrHeight GUI_LayerCreation::m_lastModified = Height;
+
+std::string GUI_LayerCreation::m_filepath = "";
 
 void GUI_LayerCreation::Show() {
 	if (m_bWindow_ShaderLayerCreation)
@@ -19,8 +25,30 @@ void GUI_LayerCreation::OpenCreateShaderLayerWindow() {
 }
 
 void GUI_LayerCreation::Window_ShaderLayerCreation() {
+
 	ImGui::Begin("Creating a ShaderLayer", &m_bWindow_ShaderLayerCreation);
-	ImGuiChoose_Ratio_Width_Height();
+	// get width and height
+	//if (ImGui::TreeNode("Size")){
+		ImGuiChoose_Ratio_Width_Height();
+		ImGui::Separator();
+	//	ImGui::TreePop();
+	//}
+
+	// get filepath
+	//if (ImGui::TreeNode("File")) {
+		ImGui::Text("Fragment file path : "); ImGui::SameLine();
+		ImGui::InputText("", &m_filepath);
+		if (ImGui::Button("Choose file")) {
+			m_filepath = openfilename();
+		}
+
+	//	ImGui::TreePop();
+	//}
+
+	if (ImGui::Button("OK !")) {
+		DrawingBoard::getLayerList().createShaderLayer(m_width, m_height, m_filepath);
+		m_bWindow_ShaderLayerCreation = false;
+	}
 	ImGui::End();
 }
 
@@ -62,7 +90,6 @@ void GUI_LayerCreation::ImGuiChoose_Ratio_Width_Height() {
 		m_lastModified = Height;
 		updateWidthOrHeight();
 	}
-	ImGui::SameLine();
 	ImGui::PopID();
 	ImGui::PopItemWidth();
 }

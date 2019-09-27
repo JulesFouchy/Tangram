@@ -8,6 +8,9 @@ public:
 	//operator =(float ratio);
 	void set(float newRatio);
 
+	unsigned int numerator();
+	unsigned int denominator();
+
 	unsigned int* getNumeratorPtr();
 	unsigned int* getDenominatorPtr();
 
