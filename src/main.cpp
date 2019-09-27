@@ -248,63 +248,66 @@ int main(int argc, char* argv[])
 				break;
 
 			case SDL_KEYDOWN:
-				//spdlog::info(e.key.keysym.sym);
-				Input::onKeyDown(e.key.keysym.sym);
-				if (e.key.keysym.sym == 'o') {
-					std::string imgFilepath = openfilename();
-					if (!imgFilepath.empty())
-						DrawingBoard::getLayerList().createLoadedImageLayer(imgFilepath);
-				}
-				else if (e.key.keysym.sym == 's') {
-					std::string imgFilepath = savefilename();
-					if (!imgFilepath.empty()) {
-						spdlog::info("[Saving image] " + imgFilepath);
-						DrawingBoard::save(1000000,imgFilepath);
-						Log::separationLine();
+				if (!imGuiIO.WantCaptureKeyboard) {
+					Input::onKeyDown(e.key.keysym.sym);
+					if (e.key.keysym.sym == 'o') {
+						std::string imgFilepath = openfilename();
+						if (!imgFilepath.empty())
+							DrawingBoard::getLayerList().createLoadedImageLayer(imgFilepath);
 					}
-				}
-				else if (e.key.keysym.scancode == SDL_SCANCODE_LALT && e.key.repeat == 0) {
-					DrawingBoard::onKeyDown(ALT);
-				}
-				else if (e.key.keysym.scancode == SDL_SCANCODE_LSHIFT && e.key.repeat == 0) {
-					DrawingBoard::onKeyDown(SHIFT);
-				}
-				else if (e.key.keysym.scancode == SDL_SCANCODE_LCTRL && e.key.repeat == 0) {
-					DrawingBoard::onKeyDown(CTRL);
-				}
-				else if (e.key.keysym.sym == '0' || e.key.keysym.sym == 1073741922) {
-					DrawingBoard::transform.reset();
-				}
-				else if (e.key.keysym.sym == ' ') {
-					DrawingBoard::onKeyDown(SPACE);
-				}
-				else if (e.key.keysym.scancode == SDL_SCANCODE_UP) {
-					;
-				}
-				else if (e.key.keysym.scancode == SDL_SCANCODE_DOWN) {
-					;
-				}
-				else if (e.key.keysym.scancode == SDL_SCANCODE_LEFT) {
-					;
-				}
-				else if (e.key.keysym.scancode == SDL_SCANCODE_RIGHT) {
-					;
+					else if (e.key.keysym.sym == 's') {
+						std::string imgFilepath = savefilename();
+						if (!imgFilepath.empty()) {
+							spdlog::info("[Saving image] " + imgFilepath);
+							DrawingBoard::save(1000000, imgFilepath);
+							Log::separationLine();
+						}
+					}
+					else if (e.key.keysym.scancode == SDL_SCANCODE_LALT && e.key.repeat == 0) {
+						DrawingBoard::onKeyDown(ALT);
+					}
+					else if (e.key.keysym.scancode == SDL_SCANCODE_LSHIFT && e.key.repeat == 0) {
+						DrawingBoard::onKeyDown(SHIFT);
+					}
+					else if (e.key.keysym.scancode == SDL_SCANCODE_LCTRL && e.key.repeat == 0) {
+						DrawingBoard::onKeyDown(CTRL);
+					}
+					else if (e.key.keysym.sym == '0' || e.key.keysym.sym == 1073741922) {
+						DrawingBoard::transform.reset();
+					}
+					else if (e.key.keysym.sym == ' ') {
+						DrawingBoard::onKeyDown(SPACE);
+					}
+					else if (e.key.keysym.scancode == SDL_SCANCODE_UP) {
+						;
+					}
+					else if (e.key.keysym.scancode == SDL_SCANCODE_DOWN) {
+						;
+					}
+					else if (e.key.keysym.scancode == SDL_SCANCODE_LEFT) {
+						;
+					}
+					else if (e.key.keysym.scancode == SDL_SCANCODE_RIGHT) {
+						;
+					}
 				}
 				break;
 
 			case SDL_KEYUP:
-				Input::onKeyUp(e.key.keysym.sym);
-				if (e.key.keysym.sym == ' ') {
-					DrawingBoard::onKeyUp(SPACE);
-				}
-				else if (e.key.keysym.scancode == SDL_SCANCODE_LALT && e.key.repeat == 0) {
-					DrawingBoard::onKeyUp(ALT);
-				}
-				else if (e.key.keysym.scancode == SDL_SCANCODE_LSHIFT && e.key.repeat == 0) {
-					DrawingBoard::onKeyUp(SHIFT);
-				}
-				else if (e.key.keysym.scancode == SDL_SCANCODE_LCTRL && e.key.repeat == 0) {
-					DrawingBoard::onKeyUp(CTRL);
+				if (!imGuiIO.WantCaptureKeyboard) {
+					Input::onKeyUp(e.key.keysym.sym);
+					if (e.key.keysym.sym == ' ') {
+						DrawingBoard::onKeyUp(SPACE);
+					}
+					else if (e.key.keysym.scancode == SDL_SCANCODE_LALT && e.key.repeat == 0) {
+						DrawingBoard::onKeyUp(ALT);
+					}
+					else if (e.key.keysym.scancode == SDL_SCANCODE_LSHIFT && e.key.repeat == 0) {
+						DrawingBoard::onKeyUp(SHIFT);
+					}
+					else if (e.key.keysym.scancode == SDL_SCANCODE_LCTRL && e.key.repeat == 0) {
+						DrawingBoard::onKeyUp(CTRL);
+					}
 				}
 				break;
 
