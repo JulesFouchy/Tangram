@@ -20,7 +20,7 @@ private:
 
 	static void ImGuiChoose_Width_Height();
 	static void ImGuiChoose_Ratio_Width_Height();
-	static void ImGuiOpenFileButton();
+	static void ImGuiOpenFileButton(const char* filter = "All Files (*.*)\0*.*\0");
 	static void ImGuiSaveFileNameButton();
 
 private:

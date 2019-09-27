@@ -48,7 +48,7 @@ void GUI_LayerCreation::Window_ShaderLayerCreation() {
 
 	// get filepath
 	ImGui::Text("Fragment file path : "); ImGui::SameLine();
-	ImGuiOpenFileButton();
+	ImGuiOpenFileButton("Fragment shader (*.frag; *.fragment)\0*.frag;*.fragment\0All Files (*.*)\0*.*\0");
 	ImGui::Separator();
 
 	// creation	
@@ -141,10 +141,10 @@ void GUI_LayerCreation::ImGuiChoose_Ratio_Width_Height() {
 	ImGuiChoose_Width_Height();
 }
 
-void GUI_LayerCreation::ImGuiOpenFileButton() {
+void GUI_LayerCreation::ImGuiOpenFileButton(const char* filter) {
 	ImGui::InputText("", &m_filepath);
 	if (ImGui::Button("Choose file")) {
-		m_filepath = openfilename();
+		m_filepath = openfilename(filter);
 	}
 }
 
