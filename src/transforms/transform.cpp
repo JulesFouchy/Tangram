@@ -343,12 +343,12 @@ void Transform::setScale(float newScale, bool bPushChangeInHistory) {
 				// DO action
 				[this, newScale]()
 			{
-				setRotation(newScale);
+				setScale(newScale);
 			},
 				// UNDO action
 				[this, initialScale]()
 			{
-				setRotation(initialScale);
+				setScale(initialScale);
 			}
 			));
 		}
