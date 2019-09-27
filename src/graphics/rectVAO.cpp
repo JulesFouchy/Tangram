@@ -1,6 +1,6 @@
 #include "rectVAO.hpp"
 
-#include "utilities/display.hpp"
+#include "helper/display.hpp"
 
 #include "UI/log.hpp"
 

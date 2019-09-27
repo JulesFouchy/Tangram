@@ -2,7 +2,7 @@
 
 #include "glm/glm.hpp"
 
-#include "utilities/timestamp.hpp"
+#include "helper/timestamp.hpp"
 #include "SDL.h"
 #include "keys.hpp"
 

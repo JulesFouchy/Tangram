@@ -4,7 +4,7 @@
 #include "groupTransform.hpp"
 #include "aspectRatioDraggingInfo.hpp"
 
-#include "utilities/ratio.hpp"
+#include "helper/ratio.hpp"
 
 enum MousePositionRelativeToRect {
 	OUTSIDE,

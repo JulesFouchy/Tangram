@@ -5,7 +5,7 @@
 #include "UI/log.hpp"
 
 #include <fstream>
-#include "utilities/string.hpp"
+#include "helper/string.hpp"
 
 ShaderLayer::ShaderLayer(int previewWidth, int previewHeight, const std::string& fragmentFilePath)
 	: Layer((float) previewWidth / previewHeight, fragmentFilePath), m_shader("C:/Dev/Tangram/res/shaders/vertex/shaderLayer.vert", fragmentFilePath),

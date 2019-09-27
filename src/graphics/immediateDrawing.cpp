@@ -1,7 +1,7 @@
 #include "immediateDrawing.hpp"
 
-#include "utilities/display.hpp"
-#include "utilities/maths.hpp"
+#include "helper/display.hpp"
+#include "helper/maths.hpp"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"

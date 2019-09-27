@@ -20,9 +20,9 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include <stdio.h>
 
-#include "utilities/conversions.hpp"
-#include "utilities/display.hpp"
-#include "utilities/timestamp.hpp"
+#include "helper/conversions.hpp"
+#include "helper/display.hpp"
+#include "helper/timestamp.hpp"
 
 #include "UI/fileBrowser.hpp"
 #include "UI/cursor.hpp"

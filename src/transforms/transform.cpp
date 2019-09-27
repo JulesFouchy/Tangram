@@ -8,8 +8,8 @@
 
 #include "core/drawingBoard.hpp"
 
-#include "utilities/maths.hpp"
-#include "utilities/display.hpp"
+#include "helper/maths.hpp"
+#include "helper/display.hpp"
 
 #include "UI/log.hpp"
 

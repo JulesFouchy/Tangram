@@ -2,7 +2,7 @@
 #include "core/drawingBoard.hpp"
 
 #include "UI/fileBrowser.hpp"
-#include "utilities/string.hpp"
+#include "helper/string.hpp"
 
 #include "imgui/imgui.h"
 #include "imgui/misc/cpp/imgui_stdlib.h"

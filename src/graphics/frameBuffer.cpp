@@ -6,7 +6,7 @@
 
 #include "UI/log.hpp"
 
-#include "utilities/display.hpp"
+#include "helper/display.hpp"
 
 FrameBuffer::FrameBuffer()
 	: m_frameBufferId(0), m_texture(), m_prevViewportSettings()

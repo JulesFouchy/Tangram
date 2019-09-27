@@ -5,7 +5,6 @@ public:
 	Ratio(unsigned int numerator, unsigned int denominator);
 	Ratio(float fRatio);
 	operator float();
-	//operator =(float ratio);
 	void set(float newRatio);
 	void set(unsigned int num, unsigned int denom);
 

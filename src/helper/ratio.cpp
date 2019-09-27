@@ -63,7 +63,7 @@ void Ratio::recomputeNumAndDenom() {
 	m_numerator = N_n;
 	m_denominator = D_n;
 	m_bMustRecomputeNumAndDenom = false;
-	spdlog::warn("{} is approx {} / {}", m_ratio, m_numerator, m_denominator);
+	spdlog::info("{} is approx {} / {}", m_ratio, m_numerator, m_denominator);
 }
 
 unsigned int Ratio::numerator() {

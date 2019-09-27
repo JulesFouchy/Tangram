@@ -2,8 +2,8 @@
 
 #include "stb_image/stb_image_write.h"
 
-#include "utilities/display.hpp"
-#include "utilities/maths.hpp"
+#include "helper/display.hpp"
+#include "helper/maths.hpp"
 
 #include "UI/log.hpp"
 #include "glm/gtc/matrix_transform.hpp"

@@ -8,7 +8,7 @@
 
 #include "UI/settings.hpp"
 
-#include "utilities/display.hpp"
+#include "helper/display.hpp"
 #include "graphics/immediateDrawing.hpp"
 
 #include "layer/loadedImageLayer.hpp"

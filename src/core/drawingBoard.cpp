@@ -4,7 +4,7 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "utilities/display.hpp"
+#include "helper/display.hpp"
 
 #include "UI/input.hpp"
 #include "UI/log.hpp"

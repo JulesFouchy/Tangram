@@ -10,11 +10,12 @@
 
 #include "core/drawingBoard.hpp"
 
-#include "utilities/maths.hpp"
+#include "helper/maths.hpp"
 
 #include <algorithm>
 
 #include "glm/gtc/matrix_inverse.hpp"
+
 RectTransform::RectTransform(Ratio aspectRatio)
 	: m_aspectRatio(aspectRatio), m_initialAspectRatio(aspectRatio), m_projectionMatrix(glm::ortho(-0.5f * m_aspectRatio, 0.5f * m_aspectRatio, -0.5f, 0.5f)),
 	bMustRecomputeProjMat(false),

@@ -4,7 +4,7 @@
 
 #include "SDL.h"
 
-#include "utilities/conversions.hpp"
+#include "helper/conversions.hpp"
 
 #include "core/drawingBoard.hpp"
 

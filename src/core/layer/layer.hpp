@@ -5,7 +5,7 @@
 #include "transforms/rectTransform.hpp"
 #include "graphics/frameBuffer.hpp"
 
-#include "utilities/ratio.hpp"
+#include "helper/ratio.hpp"
 
 class Layer {
 friend class LayerList;
