@@ -48,6 +48,7 @@ public:
 
 private:
 	int getIndex(Layer* layer);
+	void moveLayer(int fromIndex, int toIndex);
 private:
 	std::vector<Layer*> m_layers;
 	GroupTransform m_transform;

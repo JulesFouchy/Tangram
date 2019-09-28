@@ -13,7 +13,7 @@ ShaderLayer::ShaderLayer(int previewWidth, int previewHeight, const std::string&
 {
 	parseShader(fragmentFilePath);
 	// Initialize members
-	m_rectVAO.Initialize(-1.0f, 1.0f, -1.0f, 1.0f, m_transform.getAspectRatio(), MINUS_RATIO_TO_RATIO__MINUS_ONE_TO_ONE);
+	m_rectVAO.Initialize(-1.0f, 1.0f, -1.0f, 1.0f, m_transform.getInitialAspectRatio(), MINUS_RATIO_TO_RATIO__MINUS_ONE_TO_ONE);
 	m_renderBuffer.getTexture().Initialize(previewWidth, previewHeight, Texture2D::bytesPerPixel(RGBA), nullptr);
 	drawShaderOnTexture();
 }
@@ -23,6 +23,7 @@ ShaderLayer::~ShaderLayer() {
 }
 
 void ShaderLayer::showGUI() {
+	ImGui::SetNextWindowSize(ImVec2(280, 280), ImGuiCond_FirstUseEver);
 	ImGui::Begin(("Uniforms of " + getName()).c_str());
 	for (Uniform& uniform : m_uniforms) {
 		if (uniform.ImGuiDragValue())

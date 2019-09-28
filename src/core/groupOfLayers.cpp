@@ -30,11 +30,35 @@ void GroupOfLayers::addLayer(Layer* layer) {
 	m_layers.push_back(layer);
 }
 
+void GroupOfLayers::moveLayer(int fromIndex, int toIndex) {
+	Layer* movedLayer = m_layers[fromIndex];
+	m_layers.insert(m_layers.begin() + toIndex, movedLayer);
+	removeLayer(fromIndex < toIndex ? fromIndex : fromIndex + 1);
+}
+
 void GroupOfLayers::reorderLayer(Layer* layer, int newIndex) {
 	int layerIndex = getIndex(layer);
 	if (layerIndex >= 0) {
-		m_layers.insert(m_layers.begin() + newIndex, layer);
-		removeLayer(layerIndex < newIndex ? layerIndex : layerIndex + 1);
+		DrawingBoard::history.beginUndoGroup();
+			DrawingBoard::history.addAction(Action(
+				// DO action
+				[this, layerIndex, newIndex]()
+			{
+				moveLayer(layerIndex, newIndex);
+			},
+				// UNDO action
+				[this, layerIndex, newIndex]()
+			{
+				if (layerIndex > newIndex) {
+					moveLayer(newIndex, layerIndex + 1);
+				}
+				else {
+					moveLayer(newIndex-1, layerIndex);
+				}
+			}
+			));
+		DrawingBoard::history.endUndoGroup();
+		moveLayer(layerIndex, newIndex);
 	}
 	else {
 		spdlog::warn("[Group of Layers] trying to reorder a layer that isn't in the group : {}", layer->getName());

@@ -124,9 +124,9 @@ int main(int argc, char* argv[])
 	DrawingBoard::Initialize(Ratio(3,2));
 	DrawingBoard::transform.setScale(0.9f);
 
-	//DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test3.jpg");
-	//DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test2.png");
-	//DrawingBoard::getLayerList().createShaderLayer(1500, 1000,"res/shaders/fragment/gradient.frag");
+	DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test3.jpg");
+	DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test2.png");
+	DrawingBoard::getLayerList().createShaderLayer(1500, 1000,"res/shaders/fragment/shaderLayerTest.frag");
 
 	ImmediateDrawing::Initialize();
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat());
