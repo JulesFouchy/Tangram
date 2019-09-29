@@ -3,81 +3,61 @@
 #include "UI/log.hpp"
 
 History::History()
-	: m_currentDelimiterIndex(-1)
+	: m_index(-1), m_indexOfCumulfNbOfActions(-1)
 {
-	/*beginUndoGroup();
-		addAction(Action([] {
-			spdlog::info("do initial");
-		}, [] {
-			spdlog::info("undo initial");
-		}));
-	endUndoGroup();*/
-}
-
-History::~History() {
-
 }
 
 void History::beginUndoGroup() {
 	spdlog::info("begin undo group");
-	/*if (m_actions.size() == 0) {
-		m_undoGroupDelimiters.push_back(0);
-		m_currentDelimiterIndex = 0;
-	}*/
-	spdlog::warn("begin   size : {}", m_actions.size());
-	if (m_currentDelimiterIndex < m_undoGroupDelimiters.size() - 1) {
-		m_actions.resize(getCurrentDelimiter() + 1);
-		m_undoGroupDelimiters.resize(m_currentDelimiterIndex + 1);
-		spdlog::warn("begin resize : {}", m_actions.size());
-	}
+	m_tmpActionBuffer.resize(0);
 }
 
 void History::endUndoGroup() {
 	spdlog::info("end undo group");
-	if (m_undoGroupDelimiters.size() == 0 || m_actions.size() - 1 != m_undoGroupDelimiters[m_undoGroupDelimiters.size() - 1]) {
-		m_undoGroupDelimiters.push_back(m_actions.size() - 1); //Put a delimiter at the end of the actions list
-		m_currentDelimiterIndex = m_undoGroupDelimiters.size() - 1; //This delimiter becomes the current one
-		spdlog::warn("end     size : {}", m_actions.size());
+	if (m_tmpActionBuffer.size() > 0) {
+		//
+		m_cumulNbOfActionsToGetToThisUndoGroup.resize(m_indexOfCumulfNbOfActions + 1);
+		m_cumulNbOfActionsToGetToThisUndoGroup.push_back(m_tmpActionBuffer.size()+ (m_indexOfCumulfNbOfActions>-1 ? m_cumulNbOfActionsToGetToThisUndoGroup[m_indexOfCumulfNbOfActions] : 0));
+		m_indexOfCumulfNbOfActions++;
+		//
+		m_actions.resize(m_indexOfCumulfNbOfActions>0 ? m_cumulNbOfActionsToGetToThisUndoGroup[m_indexOfCumulfNbOfActions-1] : 0);
+		for (size_t i = 0; i < m_tmpActionBuffer.size(); ++i) {
+			m_actions.push_back(m_tmpActionBuffer[i]);
+			m_index++;
+		}
 	}
-	else
+	else {
 		spdlog::warn("Empty undo group");
+	}
 }
 
 void History::addAction(Action action) {
 	spdlog::info("add action");
-	m_actions.push_back(action);
+	m_tmpActionBuffer.push_back(action);
 }
 
-/*
- - We should always be in the state m_actions[getCurrentDelimiter()]
-*/
-
 void History::moveBackward() {
-	if (m_currentDelimiterIndex != -1) {
-		int prevDelimiter = m_currentDelimiterIndex == 0 ? -1 : m_undoGroupDelimiters[m_currentDelimiterIndex - 1];
-		int currDelimiter = m_undoGroupDelimiters[m_currentDelimiterIndex];
-		spdlog::info("back from {} to {}", currDelimiter, prevDelimiter);
-		for (int k = currDelimiter; k >= prevDelimiter + 1; --k) {
-			spdlog::info("undoing action {}", k);
-			m_actions[k].Undo();
+	if (m_indexOfCumulfNbOfActions > -1) {
+		spdlog::info("moving backward");
+		for (int i = 0; i < NbOfActionsBetweenThisAndPreviousUndoGroup(m_indexOfCumulfNbOfActions); ++i) {
+			m_actions[m_index].Undo();
+			m_index--;
 		}
-		m_currentDelimiterIndex = m_currentDelimiterIndex == 0 ? 0 : m_currentDelimiterIndex - 1;
+		m_indexOfCumulfNbOfActions--;
 	}
 }
 
 void History::moveForward() {
-	if (m_currentDelimiterIndex < m_undoGroupDelimiters.size()-1) {
-		int nextDelimiter = m_undoGroupDelimiters[m_currentDelimiterIndex + 1];
-		int currDelimiter = m_undoGroupDelimiters[m_currentDelimiterIndex];
-		spdlog::info("forward from {} to {}", currDelimiter, nextDelimiter);
-		for (int k = currDelimiter + 1; k <= nextDelimiter; ++k) {
-			spdlog::info("doing action {}", k);
-			m_actions[k].Do();
+	if (m_indexOfCumulfNbOfActions < (int)(m_cumulNbOfActionsToGetToThisUndoGroup.size() - 1)) { // cast to an int because size_t is an unsigned type and it causes a bug when m_indexOfCumulfNbOfActions == -1
+		spdlog::info("moving forward");
+		for (int i = 0; i < NbOfActionsBetweenThisAndPreviousUndoGroup(m_indexOfCumulfNbOfActions+1); ++i) {
+			m_index++;
+			m_actions[m_index].Do();
 		}
-		m_currentDelimiterIndex++;
+		m_indexOfCumulfNbOfActions++;
 	}
 }
 
-int History::getCurrentDelimiter() {
-	return m_undoGroupDelimiters[m_currentDelimiterIndex];
+unsigned int History::NbOfActionsBetweenThisAndPreviousUndoGroup(int index){
+	return m_cumulNbOfActionsToGetToThisUndoGroup[index] - (index > 0 ? m_cumulNbOfActionsToGetToThisUndoGroup[index-1] : 0);
 }
