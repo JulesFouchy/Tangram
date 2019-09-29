@@ -24,10 +24,10 @@ private:
 public:
 	void setUniform1i(const std::string& uniformName, int v);
 	void setUniform1f(const std::string& uniformName, float v);
-	void setUniform2f(const std::string& uniformName, glm::vec2 v);
-	void setUniform3f(const std::string& uniformName, glm::vec3 v);
-	void setUniform4f(const std::string& uniformName, glm::vec4 v);
-	void setUniformMat4f(const std::string& uniformName, glm::mat4& mat);
+	void setUniform2f(const std::string& uniformName, const glm::vec2& v);
+	void setUniform3f(const std::string& uniformName, const glm::vec3& v);
+	void setUniform4f(const std::string& uniformName, const glm::vec4& v);
+	void setUniformMat4f(const std::string& uniformName, const glm::mat4& mat);
 
 private:
 	unsigned int m_shaderId;

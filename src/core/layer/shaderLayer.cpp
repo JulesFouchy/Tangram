@@ -4,6 +4,8 @@
 
 #include "UI/log.hpp"
 
+#include "core/drawingBoard.hpp"
+
 #include <fstream>
 #include "helper/string.hpp"
 
@@ -15,7 +17,7 @@ ShaderLayer::ShaderLayer(int previewWidth, int previewHeight, const std::string&
 	// Initialize members
 	m_rectVAO.Initialize(-1.0f, 1.0f, -1.0f, 1.0f, m_transform.getInitialAspectRatio(), MINUS_RATIO_TO_RATIO__MINUS_ONE_TO_ONE);
 	m_renderBuffer.getTexture().Initialize(previewWidth, previewHeight, Texture2D::bytesPerPixel(RGBA), nullptr);
-	drawShaderOnTexture();
+	drawShaderOnPreviewTexture();
 }
 
 ShaderLayer::~ShaderLayer() {
@@ -27,15 +29,26 @@ void ShaderLayer::showGUI() {
 	ImGui::Begin(("Uniforms of " + getName()).c_str());
 	for (Uniform& uniform : m_uniforms) {
 		if (uniform.ImGuiDragValue())
-			drawShaderOnTexture();
+			drawShaderOnPreviewTexture();
 	}
 	ImGui::End();
 }
 
-void ShaderLayer::drawShaderOnTexture() {
+void ShaderLayer::showForSaving(Transform& transform) {
+	shaderBindAndSetFragmentUniforms();
+	m_shader.setUniformMat4f("u_mvp", DrawingBoard::transform.getProjectionMatrix() * transform.getMatrix() * glm::inverse(m_transform.getProjectionMatrix()));
+	m_rectVAO.binddrawunbind();
+}
+
+void ShaderLayer::shaderBindAndSetFragmentUniforms() {
 	m_shader.bind();
 	for (Uniform& uniform : m_uniforms)
 		uniform.set();
+}
+
+void ShaderLayer::drawShaderOnPreviewTexture() {
+	shaderBindAndSetFragmentUniforms();
+	m_shader.setUniformMat4f("u_mvp", glm::mat4x4(1.0f));
 	m_renderBuffer.bind();
 	m_renderBuffer.clear();
 	m_rectVAO.binddrawunbind();

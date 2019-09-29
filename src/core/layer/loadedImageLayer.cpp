@@ -2,6 +2,8 @@
 
 #include "stb_image/stb_image.h"
 
+#include "core/drawingBoard.hpp"
+
 LoadedImageLayer::LoadedImageLayer(const std::string& imgFilePath)
 	: Layer(0.1f, imgFilePath), m_filePath(imgFilePath)
 	 //      î dummy initialization of Layer's aspectRatio because we need to read image to know it
@@ -23,4 +25,8 @@ LoadedImageLayer::~LoadedImageLayer() {
 	spdlog::info("[Loaded Image Layer Destructed] " + getName());
 	if (m_pixels)
 		stbi_image_free(m_pixels);
+}
+
+void LoadedImageLayer::showForSaving(Transform& transform) {
+	show(transform.getMatrix(), glm::mat4x4(1.0f), DrawingBoard::transform.getProjectionMatrix());
 }

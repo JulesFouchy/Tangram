@@ -28,11 +28,8 @@ void Layer::show(const glm::mat4x4& viewMatrix, const glm::mat4x4& projMatrix) {
 	show(glm::scale(m_transform.getMatrix(), glm::vec3(m_transform.getAspectRatio() / m_transform.getInitialAspectRatio(), 1.0f, 1.0f)), viewMatrix, projMatrix);
 }
 
-void Layer::showInDrawingBoardSpace(const glm::mat4x4& modelMatrix) {
-	getTexture().show(modelMatrix, DrawingBoard::transform.getProjectionMatrix());
-}
-void Layer::showInDrawingBoardSpace() {
-	showInDrawingBoardSpace(m_transform.getMatrix());
+void Layer::showForSaving() {
+	showForSaving(m_transform);
 }
 
 void Layer::showFrame() {

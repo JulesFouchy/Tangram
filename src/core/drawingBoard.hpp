@@ -22,9 +22,7 @@ public:
 	static void Initialize(Ratio aspectRatio);
 
 	static void show();
-	static void showForSaving();
-	static void save(int approxNbPixels, const std::string& filePath);
-	static void save(unsigned int width, unsigned int height, const std::string& filePath);
+	static void save(unsigned int height, const std::string& filePath);
 
 	inline static LayerList& getLayerList() { return layers; };
 

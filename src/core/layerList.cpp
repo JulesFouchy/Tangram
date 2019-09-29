@@ -36,13 +36,10 @@ void LayerList::show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix) {
 	}
 }
 
-void LayerList::showInDrawingBoardSpace() {
-	if (mustShowAltOrigin()) {
-		selectedLayers.showAltOrigin();
-	}
+void LayerList::showForSaving() {
 	for (int k = 0; k < layers.size(); ++k) {
-		if(layers[k]->isVisible())
-			layers[k]->showInDrawingBoardSpace();
+		if (layers[k]->isVisible())
+			layers[k]->showForSaving();
 	}
 }
 

@@ -8,7 +8,7 @@ public:
 	~CopyLayer();
 
 	void show(const glm::mat4x4& viewMatrix, const glm::mat4x4& projMatrix) override;
-	void showInDrawingBoardSpace() override;
+	void showForSaving(Transform& transform) override;
 
 	inline Texture2D& getTexture() override { return m_childLayer->getTexture(); }
 private:

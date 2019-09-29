@@ -68,17 +68,13 @@ void DrawingBoard::show() {
 	}
 }
 
-void DrawingBoard::showForSaving() {
-	layers.showInDrawingBoardSpace();
-}
-
 void DrawingBoard::showFrame() {
 	ImmediateDrawing::setColor(0.0f, 0.0f, 0.0f, 1.0f);
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat() * transform.getMatrix());
 	ImmediateDrawing::rectOutline(0.0f, 0.0f, transform.getAspectRatio(), 1.0f, 0.002f);
 }
 
-void DrawingBoard::save(int approxNbPixels, const std::string& filePath) {
+/*void DrawingBoard::save(unsigned int approxNbPixels, const std::string& filePath) {
 	// Compute output width and height
 	float w = sqrt(approxNbPixels * transform.getAspectRatio());
 	float h = w / transform.getAspectRatio();
@@ -86,17 +82,19 @@ void DrawingBoard::save(int approxNbPixels, const std::string& filePath) {
 	int height = floor(h);
 	// Save
 	save(width, height, filePath);
-}
+}*/
 
-void DrawingBoard::save(unsigned int width, unsigned int height, const std::string& filePath) {
+void DrawingBoard::save(unsigned int height, const std::string& filePath) {
 	if (!filePath.empty()) {
-		spdlog::info("[Saving image] " + filePath);
-		//Bind frameBuffer to render and save
+		spdlog::info("[Saving as] " + filePath);
+		unsigned int width = transform.getAspectRatio() * height;
+		// Bind frameBuffer
 		FrameBuffer saveBuffer(width, height);
 		saveBuffer.bind();
 		saveBuffer.clear();
-		showForSaving();
-		//
+		// Draw
+		layers.showForSaving();
+		// Get pixels and Save
 		unsigned char* data = new unsigned char[4 * width * height];
 		glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		stbi_flip_vertically_on_write(1);

@@ -16,8 +16,11 @@ public:
 	void showGUI() override;
 
 	inline bool createdSuccessfully() override { return m_shader.createdSuccessfully(); }
+
+	void showForSaving(Transform& transform) override;
 private:
-	void drawShaderOnTexture();
+	void shaderBindAndSetFragmentUniforms();
+	void drawShaderOnPreviewTexture();
 
 private:
 	Shader m_shader;

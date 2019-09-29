@@ -36,7 +36,7 @@ void GUI_LayerCreation::OpenSaveDrawingBoardWindow() {
 		m_bWindow_DrawingBoardSaving = true;
 		m_aspectRatio = DrawingBoard::transform.getAspectRatio();
 		updateWidthOrHeight();
-		m_filepath = "";
+		m_filepath = "C:\\Dev\\Tangram\\data\\out\\test.png";
 	}
 }
 
@@ -73,7 +73,7 @@ void GUI_LayerCreation::Window_DrawingBoardSaving() {
 
 	// creation	
 	if (ImGui::Button("OK !")) {
-		DrawingBoard::save(m_width, m_height, m_filepath);
+		DrawingBoard::save(m_height, m_filepath);
 		m_bWindow_DrawingBoardSaving = false;
 	}
 	ImGui::End();
