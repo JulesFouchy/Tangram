@@ -144,7 +144,10 @@ void GUI_LayerCreation::ImGuiChoose_Ratio_Width_Height() {
 void GUI_LayerCreation::ImGuiOpenFileButton(const char* filter) {
 	ImGui::InputText("", &m_filepath);
 	if (ImGui::Button("Choose file")) {
-		m_filepath = openfilename(filter);
+		std::string tmp = openfilename(filter);
+		if (tmp != "") {
+			m_filepath = tmp;
+		}
 	}
 }
 
