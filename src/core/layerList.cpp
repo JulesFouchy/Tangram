@@ -283,7 +283,7 @@ void LayerList::onScroll(float motion) {
 }
 
 void LayerList::setCursor() {
-	if (isHandlingAnInput() && usedCursor) {
+	if (isBusy() && usedCursor) {
 		Cursor::set(usedCursor);
 	}
 	else {

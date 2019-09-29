@@ -37,7 +37,7 @@ public:
 
 	bool mustShowAltOrigin();
 
-	inline bool isHandlingAnInput() { return selectedLayers.isBusy(); };
+	inline bool isBusy() { return selectedLayers.isBusy(); };
 
 private:
 	bool mouseIsHoveringAltOrigin();

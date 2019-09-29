@@ -123,7 +123,7 @@ void DrawingBoard::onDoubleLeftClic() {
 }
 
 void DrawingBoard::onLeftClicDown() {
-	if (Input::spaceBarIsDown() && !layers.isHandlingAnInput()) {
+	if (Input::spaceBarIsDown() && !layers.isBusy()) {
 		transform.startDraggingTranslation();
 		m_bIsHandlingAnInput = true;
 	}
@@ -158,7 +158,7 @@ void DrawingBoard::onKeyDown(Key key) {
 	if (auto specialKey = std::get_if<SpecialKey>(&key)) { //Check if it's a special key
 		switch (*specialKey) {
 		case SPACE:
-			if (Input::leftClicIsDown() && !layers.isHandlingAnInput()) {
+			if (Input::leftClicIsDown() && !layers.isBusy()) {
 				transform.startDraggingTranslation();
 				m_bIsHandlingAnInput = true;
 			}
@@ -174,19 +174,19 @@ void DrawingBoard::onKeyDown(Key key) {
 	else if (auto c = std::get_if<char>(&key)) { //It's a char
 		switch (*c) {
 		case 'z':
-			if(Input::keyIsDown(CTRL))
+			if(Input::keyIsDown(CTRL) && !layers.isBusy())
 				DrawingBoard::history.moveBackward();
 			else
 				layers.onKeyDown(key);
 			break;
 		case 'y':
-			if (Input::keyIsDown(CTRL))
+			if (Input::keyIsDown(CTRL) && !layers.isBusy())
 				DrawingBoard::history.moveForward();
 			else
 				layers.onKeyDown(key);
 			break;
 		case 'o':
-			if (Input::keyIsDown(CTRL)) {
+			if (Input::keyIsDown(CTRL) && !layers.isBusy()) {
 				std::string imgFilepath = openfilename();
 				if (!imgFilepath.empty())
 					getLayerList().createLoadedImageLayer(imgFilepath);
@@ -195,14 +195,14 @@ void DrawingBoard::onKeyDown(Key key) {
 				layers.onKeyDown(key);
 			break;
 		case 's':
-			if (Input::keyIsDown(CTRL)) {
+			if (Input::keyIsDown(CTRL) && !layers.isBusy()) {
 				GUI_LayerCreation::OpenSaveDrawingBoardWindow();
 			}
 			else
 				layers.onKeyDown(key);
 			break;
 		case 'f':
-			if (Input::keyIsDown(CTRL))
+			if (Input::keyIsDown(CTRL) && !layers.isBusy())
 				GUI_LayerCreation::OpenCreateShaderLayerWindow();
 			else
 				layers.onKeyDown(key);
