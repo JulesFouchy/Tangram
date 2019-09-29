@@ -18,7 +18,7 @@ public:
 	void show(const glm::mat4x4& modelMatrix, const glm::mat4x4& viewMatrix, const glm::mat4x4& projMatrix); // used by copy layer to use it's own modelMatrix
 	virtual void show(const glm::mat4x4& viewMatrix, const glm::mat4x4& projMatrix);
 	void showForSaving();
-	virtual void showForSaving(Transform& transform) = 0; // allows copy layer to draw it with its own transform
+	virtual void showForSaving(RectTransform& transform) = 0; // allows copy layer to draw it with its own transform
 	void showFrame();
 	virtual void showGUI();
 

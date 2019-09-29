@@ -17,7 +17,7 @@ public:
 
 	inline bool createdSuccessfully() override { return m_shader.createdSuccessfully(); }
 
-	void showForSaving(Transform& transform) override;
+	void showForSaving(RectTransform& transform) override;
 private:
 	void shaderBindAndSetFragmentUniforms();
 	void drawShaderOnPreviewTexture();

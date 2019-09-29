@@ -18,6 +18,6 @@ void CopyLayer::show(const glm::mat4x4& viewMatrix, const glm::mat4x4& projMatri
 	m_childLayer->show(glm::scale(m_transform.getMatrix(), glm::vec3(m_transform.getAspectRatio() / m_transform.getInitialAspectRatio(), 1.0f, 1.0f)), viewMatrix, projMatrix);
 }
 
-void CopyLayer::showForSaving(Transform& transform) {
+void CopyLayer::showForSaving(RectTransform& transform) {
 	m_childLayer->showForSaving(transform);
 }

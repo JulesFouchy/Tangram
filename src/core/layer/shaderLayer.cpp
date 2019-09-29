@@ -34,9 +34,9 @@ void ShaderLayer::showGUI() {
 	ImGui::End();
 }
 
-void ShaderLayer::showForSaving(Transform& transform) {
+void ShaderLayer::showForSaving(RectTransform& transform) {
 	shaderBindAndSetFragmentUniforms();
-	m_shader.setUniformMat4f("u_mvp", DrawingBoard::transform.getProjectionMatrix() * transform.getMatrix() * glm::inverse(m_transform.getProjectionMatrix()));
+	m_shader.setUniformMat4f("u_mvp", DrawingBoard::transform.getProjectionMatrix() * transform.getMatrix() * glm::inverse(transform.getProjectionMatrix()));
 	m_rectVAO.binddrawunbind();
 }
 

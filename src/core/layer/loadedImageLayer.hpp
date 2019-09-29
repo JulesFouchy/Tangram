@@ -6,7 +6,7 @@ public:
 	LoadedImageLayer(const std::string& imgFilePath);
 	~LoadedImageLayer();
 
-	void showForSaving(Transform& transform) override;
+	void showForSaving(RectTransform& transform) override;
 private:
 	std::string m_filePath;
 	unsigned char* m_pixels;

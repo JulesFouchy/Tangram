@@ -27,6 +27,6 @@ LoadedImageLayer::~LoadedImageLayer() {
 		stbi_image_free(m_pixels);
 }
 
-void LoadedImageLayer::showForSaving(Transform& transform) {
+void LoadedImageLayer::showForSaving(RectTransform& transform) {
 	show(transform.getMatrix(), glm::mat4x4(1.0f), DrawingBoard::transform.getProjectionMatrix());
 }
