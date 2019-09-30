@@ -13,7 +13,7 @@ friend class GroupOfLayers;
 friend class DrawingBoard;
 
 public:
-	~Layer();
+	virtual ~Layer();
 
 	void show(const glm::mat4x4& modelMatrix, const glm::mat4x4& viewMatrix, const glm::mat4x4& projMatrix); // used by copy layer to use it's own modelMatrix
 	virtual void show(const glm::mat4x4& viewMatrix, const glm::mat4x4& projMatrix);
