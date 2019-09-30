@@ -4,6 +4,8 @@
 #include "UI/fileBrowser.hpp"
 #include "helper/string.hpp"
 
+#include "UI/log.hpp"
+
 #include "imgui/imgui.h"
 #include "imgui/misc/cpp/imgui_stdlib.h"
 
@@ -13,6 +15,7 @@ Ratio GUI_LayerCreation::m_aspectRatio(1, 1);
 unsigned int GUI_LayerCreation::m_width = 1000;
 unsigned int GUI_LayerCreation::m_height = 1000;
 WidthOrHeight GUI_LayerCreation::m_lastModified = Height;
+int GUI_LayerCreation::m_fileExtensionIndex = 0;
 
 std::string GUI_LayerCreation::m_filepath = "";
 
@@ -68,7 +71,7 @@ void GUI_LayerCreation::Window_DrawingBoardSaving() {
 
 	// get filepath
 	ImGui::Text("Save as : "); ImGui::SameLine();
-	ImGuiSaveFileNameButton();
+	ImGuiSaveFileNameButton(" PNG\0*.png;*.PNG\0 JPEG\0*.jpg;*.jpeg;*.JPG;*.JPEG\0");
 	ImGui::Separator();
 
 	// creation	
@@ -144,16 +147,18 @@ void GUI_LayerCreation::ImGuiChoose_Ratio_Width_Height() {
 void GUI_LayerCreation::ImGuiOpenFileButton(const char* filter) {
 	ImGui::InputText("", &m_filepath);
 	if (ImGui::Button("Choose file")) {
-		std::string tmp = openfilename(filter);
+		std::string tmp = FileBrowser::openfilename(filter);
 		if (tmp != "") {
 			m_filepath = tmp;
 		}
 	}
 }
 
-void GUI_LayerCreation::ImGuiSaveFileNameButton() {
+void GUI_LayerCreation::ImGuiSaveFileNameButton(const char* filter) {
 	ImGui::InputText("", &m_filepath);
 	if (ImGui::Button("Choose destination")) {
-		m_filepath = savefilename();
+		auto[tmp_filepath, tmp_fileExtensionIndex] = FileBrowser::savefilename(filter);
+		m_filepath = tmp_filepath;
+		m_fileExtensionIndex = tmp_fileExtensionIndex;
 	}
 }

@@ -5,6 +5,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "helper/display.hpp"
+#include "helper/string.hpp"
 
 #include "UI/input.hpp"
 #include "UI/log.hpp"
@@ -87,6 +88,8 @@ void DrawingBoard::showFrame() {
 void DrawingBoard::save(unsigned int height, const std::string& filePath) {
 	if (!filePath.empty()) {
 		spdlog::info("[Saving as] " + filePath);
+		std::string fileExtension = String::getFileExtension(filePath);
+		spdlog::info("|{}|", fileExtension);
 		unsigned int width = transform.getAspectRatio() * height;
 		// Bind frameBuffer
 		FrameBuffer saveBuffer(width, height);
@@ -98,7 +101,17 @@ void DrawingBoard::save(unsigned int height, const std::string& filePath) {
 		unsigned char* data = new unsigned char[4 * width * height];
 		glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		stbi_flip_vertically_on_write(1);
-		stbi_write_png(filePath.c_str(), width, height, 4, data, 0);
+		if (fileExtension == "png") {
+			spdlog::info("Saving as png");
+			stbi_write_png(filePath.c_str(), width, height, 4, data, 0);
+		}
+		else if(fileExtension == "jpg") {
+			spdlog::info("Saving as jpg");
+			stbi_write_jpg(filePath.c_str(), width, height, 4, data, 100);
+		}
+		else {
+			spdlog::error("Unknown file extension : |{}|", fileExtension);
+		}
 		//
 		saveBuffer.unbind();
 		//
@@ -185,7 +198,7 @@ void DrawingBoard::onKeyDown(Key key) {
 			break;
 		case 'o':
 			if (Input::keyIsDown(CTRL) && !layers.isBusy()) {
-				std::string imgFilepath = openfilename();
+				std::string imgFilepath = FileBrowser::openfilename();
 				if (!imgFilepath.empty())
 					getLayerList().createLoadedImageLayer(imgFilepath);
 			}

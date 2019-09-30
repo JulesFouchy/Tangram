@@ -1,7 +1,9 @@
 #include "fileBrowser.hpp"
 
+#include "UI/log.hpp"
+
 // Returns an empty string if dialog is canceled
-std::string openfilename(const char* filter , HWND owner ) {
+std::string FileBrowser::openfilename(const char* filter, HWND owner ) {
 	OPENFILENAME ofn;
 	char fileName[MAX_PATH] = "";
 	ZeroMemory(&ofn, sizeof(ofn));
@@ -19,7 +21,7 @@ std::string openfilename(const char* filter , HWND owner ) {
 }
 
 // Returns an empty string if dialog is canceled
-std::string savefilename(const char* filter, HWND owner) {
+std::tuple<std::string, int> FileBrowser::savefilename(const char* filter, HWND owner) {
 	OPENFILENAME ofn;
 	char fileName[MAX_PATH] = "";
 	ZeroMemory(&ofn, sizeof(ofn));
@@ -33,5 +35,5 @@ std::string savefilename(const char* filter, HWND owner) {
 	std::string fileNameStr;
 	if (GetSaveFileNameA(&ofn))
 		fileNameStr = fileName;
-	return fileNameStr;
+	return std::tuple<std::string, int>(fileNameStr, ofn.nFilterIndex);
 }

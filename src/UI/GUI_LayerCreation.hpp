@@ -21,7 +21,7 @@ private:
 	static void ImGuiChoose_Width_Height();
 	static void ImGuiChoose_Ratio_Width_Height();
 	static void ImGuiOpenFileButton(const char* filter = "All Files (*.*)\0*.*\0");
-	static void ImGuiSaveFileNameButton();
+	static void ImGuiSaveFileNameButton(const char* filter = "All Files (*.*)\0*.*\0");
 
 private:
 	static bool m_bWindow_ShaderLayerCreation;
@@ -35,6 +35,7 @@ private:
 	static void updateWidthOrHeight();
 
 	static std::string m_filepath;
+	static int m_fileExtensionIndex;
 
 private:
 	GUI_LayerCreation() = default;

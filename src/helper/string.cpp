@@ -29,3 +29,7 @@ void String::replaceAll(std::string& str, const std::string& from, const std::st
 		start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
 	}
 }
+
+std::string String::getFileExtension(const std::string& myString) {
+	return myString.substr(myString.find_last_of(".")+1);
+}
