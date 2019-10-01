@@ -11,12 +11,8 @@
 #include "helper/display.hpp"
 #include "graphics/immediateDrawing.hpp"
 
-#include "layer/loadedImageLayer.hpp"
-#include "layer/copyLayer.hpp"
-#include "layer/shaderLayer.hpp"
-
 LayerList::LayerList()
-	: m_hoveredLayer(nullptr), m_mousePosRelToHoveredLayer(OUTSIDE), usedCursor(nullptr)
+	: m_hoveredLayer(0), m_mousePosRelToHoveredLayer(OUTSIDE), usedCursor(nullptr)
 {
 }
 
@@ -31,21 +27,21 @@ void LayerList::update() {
 
 void LayerList::show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix) {
 	for (int k = 0; k < layers.size(); ++k) {
-		if (layers[k]->isVisible())
-			layers[k]->show(viewMatrix, projMatrix);
+		if (DrawingBoard::LayerRegistry()[layers[k]]->isVisible())
+			DrawingBoard::LayerRegistry()[layers[k]]->show(viewMatrix, projMatrix);
 	}
 }
 
 void LayerList::showForSaving() {
 	for (int k = 0; k < layers.size(); ++k) {
-		if (layers[k]->isVisible())
-			layers[k]->showForSaving();
+		if (DrawingBoard::LayerRegistry()[layers[k]]->isVisible())
+			DrawingBoard::LayerRegistry()[layers[k]]->showForSaving();
 	}
 }
 
 void LayerList::showSelectedLayerGUI() {
 	if (selectedLayers.size() == 1)
-		selectedLayers[0]->showGUI();
+		DrawingBoard::LayerRegistry()[selectedLayers[0]]->showGUI();
 }
 
 /*void LayerList::showFrames() {
@@ -63,41 +59,19 @@ void LayerList::showSelectedLayerGUI() {
 
 }*/
 
-void LayerList::createLoadedImageLayer(const std::string& imgFilePath) {
-	Layer* layer = new LoadedImageLayer(imgFilePath);
-	layers.addLayer(layer);
-}
-
-void LayerList::createCopyLayer(Layer* childLayer) {
-	Layer* layer = new CopyLayer(childLayer);
-	layers.addLayer(layer);
-}
-
-void LayerList::createShaderLayer(unsigned int previewWidth, unsigned int previewHeight, const std::string& fragmentShaderFilepath) {
-	// TODO set preview size properly, and recompute the image at full size when saving !
-	Layer* layer = new ShaderLayer(previewWidth, previewHeight, fragmentShaderFilepath);
-	if (layer->createdSuccessfully())
-		layers.addLayer(layer);
-	else
-		delete layer;
-}
-
-Layer* LayerList::getLayer(int index) {
-	return layers[index];
-}
 /*Layer* LayerList::getActivLayer() {
 	return selectedLayers.;
 }*/
-void LayerList::setSelectedLayer(Layer* layer) {
+void LayerList::setSelectedLayer(LayerID layerID) {
 	selectedLayers.removeAllLayers();
-	selectedLayers.addLayer(layer);
+	selectedLayers.addLayer(layerID);
 }
 
 void LayerList::computeHoveredLayerAndMouseRelPos() {
-	m_hoveredLayer = nullptr;
+	m_hoveredLayer = 0;
 	for (int k = layers.size()-1; k >= 0; --k) {
-		if (layers[k]->isVisible()) {
-			m_mousePosRelToHoveredLayer = layers[k]->m_transform.getMouseRelativePosition();
+		if (DrawingBoard::LayerRegistry()[layers[k]]->isVisible()) {
+			m_mousePosRelToHoveredLayer = DrawingBoard::LayerRegistry()[layers[k]]->m_transform.getMouseRelativePosition();
 			if (m_mousePosRelToHoveredLayer != OUTSIDE) {
 				m_hoveredLayer = layers[k];
 				break;
@@ -144,7 +118,7 @@ void LayerList::onKeyDown(Key key) {
 			switch (*c) {
 			case 'd':
 				for (int k = 0; k < selectedLayers.size(); ++k) {
-					createCopyLayer(selectedLayers[k]);
+					DrawingBoard::LayerRegistry().createCopyLayer(DrawingBoard::LayerRegistry()[selectedLayers[k]]);
 				}
 			default:
 				break;
@@ -195,7 +169,7 @@ void LayerList::onLeftClicDown() {
 		//Change selected layers
 		if (Input::keyIsDown(CTRL)) {
 			if( selectedLayers.contains(m_hoveredLayer))
-				selectedLayers.removeLayer(m_hoveredLayer);
+				selectedLayers.removeLayerByRegisterID(m_hoveredLayer);
 			else
 				selectedLayers.addLayer(m_hoveredLayer);
 		}
@@ -220,28 +194,28 @@ void LayerList::onLeftClicDown() {
 				break;
 				//Scale towards opposite border
 			case RIGHT:
-				originInTransformSpace = glm::vec2(-0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.0f);
+				originInTransformSpace = glm::vec2(-0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), 0.0f);
 				break;
 			case TOP_RIGHT:
-				originInTransformSpace = glm::vec2(-0.5f * m_hoveredLayer->m_transform.getAspectRatio(), -0.5f);
+				originInTransformSpace = glm::vec2(-0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), -0.5f);
 				break;
 			case TOP:
 				originInTransformSpace = glm::vec2(0.0f, -0.5f);
 				break;
 			case TOP_LEFT:
-				originInTransformSpace = glm::vec2(0.5f * m_hoveredLayer->m_transform.getAspectRatio(), -0.5f);
+				originInTransformSpace = glm::vec2(0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), -0.5f);
 				break;
 			case LEFT:
-				originInTransformSpace = glm::vec2(0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.0f);
+				originInTransformSpace = glm::vec2(0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), 0.0f);
 				break;
 			case BOT_LEFT:
-				originInTransformSpace = glm::vec2(0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.5f);
+				originInTransformSpace = glm::vec2(0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), 0.5f);
 				break;
 			case BOT:
 				originInTransformSpace = glm::vec2(0.0f, 0.5f);
 				break;
 			case BOT_RIGHT:
-				originInTransformSpace = glm::vec2(-0.5f * m_hoveredLayer->m_transform.getAspectRatio(), 0.5f);
+				originInTransformSpace = glm::vec2(-0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), 0.5f);
 				break;
 			default:
 				spdlog::error("[LayerList::onLeftClicDown] reached default case");
@@ -251,7 +225,7 @@ void LayerList::onLeftClicDown() {
 			bool unlockUForClickedLayer = (originInTransformSpace.x != 0.0f);
 			bool unlockVForClickedLayer = (originInTransformSpace.y != 0.0f);
 			// Start dragging
-			selectedLayers.startDraggingScale(m_hoveredLayer, m_hoveredLayer->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f), m_hoveredLayer->m_transform.getUAxis(), m_hoveredLayer->m_transform.getVAxis(), unlockUForClickedLayer, unlockVForClickedLayer);
+			selectedLayers.startDraggingScale(m_hoveredLayer, DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f), DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getUAxis(), DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getVAxis(), unlockUForClickedLayer, unlockVForClickedLayer);
 			//Scale towards alt origin if ALT down
 			if (Input::keyIsDown(ALT)) {
 				selectedLayers.changeDraggingCenterToAltOrigin();

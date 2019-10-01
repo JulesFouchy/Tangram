@@ -56,7 +56,7 @@ void GUI_LayerCreation::Window_ShaderLayerCreation() {
 
 	// creation	
 	if (ImGui::Button("OK !")) {
-		DrawingBoard::getLayerList().createShaderLayer(m_width, m_height, m_filepath);
+		DrawingBoard::LayerRegistry().createShaderLayer(m_width, m_height, m_filepath);
 		m_bWindow_ShaderLayerCreation = false;
 	}
 	ImGui::End();

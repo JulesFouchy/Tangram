@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "layer/layer.hpp"
-#include "layerList.hpp"
+#include "registryOfAllLayersPresentAndGone.hpp"
 #include "history/history.hpp"
 
 #include "graphics/frameBuffer.hpp"
@@ -24,9 +24,9 @@ public:
 	static void show();
 	static void save(unsigned int height, const std::string& filePath);
 
-	inline static LayerList& getLayerList() { return layers; };
-
 	static void update();
+
+	static inline RegistryOfAllLayersPresentAndGone& LayerRegistry() { return m_LayerRegistry; }
 
 	static void onDoubleLeftClic();
 	static void onLeftClicDown();
@@ -50,8 +50,8 @@ public:
 	static DrawingBoardTransform transform;
 private:
 	static void showFrame();
-public:
-	static LayerList layers;
+private:
+	static RegistryOfAllLayersPresentAndGone m_LayerRegistry;
 private:
 	static FrameBuffer* renderBuffer;
 private:

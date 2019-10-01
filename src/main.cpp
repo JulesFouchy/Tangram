@@ -121,12 +121,12 @@ int main(int argc, char* argv[])
 	Log::Initialize();
 
 	Texture2D::ClassInitialization();
-	DrawingBoard::Initialize(Ratio(3,2));
+	DrawingBoard::Initialize(Ratio(4,3));
 	DrawingBoard::transform.setScale(0.9f);
 
 	//DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test3.jpg");
 	//DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test2.png");
-	DrawingBoard::getLayerList().createShaderLayer(1500, 1000,"res/shaders/fragment/shaderLayerTest.frag");
+	//DrawingBoard::getLayerList().createShaderLayer(1500, 1000,"res/shaders/fragment/shaderLayerTest.frag");
 
 	ImmediateDrawing::Initialize();
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat());
@@ -143,7 +143,7 @@ int main(int argc, char* argv[])
 
 		GUI_LayerList::show();
 		GUI::showMainMenuBar();
-		DrawingBoard::getLayerList().showSelectedLayerGUI();
+		DrawingBoard::LayerRegistry().AliveLayers().showSelectedLayerGUI();
 		GUI_LayerCreation::Show();
 
 		// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
@@ -199,7 +199,7 @@ int main(int argc, char* argv[])
 		//DrawingBoard::layers.getActivLayer()->m_transform.rotate(imRot, DrawingBoard::layers.getActivLayer()->m_transform.getAltOriginInDrawingBoardSpace());
 		DrawingBoard::update();
 		DrawingBoard::show();
-		DrawingBoard::layers.update();
+		DrawingBoard::LayerRegistry().AliveLayers().update();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		//
 		Input::update();

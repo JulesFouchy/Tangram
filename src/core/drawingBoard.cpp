@@ -25,7 +25,7 @@ bool DrawingBoard::m_bIsHandlingAnInput;
 CursorType* DrawingBoard::m_currentCursor;
 History DrawingBoard::history;
 DrawingBoardTransform DrawingBoard::transform(1.0f);
-LayerList DrawingBoard::layers;
+RegistryOfAllLayersPresentAndGone DrawingBoard::m_LayerRegistry;
 FrameBuffer* DrawingBoard::renderBuffer;
 
 void DrawingBoard::Initialize(Ratio aspectRatio) 
@@ -50,7 +50,7 @@ void DrawingBoard::show() {
 	renderBuffer->unbind();
 	renderBuffer->m_texture.show(transform.getMatrix());*/
 
-	layers.show(transform.getMatrix(), Display::getProjMat());
+	LayerRegistry().AliveLayers().show(transform.getMatrix(), Display::getProjMat());
 
 	ImmediateDrawing::setColor(outsideColor);
 	ImmediateDrawing::windowMinusARectangle(
@@ -60,12 +60,12 @@ void DrawingBoard::show() {
 		transform.getRotation()
 	);
 
-	layers.selectedLayers.showFrames();
+	LayerRegistry().AliveLayers().selectedLayers.showFrames();
 
 	showFrame();
 
-	if (layers.mustShowAltOrigin()) {
-		layers.selectedLayers.showAltOrigin();
+	if (LayerRegistry().AliveLayers().mustShowAltOrigin()) {
+		LayerRegistry().AliveLayers().selectedLayers.showAltOrigin();
 	}
 }
 
@@ -96,7 +96,7 @@ void DrawingBoard::save(unsigned int height, const std::string& filePath) {
 		saveBuffer.bind();
 		saveBuffer.clear();
 		// Draw
-		layers.showForSaving();
+		LayerRegistry().AliveLayers().showForSaving();
 		// Get pixels and Save
 		unsigned char* data = new unsigned char[4 * width * height];
 		glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -128,24 +128,24 @@ void DrawingBoard::update() {
 }
 
 void DrawingBoard::onDoubleLeftClic() {
-	layers.onDoubleLeftClic();
+	LayerRegistry().AliveLayers().onDoubleLeftClic();
 	//Center the point we doucle-clicked on
 	//transform.translate(-Input::getMousePosition());
 }
 
 void DrawingBoard::onLeftClicDown() {
-	if (Input::spaceBarIsDown() && !layers.isBusy()) {
+	if (Input::spaceBarIsDown() && !LayerRegistry().AliveLayers().isBusy()) {
 		transform.startDraggingTranslation();
 		m_bIsHandlingAnInput = true;
 	}
 	else{
-		layers.onLeftClicDown();
+		LayerRegistry().AliveLayers().onLeftClicDown();
 	}
 }
 
 void DrawingBoard::onLeftClicUp() {
 	if (!transform.endDragging()) {
-		layers.onLeftClicUp();
+		LayerRegistry().AliveLayers().onLeftClicUp();
 	}
 	m_bIsHandlingAnInput = false;
 	m_currentCursor = nullptr;
@@ -161,7 +161,7 @@ void DrawingBoard::onScroll(float motion) {
 		}
 	}
 	else {
-		layers.onScroll(motion);
+		LayerRegistry().AliveLayers().onScroll(motion);
 	}
 }
 
@@ -169,57 +169,57 @@ void DrawingBoard::onKeyDown(Key key) {
 	if (auto specialKey = std::get_if<SpecialKey>(&key)) { //Check if it's a special key
 		switch (*specialKey) {
 		case SPACE:
-			if (Input::leftClicIsDown() && !layers.isBusy()) {
+			if (Input::leftClicIsDown() && !LayerRegistry().AliveLayers().isBusy()) {
 				transform.startDraggingTranslation();
 				m_bIsHandlingAnInput = true;
 			}
 			else {
-				layers.onKeyDown(key);
+				LayerRegistry().AliveLayers().onKeyDown(key);
 			}
 			break;
 		default:
-			layers.onKeyDown(key);
+			LayerRegistry().AliveLayers().onKeyDown(key);
 			break;
 		}
 	}
 	else if (auto c = std::get_if<char>(&key)) { //It's a char
 		switch (*c) {
 		case 'z':
-			if(Input::keyIsDown(CTRL) && !layers.isBusy())
+			if(Input::keyIsDown(CTRL) && !LayerRegistry().AliveLayers().isBusy())
 				DrawingBoard::history.moveBackward();
 			else
-				layers.onKeyDown(key);
+				LayerRegistry().AliveLayers().onKeyDown(key);
 			break;
 		case 'y':
-			if (Input::keyIsDown(CTRL) && !layers.isBusy())
+			if (Input::keyIsDown(CTRL) && !LayerRegistry().AliveLayers().isBusy())
 				DrawingBoard::history.moveForward();
 			else
-				layers.onKeyDown(key);
+				LayerRegistry().AliveLayers().onKeyDown(key);
 			break;
 		case 'o':
-			if (Input::keyIsDown(CTRL) && !layers.isBusy()) {
+			if (Input::keyIsDown(CTRL) && !LayerRegistry().AliveLayers().isBusy()) {
 				std::string imgFilepath = FileBrowser::openfilename();
 				if (!imgFilepath.empty())
-					getLayerList().createLoadedImageLayer(imgFilepath);
+					LayerRegistry().createLoadedImageLayer(imgFilepath);
 			}
 			else
-				layers.onKeyDown(key);
+				LayerRegistry().AliveLayers().onKeyDown(key);
 			break;
 		case 's':
-			if (Input::keyIsDown(CTRL) && !layers.isBusy()) {
+			if (Input::keyIsDown(CTRL) && !LayerRegistry().AliveLayers().isBusy()) {
 				GUI_LayerCreation::OpenSaveDrawingBoardWindow();
 			}
 			else
-				layers.onKeyDown(key);
+				LayerRegistry().AliveLayers().onKeyDown(key);
 			break;
 		case 'f':
-			if (Input::keyIsDown(CTRL) && !layers.isBusy())
+			if (Input::keyIsDown(CTRL) && !LayerRegistry().AliveLayers().isBusy())
 				GUI_LayerCreation::OpenCreateShaderLayerWindow();
 			else
-				layers.onKeyDown(key);
+				LayerRegistry().AliveLayers().onKeyDown(key);
 			break;
 		default:
-			layers.onKeyDown(key);
+			LayerRegistry().AliveLayers().onKeyDown(key);
 			break;
 		}
 	}
@@ -233,15 +233,15 @@ void DrawingBoard::onKeyUp(Key key) {
 			transform.endDragging();
 			m_bIsHandlingAnInput = false;
 			m_currentCursor = nullptr;
-			layers.onKeyUp(key);
+			LayerRegistry().AliveLayers().onKeyUp(key);
 			break;
 		default:
-			layers.onKeyUp(key);
+			LayerRegistry().AliveLayers().onKeyUp(key);
 			break;
 		}
 	}
 	else if (auto c = std::get_if<char>(&key)) { //It's a char
-		layers.onKeyUp(key);
+		LayerRegistry().AliveLayers().onKeyUp(key);
 	}
 }
 
@@ -255,7 +255,7 @@ void DrawingBoard::setCursor() {
 			m_currentCursor = Cursor::fourDirections;
 		}
 		else {
-			layers.setCursor();
+			LayerRegistry().AliveLayers().setCursor();
 		}
 	}
 }

@@ -2,9 +2,11 @@
 
 #include "core/layer/layer.hpp"
 
+#include "core/layerID.hpp"
+
 class GUI_LayerList {
 public:
 	static void show();
-	static void dragDropSourceReorderLayer(Layer* layer);
+	static void dragDropSourceReorderLayer(LayerID layerID);
 	static void dragDropTargetReorderLayer(int layerIndex);
 };

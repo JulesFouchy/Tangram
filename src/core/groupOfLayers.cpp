@@ -6,39 +6,31 @@
 
 #include <algorithm>
 
-GroupOfLayers::GroupOfLayers() {
-
+LayerID GroupOfLayers::operator[](int k) {
+	return m_layerIDs[k];
 }
 
-GroupOfLayers::~GroupOfLayers() {
-
-}
-
-Layer* GroupOfLayers::operator[](int k) {
-	return m_layers[k];
-}
-
-void GroupOfLayers::addLayer(Layer* layer) {
+void GroupOfLayers::addLayer(LayerID layerID) {
 	//Check for doublons
-	for (Layer* otherLayer : m_layers) {
-		if (otherLayer == layer) {
-			spdlog::warn("[Group of Layers] trying to add a layer that was already in it : {}", layer->getName());
+	for (LayerID otherLayerID : m_layerIDs) {
+		if (otherLayerID == layerID) {
+			spdlog::warn("[Group of Layers] trying to add a layer that was already in it : {}", DrawingBoard::LayerRegistry()[layerID]->getName());
 			return;
 		}
 	}
 	//Add layer
-	m_layers.push_back(layer);
+	m_layerIDs.push_back(layerID);
 }
 
 void GroupOfLayers::moveLayer(int fromIndex, int toIndex) {
-	Layer* movedLayer = m_layers[fromIndex];
-	m_layers.insert(m_layers.begin() + toIndex, movedLayer);
-	removeLayer(fromIndex < toIndex ? fromIndex : fromIndex + 1);
+	LayerID movedLayerID = m_layerIDs[fromIndex];
+	m_layerIDs.insert(m_layerIDs.begin() + toIndex, movedLayerID);
+	removeLayerByIndexInGroup(fromIndex < toIndex ? fromIndex : fromIndex + 1);
 }
 
-void GroupOfLayers::reorderLayer(Layer* layer, int newIndex) {
-	int layerIndex = getIndex(layer);
-	if (layerIndex >= 0) {
+void GroupOfLayers::reorderLayer(LayerID layerID, int newIndex) {
+	size_t layerIndex = getIndex(layerID);
+	//if (layerIndex >= 0) {
 		DrawingBoard::history.beginUndoGroup();
 			DrawingBoard::history.addAction(Action(
 				// DO action
@@ -59,53 +51,53 @@ void GroupOfLayers::reorderLayer(Layer* layer, int newIndex) {
 			));
 		DrawingBoard::history.endUndoGroup();
 		moveLayer(layerIndex, newIndex);
-	}
-	else {
-		spdlog::warn("[Group of Layers] trying to reorder a layer that isn't in the group : {}", layer->getName());
-	}
+	//}
+	//else {
+	//	spdlog::warn("[Group of Layers] trying to reorder a layer that isn't in the group : {}", layer->getName());
+	//}
 }
 
-void GroupOfLayers::removeLayer(Layer* layer) {
-	int index = getIndex(layer);
-	if (index >= 0) {
-		removeLayer(index);
-	}
-	else {
-		spdlog::warn("[Group of Layers] asked to remove a layer that wasn't there : {}", layer->getName());
-	}
+void GroupOfLayers::removeLayerByRegisterID(LayerID layerID) {
+	size_t index = getIndex(layerID);
+	//if (index >= 0) {
+	removeLayerByIndexInGroup(index);
+	//}
+	//else {
+	//	spdlog::warn("[Group of Layers] asked to remove a layer that wasn't there : {}", layer->getName());
+	//}
 }
 
-void GroupOfLayers::removeLayer(int layerIndex) {
-	m_layers.erase(m_layers.begin() + layerIndex);
+void GroupOfLayers::removeLayerByIndexInGroup(size_t layerIndex) {
+	m_layerIDs.erase(m_layerIDs.begin() + layerIndex);
 }
 
 void GroupOfLayers::removeAllLayers() {
-	m_layers.resize(0);
+	m_layerIDs.resize(0);
 }
 
-bool GroupOfLayers::contains(Layer* layer) {
-	return std::find(m_layers.begin(), m_layers.end(), layer) != m_layers.end();
+bool GroupOfLayers::contains(LayerID layerID) {
+	return std::find(m_layerIDs.begin(), m_layerIDs.end(), layerID) != m_layerIDs.end();
 }
 
 void GroupOfLayers::showFrames() {
-	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->showFrame();
+	for (LayerID layerID : m_layerIDs) {
+		DrawingBoard::LayerRegistry()[layerID]->showFrame();
 	}
 }
 
 bool GroupOfLayers::isBusy() {
 	bool busy = m_transform.isBusy();
-	for (int k = 0; k < m_layers.size(); ++k) {
-		busy |= m_layers[k]->m_transform.isBusy();
+	for (LayerID layerID : m_layerIDs) {
+		busy |= DrawingBoard::LayerRegistry()[layerID]->m_transform.isBusy();
 	}
 	return busy;
 }
 
 void GroupOfLayers::showAltOrigin() {
-	if (m_layers.size() == 1) {
-		m_layers[0]->m_transform.showAltOrigin();
+	if (m_layerIDs.size() == 1) {
+		DrawingBoard::LayerRegistry()[m_layerIDs[0]]->m_transform.showAltOrigin();
 	}
-	else if (m_layers.size() > 1) {
+	else if (m_layerIDs.size() > 1) {
 		m_transform.showAltOrigin();
 	}
 	else {
@@ -114,10 +106,10 @@ void GroupOfLayers::showAltOrigin() {
 }
 
 glm::vec2 GroupOfLayers::getAltOriginInTransformSpace() {
-	if (m_layers.size() == 1) {
-		return m_layers[0]->m_transform.getAltOriginInTransformSpace();
+	if (m_layerIDs.size() == 1) {
+		return DrawingBoard::LayerRegistry()[m_layerIDs[0]]->m_transform.getAltOriginInTransformSpace();
 	}
-	else if (m_layers.size() > 1) {
+	else if (m_layerIDs.size() > 1) {
 		return m_transform.getAltOriginInTransformSpace();
 	}
 	else {
@@ -127,10 +119,10 @@ glm::vec2 GroupOfLayers::getAltOriginInTransformSpace() {
 }
 
 glm::vec2 GroupOfLayers::getAltOriginInWindowSpace() {
-	if (m_layers.size() == 1) {
-		return m_layers[0]->m_transform.getAltOriginInWindowSpace();
+	if (m_layerIDs.size() == 1) {
+		return DrawingBoard::LayerRegistry()[m_layerIDs[0]]->m_transform.getAltOriginInWindowSpace();
 	}
-	else if (m_layers.size() > 1) {
+	else if (m_layerIDs.size() > 1) {
 		return m_transform.getAltOriginInWindowSpace();
 	}
 	else {
@@ -140,10 +132,10 @@ glm::vec2 GroupOfLayers::getAltOriginInWindowSpace() {
 }
 
 void GroupOfLayers::startDraggingAltOrigin() {
-	if (m_layers.size() == 1) {
-		m_layers[0]->m_transform.startDraggingAltOrigin();
+	if (m_layerIDs.size() == 1) {
+		DrawingBoard::LayerRegistry()[m_layerIDs[0]]->m_transform.startDraggingAltOrigin();
 	}
-	else if (m_layers.size() > 1) {
+	else if (m_layerIDs.size() > 1) {
 		m_transform.startDraggingAltOrigin();
 	}
 	else {
@@ -152,16 +144,16 @@ void GroupOfLayers::startDraggingAltOrigin() {
 }
 
 void GroupOfLayers::resetAltOrigin() {
-	if (m_layers.size() == 1) {
-		m_layers[0]->m_transform.setAltOrigin(glm::vec2(0.0f), true);
+	if (m_layerIDs.size() == 1) {
+		DrawingBoard::LayerRegistry()[m_layerIDs[0]]->m_transform.setAltOrigin(glm::vec2(0.0f), true);
 	}
-	else if (m_layers.size() > 1) {
+	else if (m_layerIDs.size() > 1) {
 		m_transform.setAltOrigin(glm::vec2(0.0f), true);
 		//Set in the middle of all layers
 		glm::vec2 newOriginInDBspace = glm::vec2(0.0f);
-		for (Layer* layer : m_layers)
-			newOriginInDBspace = glm::vec4(newOriginInDBspace,0.0f, 0.0f) + layer->m_transform.getMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-		newOriginInDBspace /= m_layers.size();
+		for (LayerID layerID : m_layerIDs)
+			newOriginInDBspace = glm::vec4(newOriginInDBspace, 0.0f, 0.0f) + DrawingBoard::LayerRegistry()[layerID]->m_transform.getMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+		newOriginInDBspace /= m_layerIDs.size();
 		m_transform.setAltOrigin(glm::vec4(newOriginInDBspace, 0.0f, 1.0f), true); //no need to convert back to transform space bc m_transform.getMatrix() == identity
 	}
 	else {
@@ -171,19 +163,19 @@ void GroupOfLayers::resetAltOrigin() {
 
 void GroupOfLayers::startDraggingTranslation() {
 	m_transform.startDraggingTranslation();
-	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.startDraggingTranslation();
+	for (LayerID layerID : m_layerIDs) {
+		DrawingBoard::LayerRegistry()[layerID]->m_transform.startDraggingTranslation();
 	}
 }
 
 void GroupOfLayers::startDraggingRotation() {
-	if (m_layers.size() == 1) {
-		m_layers[0]->m_transform.startDraggingRotation();
+	if (m_layerIDs.size() == 1) {
+		DrawingBoard::LayerRegistry()[m_layerIDs[0]]->m_transform.startDraggingRotation();
 	}
-	else if (m_layers.size() > 1) {
+	else if (m_layerIDs.size() > 1) {
 		m_transform.startDraggingRotation();
-		for (int k = 0; k < m_layers.size(); ++k) {
-			m_layers[k]->m_transform.startDraggingRotation(m_transform.getAltOriginInDrawingBoardSpace());
+		for (LayerID layerID : m_layerIDs) {
+			DrawingBoard::LayerRegistry()[layerID]->m_transform.startDraggingRotation(m_transform.getAltOriginInDrawingBoardSpace());
 		}
 	}
 	else {
@@ -191,44 +183,45 @@ void GroupOfLayers::startDraggingRotation() {
 	}
 }
 
-void GroupOfLayers::startDraggingScale(Layer* leadLayer, glm::vec2 originInDBspace, glm::vec2 uAxis, glm::vec2 vAxis, bool unlockU, bool unlockV) {
-	m_transform.startDraggingScale(&(leadLayer->m_transform), originInDBspace, unlockU, unlockV);
-	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.startDraggingScale(m_transform.getAspectRatioDraggingInfos(), originInDBspace, m_layers[k] != leadLayer);
+void GroupOfLayers::startDraggingScale(LayerID leadLayerID, glm::vec2 originInDBspace, glm::vec2 uAxis, glm::vec2 vAxis, bool unlockU, bool unlockV) {
+	m_transform.startDraggingScale(&(DrawingBoard::LayerRegistry()[leadLayerID]->m_transform), originInDBspace, unlockU, unlockV);
+	for (LayerID layerID : m_layerIDs) {
+		DrawingBoard::LayerRegistry()[layerID]->m_transform.startDraggingScale(m_transform.getAspectRatioDraggingInfos(), originInDBspace, layerID != leadLayerID);
 	}
 }
 
 void GroupOfLayers::checkDragging() {
 	m_transform.checkDragging();
-	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.checkDragging();
+	for (LayerID layerID : m_layerIDs) {
+		DrawingBoard::LayerRegistry()[layerID]->m_transform.checkDragging();
 	}
 }
 
 void GroupOfLayers::endDragging() {
 		m_transform.endDragging();
-		for (int k = 0; k < m_layers.size(); ++k) {
-			m_layers[k]->m_transform.endDragging();
+		for (LayerID layerID : m_layerIDs) {
+			DrawingBoard::LayerRegistry()[layerID]->m_transform.endDragging();
 		}
 }
 
 void GroupOfLayers::pushStateInHistoryAtTheEndOfDragging() {
 	DrawingBoard::history.beginUndoGroup();
 		m_transform.pushStateInHistoryAtTheEndOfDragging();
-		for (int k = 0; k < m_layers.size(); ++k) {
-			m_layers[k]->m_transform.pushStateInHistoryAtTheEndOfDragging();
+		for (LayerID layerID : m_layerIDs) {
+			DrawingBoard::LayerRegistry()[layerID]->m_transform.pushStateInHistoryAtTheEndOfDragging();
 		}
 	DrawingBoard::history.endUndoGroup();
 }
 
 void GroupOfLayers::changeDraggingCenterToAltOrigin() {
-	if (m_layers.size() == 1) {
-		m_layers[0]->m_transform.changeDraggingCenterToAltOrigin();
+	if (m_layerIDs.size() == 1) {
+		DrawingBoard::LayerRegistry()[m_layerIDs[0]]->m_transform.changeDraggingCenterToAltOrigin();
 	}
-	else if (m_layers.size() > 1) {
+	else if (m_layerIDs.size() > 1) {
 		m_transform.changeDraggingCenterToAltOrigin();
-		for (int k = 0; k < m_layers.size(); ++k) {
-			m_layers[k]->m_transform.changeDraggingCenter(m_layers[k]->m_transform.getInverseMatrix() * glm::vec4(m_transform.getAltOriginInDrawingBoardSpace(), 0.0f, 1.0f));
+		for (LayerID layerID : m_layerIDs) {
+			Layer* layer = DrawingBoard::LayerRegistry()[layerID];
+			layer->m_transform.changeDraggingCenter(layer->m_transform.getInverseMatrix() * glm::vec4(m_transform.getAltOriginInDrawingBoardSpace(), 0.0f, 1.0f));
 		}
 	}
 	else {
@@ -238,21 +231,21 @@ void GroupOfLayers::changeDraggingCenterToAltOrigin() {
 
 void GroupOfLayers::revertDraggingCenterToInitialOrigin() {
 	m_transform.revertDraggingCenterToInitialOrigin();
-	for (int k = 0; k < m_layers.size(); ++k) {
-		m_layers[k]->m_transform.revertDraggingCenterToInitialOrigin();
+	for (LayerID layerID : m_layerIDs) {
+		DrawingBoard::LayerRegistry()[layerID]->m_transform.revertDraggingCenterToInitialOrigin();
 	}
 }
 
 void GroupOfLayers::scale(float scaleFactor, bool bPushChangeInHistory) {
 	if (bPushChangeInHistory)
 		DrawingBoard::history.beginUndoGroup();
-	if (m_layers.size() == 1) {
-		m_layers[0]->m_transform.scale(scaleFactor, m_layers[0]->m_transform.getAltOriginInDrawingBoardSpace(), bPushChangeInHistory);
+	if (m_layerIDs.size() == 1) {
+		DrawingBoard::LayerRegistry()[m_layerIDs[0]]->m_transform.scale(scaleFactor, DrawingBoard::LayerRegistry()[m_layerIDs[0]]->m_transform.getAltOriginInDrawingBoardSpace(), bPushChangeInHistory);
 	}
-	else if (m_layers.size() > 1) {
+	else if (m_layerIDs.size() > 1) {
 		m_transform.scale(scaleFactor, m_transform.getAltOriginInDrawingBoardSpace(), bPushChangeInHistory);
-		for (int k = 0; k < m_layers.size(); ++k) {
-			m_layers[k]->m_transform.scale(scaleFactor, glm::vec4(m_transform.getAltOriginInDrawingBoardSpace(), 0.0f, 1.0f), bPushChangeInHistory);
+		for (LayerID layerID : m_layerIDs) {
+			DrawingBoard::LayerRegistry()[layerID]->m_transform.scale(scaleFactor, glm::vec4(m_transform.getAltOriginInDrawingBoardSpace(), 0.0f, 1.0f), bPushChangeInHistory);
 		}
 	}
 	else {
@@ -262,10 +255,11 @@ void GroupOfLayers::scale(float scaleFactor, bool bPushChangeInHistory) {
 		DrawingBoard::history.endUndoGroup();
 }
 
-int GroupOfLayers::getIndex(Layer* layer) {
-	for (int k = 0; k < m_layers.size(); ++k) {
-		if (m_layers[k] == layer)
+size_t GroupOfLayers::getIndex(LayerID layerID) {
+	for (size_t k = 0; k < m_layerIDs.size(); ++k) {
+		if (m_layerIDs[k] == layerID)
 			return k;
 	}
+	spdlog::error("[GroupOfLayers::getIndex] layer {} not found in the group", layerID);
 	return -1;
 }

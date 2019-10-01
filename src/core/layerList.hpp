@@ -10,6 +10,8 @@
 
 #include "UI/keys.hpp"
 
+#include "layerID.hpp"
+
 class LayerList {
 public:
 	LayerList();
@@ -21,11 +23,8 @@ public:
 	void showForSaving();
 	void showSelectedLayerGUI();
 
-	void createLoadedImageLayer(const std::string& imgFilePath);
-	void createCopyLayer(Layer* childLayer);
-	void createShaderLayer(unsigned int previewWidth, unsigned int previewHeight, const std::string& fragmentShaderFilepath);
-	Layer* getLayer(int index);
-	void setSelectedLayer(Layer* layer);
+	//Layer* getLayer(int index);
+	void setSelectedLayer(LayerID layerID);
 
 	void onKeyDown(Key key);
 	void onKeyUp(Key key);
@@ -51,6 +50,6 @@ private:
 	void computeHoveredLayerAndMouseRelPos();
 public:
 	//Layer* m_activLayer;
-	Layer* m_hoveredLayer;
+	LayerID m_hoveredLayer;
 	MousePositionRelativeToRect m_mousePosRelToHoveredLayer;
 };
