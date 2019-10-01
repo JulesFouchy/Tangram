@@ -9,5 +9,4 @@ public:
 	void showForSaving(RectTransform& transform) override;
 private:
 	std::string m_filePath;
-	unsigned char* m_pixels;
 };

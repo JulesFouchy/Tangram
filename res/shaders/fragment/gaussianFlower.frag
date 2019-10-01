@@ -3,7 +3,7 @@
 layout(location = 0) out vec4 fragColor;
 
 uniform float u_pow; // default 2 min -0.15 max 4
-uniform float u_scale; // default 3 min 0 max 10
+uniform float u_scale; // default 2.44 min 0 max 10
 uniform vec3 u_Color; // default 1.0 1.0 1.0
 
 in vec2 v_texCoord;

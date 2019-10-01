@@ -26,17 +26,14 @@ public:
 	void show(glm::mat4x4 transform, glm::mat4x4 projection);
 	void show(glm::mat4x4 transform);
 	void bind();
-	void save(const std::string& filePath);
 
 	inline float getAspectRatio() { return m_aspectRatio; }
 	inline int getWidth() { return m_width; }
 	inline int getHeight() { return m_height; }
 	inline int getBPP() { return m_BPP; }
-	inline unsigned char* getPixels() { return m_pixels; }
 	inline unsigned int getID() { return m_textureID; }
 
 private:
-	unsigned char* m_pixels;
 	int m_width;
 	int m_height;
 	float m_aspectRatio;

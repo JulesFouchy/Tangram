@@ -13,18 +13,19 @@ LoadedImageLayer::LoadedImageLayer(const std::string& imgFilePath)
 	stbi_set_flip_vertically_on_load(1);
 	int width, height, BPP;
 	unsigned char* pixels = stbi_load(imgFilePath.c_str(), &width, &height, &BPP, Texture2D::bytesPerPixel(RGBA));
-	if (!pixels)
-		spdlog::warn("Couldn't open " + imgFilePath);
 	Log::separationLine();
 	// Initialize members
 	m_renderBuffer.getTexture().Initialize(width, height, BPP, pixels);
-	m_transform = RectTransform((float) width / height);	
+	m_transform = RectTransform((float) width / height);
+	// Free pixels CPU-side
+	if (pixels)
+		stbi_image_free(pixels);
+	else
+		spdlog::warn("Couldn't open " + imgFilePath);
 }
 
 LoadedImageLayer::~LoadedImageLayer() {
 	spdlog::info("[Loaded Image Layer Destructed] " + getName());
-	if (m_pixels)
-		stbi_image_free(m_pixels);
 }
 
 void LoadedImageLayer::showForSaving(RectTransform& transform) {
