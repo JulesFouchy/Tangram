@@ -15,6 +15,8 @@ public:
 	GroupOfLayers() = default;
 	~GroupOfLayers() = default;
 
+	void reload();
+
 	inline int size() { return m_layerIDs.size();	}
 	LayerID operator[](int k);
 

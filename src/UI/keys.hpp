@@ -6,7 +6,8 @@ enum SpecialKey {
 	ALT,
 	CTRL,
 	SHIFT,
-	SPACE
+	SPACE,
+	F5
 };
 
 typedef std::variant<SpecialKey, char> Key;

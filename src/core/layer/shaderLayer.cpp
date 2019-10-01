@@ -20,8 +20,10 @@ ShaderLayer::ShaderLayer(int previewWidth, int previewHeight, const std::string&
 	drawShaderOnPreviewTexture();
 }
 
-ShaderLayer::~ShaderLayer() {
-
+void ShaderLayer::reload() {
+	m_shader.compile();
+	parseShader(m_shader.getFragmentFilepath());
+	drawShaderOnPreviewTexture();
 }
 
 void ShaderLayer::showGUI() {
@@ -58,8 +60,9 @@ void ShaderLayer::drawShaderOnPreviewTexture() {
 void ShaderLayer::parseShader(const std::string& filepath) {
 	std::ifstream file(filepath);
 	if (file.is_open()) {
-		std::string line;
+		m_uniforms.clear();
 
+		std::string line;
 		while (std::getline(file, line)) {
 			spdlog::info("NEW LINE");
 			// Parse uniform

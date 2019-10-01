@@ -26,6 +26,8 @@ void Shader::bind() {
 
 void Shader::compile() {
 	spdlog::info("[Compiling Shader] " + m_vertexShaderFilepath + " & " + m_fragmentShaderFilepath);
+	if (m_shaderId != -1)
+		glDeleteProgram(m_shaderId);
 	m_shaderId = glCreateProgram();
 	unsigned int vs = compileShader(GL_VERTEX_SHADER, parseFile(m_vertexShaderFilepath));
 	unsigned int fs = compileShader(GL_FRAGMENT_SHADER, parseFile(m_fragmentShaderFilepath));

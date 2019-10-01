@@ -278,6 +278,9 @@ int main(int argc, char* argv[])
 					else if (e.key.keysym.scancode == SDL_SCANCODE_RIGHT) {
 						;
 					}
+					else if (e.key.keysym.scancode == SDL_SCANCODE_F5) {
+						Input::onKeyDown(F5);
+					}
 				}
 				break;
 

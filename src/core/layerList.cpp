@@ -129,6 +129,9 @@ void LayerList::onKeyDown(Key key) {
 			break;
 		case SPACE:
 			break;
+		case F5:
+			selectedLayers.reload();
+			break;
 		default:
 			break;
 		}

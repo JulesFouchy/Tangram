@@ -6,6 +6,11 @@
 
 #include <algorithm>
 
+void GroupOfLayers::reload() {
+	for (LayerID layerID : m_layerIDs)
+		DrawingBoard::LayerRegistry()[layerID]->reload();
+}
+
 LayerID GroupOfLayers::operator[](int k) {
 	return m_layerIDs[k];
 }

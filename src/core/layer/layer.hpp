@@ -25,6 +25,7 @@ public:
 	inline const std::string& getName() { return m_name; }
 
 	virtual inline bool createdSuccessfully() { return true; };
+	virtual inline void reload() {}; // nothing for some layerTypes
 
 	inline bool isVisible() { return m_bVisible; }
 	inline bool isMovable() { return m_bMovable; }

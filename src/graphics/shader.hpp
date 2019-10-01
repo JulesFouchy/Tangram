@@ -16,6 +16,7 @@ public:
 	inline bool createdSuccessfully() { return m_bCreatedSuccessfully; }
 
 	inline unsigned int getID() const { return m_shaderId; }
+	inline const std::string& getFragmentFilepath() const { return m_fragmentShaderFilepath; }
 
 	//Uniforms
 private:

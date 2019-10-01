@@ -11,11 +11,12 @@
 class ShaderLayer : public Layer {
 public:
 	ShaderLayer(int previewWidth, int previewHeight, const std::string& fragmentFilePath);
-	~ShaderLayer();
+	~ShaderLayer() = default;
 
 	void showGUI() override;
 
 	inline bool createdSuccessfully() override { return m_shader.createdSuccessfully(); }
+	void reload() override;
 
 	void showForSaving(RectTransform& transform) override;
 private:
