@@ -41,7 +41,9 @@ void GUI_LayerList::show() {
 		// miniature
 		ImGui::Image((ImTextureID)layer->getTexture().getID(), ImVec2(50 * layer->getTexture().getAspectRatio(), 50), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
 		// visibiliy checkbox
-		ImGui::Checkbox("visible", layer->getIsVisiblePointer());
+		ImGui::Checkbox("Visible", layer->getIsVisiblePointer());
+		// movability checkbox
+		ImGui::Checkbox("Movable", layer->getIsMovablePointer());
 		// reset transform
 		if (ImGui::Button("Reset Transform")) {
 			DrawingBoard::history.beginUndoGroup();

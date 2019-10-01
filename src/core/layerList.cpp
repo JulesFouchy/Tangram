@@ -71,7 +71,7 @@ void LayerList::computeHoveredLayerAndMouseRelPos() {
 	m_hoveredLayer = 0;
 	for (int k = layers.size()-1; k >= 0; --k) {
 		Layer* layer = DrawingBoard::LayerRegistry()[layers[k]];
-		if (layer->isVisible()) {
+		if (layer->isVisible() && layer->isMovable()) {
 			// get mouse position
 			glm::vec2 mousePosInNTS = layer->m_transform.getMousePositionInNormalizedTransformSpace();
 			m_mousePosRelToHoveredLayer = layer->m_transform.getRelativePositionFromPositionInNormalizedTransformSpace(mousePosInNTS);
@@ -84,7 +84,7 @@ void LayerList::computeHoveredLayerAndMouseRelPos() {
 				layerFrameBuffer.bind();
 				glReadPixels(int(mousePosInNTS.x * layerFrameBuffer.getTexture().getWidth()), int(mousePosInNTS.y * layerFrameBuffer.getTexture().getHeight()), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixelColor);
 				layerFrameBuffer.unbind();
-				spdlog::info("Alpha : {}", pixelColor[3]);
+				//spdlog::info("Alpha : {}", pixelColor[3]);
 				//
 				if (pixelColor[3] > Settings::MIN_ALPHA_TO_GRAB_LAYER) {
 					m_hoveredLayer = layers[k];

@@ -27,14 +27,18 @@ public:
 	virtual inline bool createdSuccessfully() { return true; };
 
 	inline bool isVisible() { return m_bVisible; }
+	inline bool isMovable() { return m_bMovable; }
 	inline void setVisibility(bool visible) { m_bVisible = visible; }
+	inline void setMovability(bool movable) { m_bMovable = movable; }
 	inline bool* getIsVisiblePointer() { return &m_bVisible; } //For ImGui
+	inline bool* getIsMovablePointer() { return &m_bMovable; } //For ImGui
 
 	virtual inline Texture2D& getTexture() { return m_renderBuffer.getTexture(); }
 	virtual inline FrameBuffer& getFrameBuffer() { return m_renderBuffer; }
 
 private:
 	bool m_bVisible;
+	bool m_bMovable;
 protected:
 	std::string m_name;
 protected:
