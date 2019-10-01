@@ -22,14 +22,14 @@ void GUI_LayerList::show() {
 		Layer* layer = DrawingBoard::LayerRegistry()[layerID];
 		//
 		if (layerList.selectedLayers.contains(layerID))
-			ImGui::BeginChild(layer->getName().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth() * 0.95f, 150), true, ImGuiWindowFlags_NoMove);
+			ImGuiBeginLayerChildWindow(layerID, 150);
 		else {
 			// miniature
 			ImGuiShowTexture(layer, 30);
 			ImGui::SameLine();
-			ImGui::BeginChild(layer->getName().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth() * 0.95f, 25), true, ImGuiWindowFlags_NoMove);
+			ImGuiBeginLayerChildWindow(layerID, 25);
 		}
-		ImGui::PushID((int)layer);
+		ImGui::PushID(layerID);
 		dragDropSourceReorderLayer(layerID);
 		// onClic : add/remove layer from selection
 		bool bClicToSelect = ImGui::Selectable(layer->getName().c_str(), layerList.selectedLayers.contains(layerID));
@@ -95,4 +95,10 @@ void GUI_LayerList::dragDropTargetReorderLayer(int layerIndex) {
 
 void GUI_LayerList::ImGuiShowTexture(Layer* layer, unsigned int previewHeight) {
 	ImGui::Image((ImTextureID)layer->getTexture().getID(), ImVec2(previewHeight * layer->getTexture().getAspectRatio(), previewHeight), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
+}
+
+
+void GUI_LayerList::ImGuiBeginLayerChildWindow(LayerID layerID, unsigned int height) {
+	Layer* layer = DrawingBoard::LayerRegistry()[layerID];
+	ImGui::BeginChild((layer->getName() + std::to_string(layerID)).c_str(), ImVec2(ImGui::GetWindowContentRegionWidth() * 0.95f, height), true, ImGuiWindowFlags_NoMove);
 }
