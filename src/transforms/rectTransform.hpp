@@ -50,7 +50,7 @@ private:
 	void scaleV(float scaleFactor, glm::vec2 originInTransformSpace, bool bPushChangeInHistory = false);
 public:
 	glm::vec2 getMousePositionInNormalizedTransformSpace();
-	MousePositionRelativeToRect getMouseRelativePosition();
+	MousePositionRelativeToRect getRelativePositionFromPositionInNormalizedTransformSpace(glm::vec2 posInNTS);
 private:
 	Ratio m_aspectRatio;
 	Ratio m_initialAspectRatio;

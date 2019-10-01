@@ -180,29 +180,28 @@ glm::vec2 RectTransform::getMousePositionInNormalizedTransformSpace() {
 	return glm::inverse(DrawingBoard::transform.getMatrix() * glm::scale(getMatrix(), glm::vec3(getAspectRatio(), 1.0f, 1.0f))) * glm::vec4(Input::getMousePosition(), 0.0f, 1.0f);
 }
 
-MousePositionRelativeToRect RectTransform::getMouseRelativePosition() {
-	glm::vec2 dl = getMousePositionInNormalizedTransformSpace();
+MousePositionRelativeToRect RectTransform::getRelativePositionFromPositionInNormalizedTransformSpace(glm::vec2 posInNTS) {
 	float margin = 0.025f;
 	int xPos, yPos;
 	//------Check y------
-	if (dl.y < -0.5f - margin)
+	if (posInNTS.y < -0.5f - margin)
 		return OUTSIDE;
-	else if (dl.y < -0.5f + margin)
+	else if (posInNTS.y < -0.5f + margin)
 		yPos = 0; //a.k.a BOT
-	else if (dl.y < 0.5f - margin)
+	else if (posInNTS.y < 0.5f - margin)
 		yPos = 1; //a.k.a. INSIDE
-	else if (dl.y < 0.5f + margin)
+	else if (posInNTS.y < 0.5f + margin)
 		yPos = 2; //a.k.a. TOP
 	else
 		return OUTSIDE;
 	//------Check x------
-	if (dl.x < -0.5f - margin)
+	if (posInNTS.x < -0.5f - margin)
 		return OUTSIDE;
-	else if (dl.x < -0.5f + margin)
+	else if (posInNTS.x < -0.5f + margin)
 		xPos = 0; //a.k.a LEFT
-	else if (dl.x < 0.5f - margin)
+	else if (posInNTS.x < 0.5f - margin)
 		xPos = 1; //a.k.a. INSIDE
-	else if (dl.x < 0.5f + margin)
+	else if (posInNTS.x < 0.5f + margin)
 		xPos = 2; //a.k.a. RIGHT
 	else
 		return OUTSIDE;

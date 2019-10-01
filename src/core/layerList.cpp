@@ -72,24 +72,26 @@ void LayerList::computeHoveredLayerAndMouseRelPos() {
 	for (int k = layers.size()-1; k >= 0; --k) {
 		Layer* layer = DrawingBoard::LayerRegistry()[layers[k]];
 		if (layer->isVisible()) {
-			m_mousePosRelToHoveredLayer = layer->m_transform.getMouseRelativePosition();
+			// get mouse position
+			glm::vec2 mousePosInNTS = layer->m_transform.getMousePositionInNormalizedTransformSpace();
+			m_mousePosRelToHoveredLayer = layer->m_transform.getRelativePositionFromPositionInNormalizedTransformSpace(mousePosInNTS);
+			// check if hovered part of the layer is not fully transparent
 			if (m_mousePosRelToHoveredLayer == INSIDE) {
-				glm::vec2 mousePosInNTS = layer->m_transform.getMousePositionInNormalizedTransformSpace();
-				mousePosInNTS += glm::vec2(0.5f);
-				FrameBuffer& layerFrameBuffer = layer->getFrameBuffer();
+				mousePosInNTS += glm::vec2(0.5f); // 0to1, 0to1
+				// get pixel color under mouse
 				unsigned char pixelColor[4];
-				int X = int(mousePosInNTS.x * layerFrameBuffer.getTexture().getWidth());
-				int Y = int(mousePosInNTS.y * layerFrameBuffer.getTexture().getHeight());
-				//spdlog::info("{} {}", X, Y);
+				FrameBuffer& layerFrameBuffer = layer->getFrameBuffer();
 				layerFrameBuffer.bind();
-				glReadPixels(X, Y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixelColor);
+				glReadPixels(int(mousePosInNTS.x * layerFrameBuffer.getTexture().getWidth()), int(mousePosInNTS.y * layerFrameBuffer.getTexture().getHeight()), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixelColor);
 				layerFrameBuffer.unbind();
-				spdlog::info("{}", (int)pixelColor[3]);
-				if (pixelColor[3] > 10) {
+				spdlog::info("Alpha : {}", pixelColor[3]);
+				//
+				if (pixelColor[3] > Settings::MIN_ALPHA_TO_GRAB_LAYER) {
 					m_hoveredLayer = layers[k];
 					break;
 				}
 			}
+			// check if we're on a border
 			else if (m_mousePosRelToHoveredLayer != OUTSIDE) {
 				m_hoveredLayer = layers[k];
 				break;
