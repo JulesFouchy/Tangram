@@ -176,8 +176,12 @@ void RectTransform::scaleV(float scaleFactor, glm::vec2 originInTransformSpace, 
 	translate(getMatrix() * glm::vec4(0.0f, originInTransformSpace.y, 0.0f, 0.0f) * (1.0f / scaleFactor - 1.0f), bPushChangeInHistory);
 }
 
+glm::vec2 RectTransform::getMousePositionInNormalizedTransformSpace() {
+	return glm::inverse(DrawingBoard::transform.getMatrix() * glm::scale(getMatrix(), glm::vec3(getAspectRatio(), 1.0f, 1.0f))) * glm::vec4(Input::getMousePosition(), 0.0f, 1.0f);
+}
+
 MousePositionRelativeToRect RectTransform::getMouseRelativePosition() {
-	glm::vec4 dl = glm::inverse(DrawingBoard::transform.getMatrix() * glm::scale(getMatrix(), glm::vec3(getAspectRatio(), 1.0f, 1.0f))) * glm::vec4(Input::getMousePosition(), 0.0f, 1.0f);
+	glm::vec2 dl = getMousePositionInNormalizedTransformSpace();
 	float margin = 0.025f;
 	int xPos, yPos;
 	//------Check y------

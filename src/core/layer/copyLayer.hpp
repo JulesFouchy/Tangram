@@ -13,6 +13,7 @@ public:
 	void showForSaving(RectTransform& transform) override;
 
 	inline Texture2D& getTexture() override { return DrawingBoard::LayerRegistry()[m_childLayerID]->getTexture(); }
+	inline FrameBuffer& getFrameBuffer() override { return DrawingBoard::LayerRegistry()[m_childLayerID]->getFrameBuffer(); }
 private:
 	LayerID m_childLayerID;
 };

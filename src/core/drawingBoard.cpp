@@ -112,6 +112,7 @@ void DrawingBoard::save(unsigned int height, const std::string& filePath) {
 		else {
 			spdlog::error("Unknown file extension : |{}|", fileExtension);
 		}
+		delete[] data;
 		//
 		saveBuffer.unbind();
 		//

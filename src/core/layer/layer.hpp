@@ -31,6 +31,7 @@ public:
 	inline bool* getIsVisiblePointer() { return &m_bVisible; } //For ImGui
 
 	virtual inline Texture2D& getTexture() { return m_renderBuffer.getTexture(); }
+	virtual inline FrameBuffer& getFrameBuffer() { return m_renderBuffer; }
 
 private:
 	bool m_bVisible;

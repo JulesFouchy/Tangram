@@ -70,9 +70,27 @@ void LayerList::setSelectedLayer(LayerID layerID) {
 void LayerList::computeHoveredLayerAndMouseRelPos() {
 	m_hoveredLayer = 0;
 	for (int k = layers.size()-1; k >= 0; --k) {
-		if (DrawingBoard::LayerRegistry()[layers[k]]->isVisible()) {
-			m_mousePosRelToHoveredLayer = DrawingBoard::LayerRegistry()[layers[k]]->m_transform.getMouseRelativePosition();
-			if (m_mousePosRelToHoveredLayer != OUTSIDE) {
+		Layer* layer = DrawingBoard::LayerRegistry()[layers[k]];
+		if (layer->isVisible()) {
+			m_mousePosRelToHoveredLayer = layer->m_transform.getMouseRelativePosition();
+			if (m_mousePosRelToHoveredLayer == INSIDE) {
+				glm::vec2 mousePosInNTS = layer->m_transform.getMousePositionInNormalizedTransformSpace();
+				mousePosInNTS += glm::vec2(0.5f);
+				FrameBuffer& layerFrameBuffer = layer->getFrameBuffer();
+				unsigned char pixelColor[4];
+				int X = int(mousePosInNTS.x * layerFrameBuffer.getTexture().getWidth());
+				int Y = int(mousePosInNTS.y * layerFrameBuffer.getTexture().getHeight());
+				//spdlog::info("{} {}", X, Y);
+				layerFrameBuffer.bind();
+				glReadPixels(X, Y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixelColor);
+				layerFrameBuffer.unbind();
+				spdlog::info("{}", (int)pixelColor[3]);
+				if (pixelColor[3] > 10) {
+					m_hoveredLayer = layers[k];
+					break;
+				}
+			}
+			else if (m_mousePosRelToHoveredLayer != OUTSIDE) {
 				m_hoveredLayer = layers[k];
 				break;
 			}
