@@ -25,8 +25,8 @@ void RegistryOfAllLayersPresentAndGone::createLoadedImageLayer(const std::string
 	addLayer(layer, registryID);
 }
 
-void RegistryOfAllLayersPresentAndGone::createCopyLayer(Layer* childLayer, LayerID registryID) {
-	Layer* layer = new CopyLayer(childLayer);
+void RegistryOfAllLayersPresentAndGone::createCopyLayer(LayerID childLayerID, LayerID registryID) {
+	Layer* layer = new CopyLayer(childLayerID);
 	addLayer(layer, registryID);
 }
 

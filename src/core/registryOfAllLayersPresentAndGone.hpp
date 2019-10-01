@@ -14,7 +14,7 @@ public:
 	inline LayerList& AliveLayers() { return m_aliveLayers; }
 	// Layer creation
 	void createLoadedImageLayer(const std::string& imgFilePath, LayerID registryID = 0);
-	void createCopyLayer(Layer* childLayer, LayerID registryID = 0);
+	void createCopyLayer(LayerID childLayerID, LayerID registryID = 0);
 	void createShaderLayer(unsigned int previewWidth, unsigned int previewHeight, const std::string& fragmentShaderFilepath, LayerID registryID = 0);
 
 private:

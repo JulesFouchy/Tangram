@@ -118,7 +118,7 @@ void LayerList::onKeyDown(Key key) {
 			switch (*c) {
 			case 'd':
 				for (int k = 0; k < selectedLayers.size(); ++k) {
-					DrawingBoard::LayerRegistry().createCopyLayer(DrawingBoard::LayerRegistry()[selectedLayers[k]]);
+					DrawingBoard::LayerRegistry().createCopyLayer(selectedLayers[k]);
 				}
 			default:
 				break;
