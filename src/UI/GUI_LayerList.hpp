@@ -9,4 +9,6 @@ public:
 	static void show();
 	static void dragDropSourceReorderLayer(LayerID layerID);
 	static void dragDropTargetReorderLayer(int layerIndex);
+private:
+	static void ImGuiShowTexture(Layer* layer, unsigned int previewHeight);
 };

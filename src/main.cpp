@@ -126,9 +126,9 @@ int main(int argc, char* argv[])
 
 	//DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test3.jpg");
 	//DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test2.png");
-	DrawingBoard::LayerRegistry().createShaderLayer(4*1000/3, 1000,"res/shaders/fragment/gradient.frag");
+	//DrawingBoard::LayerRegistry().createShaderLayer(4*1000/3, 1000,"res/shaders/fragment/gradient.frag");
 	DrawingBoard::LayerRegistry().createShaderLayer(1000, 1000, "res/shaders/fragment/gaussianFlower.frag");
-	DrawingBoard::LayerRegistry().createShaderLayer(4 * 1000 / 3, 1000, "res/shaders/fragment/shaderLayerTest.frag");
+	//DrawingBoard::LayerRegistry().createShaderLayer(4 * 1000 / 3, 1000, "res/shaders/fragment/shaderLayerTest.frag");
 
 	ImmediateDrawing::Initialize();
 	ImmediateDrawing::setViewProjMatrix(Display::getProjMat());

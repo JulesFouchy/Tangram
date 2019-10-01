@@ -122,6 +122,7 @@ void Transform::startDraggingRotation() {
 	startDraggingRotation(getAltOriginInDrawingBoardSpace());
 }
 void Transform::checkDragging() {
+	//spdlog::warn(bDraggingRotation);
 	if (bDraggingTranslation) {
 		glm::vec4 dl = DrawingBoard::transform.getInverseMatrix() * glm::vec4(Input::getMousePosition() - m_mousePosWhenDraggingStarted, 0.0f, 0.0f);
 		setTranslation(m_translationWhenDraggingStarted + glm::vec2(dl.x, dl.y));

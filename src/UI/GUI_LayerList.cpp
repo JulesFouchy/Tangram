@@ -21,13 +21,20 @@ void GUI_LayerList::show() {
 		LayerID layerID = layerList.layers[k];
 		Layer* layer = DrawingBoard::LayerRegistry()[layerID];
 		//
-		ImGui::BeginChild(layer->getName().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth() * 0.95f, 150), true, ImGuiWindowFlags_NoMove);
+		if (layerList.selectedLayers.contains(layerID))
+			ImGui::BeginChild(layer->getName().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth() * 0.95f, 150), true, ImGuiWindowFlags_NoMove);
+		else {
+			// miniature
+			ImGuiShowTexture(layer, 30);
+			ImGui::SameLine();
+			ImGui::BeginChild(layer->getName().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth() * 0.95f, 25), true, ImGuiWindowFlags_NoMove);
+		}
 		ImGui::PushID((int)layer);
 		dragDropSourceReorderLayer(layerID);
 		// onClic : add/remove layer from selection
-		bool b = ImGui::Selectable(layer->getName().c_str(), layerList.selectedLayers.contains(layerID));
+		bool bClicToSelect = ImGui::Selectable(layer->getName().c_str(), layerList.selectedLayers.contains(layerID));
 		dragDropSourceReorderLayer(layerID);
-		if (b) {
+		if (bClicToSelect) {
 			if (Input::keyIsDown(CTRL)) {
 				if (layerList.selectedLayers.contains(layerID))
 					layerList.selectedLayers.removeLayerByIndexInGroup(layerID);
@@ -38,17 +45,19 @@ void GUI_LayerList::show() {
 				layerList.setSelectedLayer(layerID);
 			}
 		}
-		// miniature
-		ImGui::Image((ImTextureID)layer->getTexture().getID(), ImVec2(50 * layer->getTexture().getAspectRatio(), 50), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
-		// visibiliy checkbox
-		ImGui::Checkbox("Visible", layer->getIsVisiblePointer());
-		// movability checkbox
-		ImGui::Checkbox("Movable", layer->getIsMovablePointer());
-		// reset transform
-		if (ImGui::Button("Reset Transform")) {
-			DrawingBoard::history.beginUndoGroup();
-			layer->m_transform.reset(true);
-			DrawingBoard::history.endUndoGroup();
+		if (layerList.selectedLayers.contains(layerID)) {
+			// miniature
+			ImGuiShowTexture(layer, 50);
+			// visibiliy checkbox
+			ImGui::Checkbox("Visible", layer->getIsVisiblePointer());
+			// movability checkbox
+			ImGui::Checkbox("Movable", layer->getIsMovablePointer());
+			// reset transform
+			if (ImGui::Button("Reset Transform")) {
+				DrawingBoard::history.beginUndoGroup();
+				layer->m_transform.reset(true);
+				DrawingBoard::history.endUndoGroup();
+			}
 		}
 		ImGui::PopID();
 		ImGui::EndChild();
@@ -82,4 +91,8 @@ void GUI_LayerList::dragDropTargetReorderLayer(int layerIndex) {
 		}
 		ImGui::EndDragDropTarget();
 	}
+}
+
+void GUI_LayerList::ImGuiShowTexture(Layer* layer, unsigned int previewHeight) {
+	ImGui::Image((ImTextureID)layer->getTexture().getID(), ImVec2(previewHeight * layer->getTexture().getAspectRatio(), previewHeight), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
 }
