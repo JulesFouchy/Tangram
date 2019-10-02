@@ -9,6 +9,8 @@
 
 #include "glm/glm.hpp"
 
+#include "UI/GUI_DraggablePoint.hpp"
+
 typedef std::variant<int, float, glm::vec2, glm::vec3, glm::vec4> UniformType;
 
 class Uniform {
@@ -22,7 +24,9 @@ public:
 	inline int getLocation() const { return m_location; }
 	const UniformType& getValue() const { return m_value; }
 	UniformType* getValuePointer() { return &m_value; }
-	bool ImGuiDragValue();
+	bool GuiDragValue();
+
+	void showDraggablePoints();
 	
 public:
 	// Helpers
@@ -34,4 +38,6 @@ private:
 	UniformType m_value;
 	UniformType m_minValue;
 	UniformType m_maxValue;
+
+	DraggablePoint m_pos2D_WS; // temporary ! only for vec2 uniforms
 };

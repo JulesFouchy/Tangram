@@ -14,6 +14,7 @@ public:
 	~ShaderLayer() = default;
 
 	void showGUI() override;
+	void showDraggablePoints() override;
 
 	inline bool createdSuccessfully() override { return m_shader.createdSuccessfully(); }
 	void reload() override;

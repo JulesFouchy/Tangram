@@ -21,6 +21,7 @@ public:
 	virtual void showForSaving(RectTransform& transform) = 0; // allows copy layer to draw it with its own transform
 	void showFrame();
 	virtual void showGUI();
+	virtual void showDraggablePoints();
 
 	inline const std::string& getName() { return m_name; }
 

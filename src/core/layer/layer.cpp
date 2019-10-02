@@ -41,3 +41,7 @@ void Layer::showFrame() {
 void Layer::showGUI() {
 	// nothing by default !
 }
+
+void Layer::showDraggablePoints() {
+	// nothing by default !
+}

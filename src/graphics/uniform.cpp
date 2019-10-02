@@ -37,7 +37,7 @@ void Uniform::set() {
 	}
 }
 
-bool Uniform::ImGuiDragValue() {
+bool Uniform::GuiDragValue() {
 	if (auto myInt = std::get_if<int>(getValuePointer())) {
 		return ImGui::DragInt(getName().c_str(), myInt);
 	}
@@ -45,6 +45,7 @@ bool Uniform::ImGuiDragValue() {
 		return ImGui::SliderFloat(getName().c_str(), myFloat, std::get<float>(m_minValue), std::get<float>(m_maxValue));
 	}
 	else if (auto myVec2 = std::get_if<glm::vec2>(getValuePointer())) {
+		//return TanGUI::DragPoint(m_pos2D_WS);
 		return ImGui::SliderFloat2(getName().c_str(), glm::value_ptr(*myVec2), std::get<glm::vec2>(m_minValue).x, std::get<glm::vec2>(m_maxValue).x);
 	}
 	else if (auto myVec3 = std::get_if<glm::vec3>(getValuePointer())) {
@@ -55,6 +56,13 @@ bool Uniform::ImGuiDragValue() {
 	}
 	else {
 		spdlog::error(" {} : unknown uniform type", getName());
+	}
+}
+
+void Uniform::showDraggablePoints() {
+	if (auto myVec2 = std::get_if<glm::vec2>(getValuePointer())) {
+		TanGUI::DragPoint(m_pos2D_WS);
+		//return ImGui::SliderFloat2(getName().c_str(), glm::value_ptr(*myVec2), std::get<glm::vec2>(m_minValue).x, std::get<glm::vec2>(m_maxValue).x);
 	}
 }
 
