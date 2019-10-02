@@ -30,10 +30,17 @@ void ShaderLayer::showGUI() {
 	ImGui::SetNextWindowSize(ImVec2(280, 280), ImGuiCond_FirstUseEver);
 	ImGui::Begin(("Uniforms of " + getName()).c_str());
 	for (Uniform& uniform : m_uniforms) {
-		if (uniform.ImGuiDragValue())
+		if (uniform.GuiDragValue())
 			drawShaderOnPreviewTexture();
 	}
 	ImGui::End();
+}
+
+void ShaderLayer::showDraggablePoints() {
+	for (Uniform& uniform : m_uniforms) {
+		uniform.showDraggablePoints();
+		drawShaderOnPreviewTexture();
+	}
 }
 
 void ShaderLayer::showForSaving(RectTransform& transform) {
@@ -49,12 +56,14 @@ void ShaderLayer::shaderBindAndSetFragmentUniforms() {
 }
 
 void ShaderLayer::drawShaderOnPreviewTexture() {
-	shaderBindAndSetFragmentUniforms();
-	m_shader.setUniformMat4f("u_mvp", glm::mat4x4(1.0f));
-	m_renderBuffer.bind();
-	m_renderBuffer.clear();
-	m_rectVAO.binddrawunbind();
-	m_renderBuffer.unbind();
+	glDisable(GL_BLEND);
+		shaderBindAndSetFragmentUniforms();
+		m_shader.setUniformMat4f("u_mvp", glm::mat4x4(1.0f));
+		m_renderBuffer.bind();
+		m_renderBuffer.clear();
+		m_rectVAO.binddrawunbind();
+		m_renderBuffer.unbind(); 
+	glEnable(GL_BLEND);
 }
 
 void ShaderLayer::parseShader(const std::string& filepath) {
