@@ -121,13 +121,13 @@ int main(int argc, char* argv[])
 	Log::Initialize();
 
 	Texture2D::ClassInitialization();
-	DrawingBoard::Initialize(Ratio(4,3));
+	DrawingBoard::Initialize(Ratio(16,9));
 	DrawingBoard::transform.setScale(0.9f);
 
 	//DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test3.jpg");
 	//DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test2.png");
 	//DrawingBoard::LayerRegistry().createShaderLayer(4*1000/3, 1000,"res/shaders/fragment/gradient.frag");
-	DrawingBoard::LayerRegistry().createShaderLayer(1000, 1000, "res/shaders/fragment/gaussianFlower.frag");
+	DrawingBoard::LayerRegistry().createShaderLayer(ceil(DrawingBoard::transform.getAspectRatio()*1000), 1000, "res/shaders/fragment/StarBackground.frag");
 	//DrawingBoard::LayerRegistry().createShaderLayer(4 * 1000 / 3, 1000, "res/shaders/fragment/shaderLayerTest.frag");
 
 	ImmediateDrawing::Initialize();
@@ -145,8 +145,8 @@ int main(int argc, char* argv[])
 
 		GUI_LayerList::show();
 		GUI::showMainMenuBar();
-		DrawingBoard::LayerRegistry().AliveLayers().showSelectedLayerGUI();
 		GUI_LayerCreation::Show();
+		DrawingBoard::LayerRegistry().AliveLayers().showSelectedLayerGUI();
 
 		// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 		if (show_demo_window)
@@ -201,6 +201,8 @@ int main(int argc, char* argv[])
 		//DrawingBoard::layers.getActivLayer()->m_transform.rotate(imRot, DrawingBoard::layers.getActivLayer()->m_transform.getAltOriginInDrawingBoardSpace());
 		DrawingBoard::update();
 		DrawingBoard::show();
+		//if(DrawingBoard::LayerRegistry().AliveLayers().selectedLayers.size()>0)
+		//	DrawingBoard::LayerRegistry()[DrawingBoard::LayerRegistry().AliveLayers().selectedLayers[0]]->showDraggablePoints();
 		DrawingBoard::LayerRegistry().AliveLayers().update();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		//

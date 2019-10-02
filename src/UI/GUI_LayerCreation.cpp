@@ -85,10 +85,10 @@ void GUI_LayerCreation::Window_DrawingBoardSaving() {
 void GUI_LayerCreation::updateWidthOrHeight() {
 	switch (m_lastModified) {
 	case Width:
-		m_height = m_width / m_aspectRatio;
+		m_height = ceil(m_width / m_aspectRatio);
 		break;
 	case Height:
-		m_width = m_height * m_aspectRatio;
+		m_width = ceil(m_height * m_aspectRatio);
 		break;
 	default:
 		break;
