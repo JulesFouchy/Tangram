@@ -69,7 +69,7 @@ void ShaderLayer::drawShaderOnPreviewTexture() {
 void ShaderLayer::parseShader(const std::string& filepath) {
 	std::ifstream file(filepath);
 	if (file.is_open()) {
-		m_uniforms.clear();
+		std::vector<Uniform> tmpUniforms;
 
 		std::string line;
 		while (std::getline(file, line)) {
@@ -98,7 +98,17 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 						std::string arg = String::getNextWord(line, &currentPos);
 						spdlog::info("|" + arg + "|");
 						if (arg == "default") {
-							initialValue = readValue_s_(type, line, &currentPos);
+							int index = -1;
+							for (int k = 0; k < m_uniforms.size(); ++k) {
+								if (m_uniforms[k].getName() == s_name) {
+									index = k;
+									break;
+								}
+							}
+							if (index != -1)
+								initialValue = m_uniforms[index].getValue();
+							else
+								initialValue = readValue_s_(type, line, &currentPos);
 						}
 						else if (arg == "min") {
 							minValue = readValue_s_(type, line, &currentPos);
@@ -109,10 +119,10 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 					}
 				}
 				// Add uniform
-				m_uniforms.push_back(Uniform(m_shader.getID(), s_name, initialValue, minValue, maxValue));
+				tmpUniforms.push_back(Uniform(m_shader.getID(), s_name, initialValue, minValue, maxValue));
 			}
 		}
-
+		m_uniforms = tmpUniforms;
 	}
 }
 
