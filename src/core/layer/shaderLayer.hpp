@@ -18,6 +18,7 @@ public:
 
 	inline bool createdSuccessfully() override { return m_shader.createdSuccessfully(); }
 	void reload() override;
+	void createACopy() override;
 
 	void showForSaving(RectTransform& transform) override;
 private:

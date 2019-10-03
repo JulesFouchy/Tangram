@@ -9,6 +9,8 @@ public:
 	CopyLayer(LayerID childLayerID);
 	~CopyLayer();
 
+	void createACopy() override;
+
 	void show(const glm::mat4x4& viewMatrix, const glm::mat4x4& projMatrix) override;
 	void showForSaving(RectTransform& transform) override;
 

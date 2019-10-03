@@ -28,6 +28,12 @@ LoadedImageLayer::~LoadedImageLayer() {
 	spdlog::info("[Loaded Image Layer Destructed] " + getName());
 }
 
+void LoadedImageLayer::createACopy() {
+	Layer* newLayer = new LoadedImageLayer(m_filePath);
+	newLayer->setTransform(m_transform);
+	DrawingBoard::LayerRegistry().addLayer(newLayer);
+}
+
 void LoadedImageLayer::showForSaving(RectTransform& transform) {
 	show(transform.getMatrix(), glm::mat4x4(1.0f), DrawingBoard::transform.getProjectionMatrix());
 }

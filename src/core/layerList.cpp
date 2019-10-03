@@ -143,6 +143,12 @@ void LayerList::onKeyDown(Key key) {
 				for (int k = 0; k < selectedLayers.size(); ++k) {
 					DrawingBoard::LayerRegistry().createCopyLayer(selectedLayers[k]);
 				}
+				break;
+			case 'c':
+				for (int k = 0; k < selectedLayers.size(); ++k) {
+					DrawingBoard::LayerRegistry()[selectedLayers[k]]->createACopy();
+				}
+				break;
 			default:
 				break;
 			}

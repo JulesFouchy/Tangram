@@ -27,6 +27,8 @@ public:
 
 	virtual inline bool createdSuccessfully() { return true; };
 	virtual inline void reload() {}; // nothing for some layerTypes
+	inline virtual void createACopy() = 0;
+	inline void setTransform(const RectTransform& newTransform) { m_transform = newTransform; }
 
 	inline bool isVisible() { return m_bVisible; }
 	inline bool isMovable() { return m_bMovable; }

@@ -180,3 +180,11 @@ UniformType ShaderLayer::readValue_s_(OpenGLType type, const std::string& str, s
 		break;
 	}
 }
+
+void ShaderLayer::createACopy() {
+	ShaderLayer* newLayer = new ShaderLayer(getTexture().getWidth(), getTexture().getHeight(), m_shader.getFragmentFilepath());
+	newLayer->setTransform(m_transform);
+	newLayer->m_uniforms = m_uniforms;
+	newLayer->drawShaderOnPreviewTexture();
+	DrawingBoard::LayerRegistry().addLayer(newLayer);
+}
