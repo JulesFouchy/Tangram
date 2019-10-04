@@ -9,14 +9,19 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 DraggablePoint::DraggablePoint()
-	: DraggablePoint(0.0f, 0.0f)
+	: DraggablePoint(0.0f, 0.0f, nullptr)
 {}
 
-DraggablePoint::DraggablePoint(float x, float y)
-	: m_pos_WS(x, y), m_bDragging(false), m_pos_WS_WhenDraggingStarted(0.0f), m_mousePos_WS_WhenDraggingStarted(0.0f)
+DraggablePoint::DraggablePoint(float x, float y, Transform* parentTransform)
+	: m_pos_WS(x, y), m_bDragging(false), m_pos_WS_WhenDraggingStarted(0.0f), m_mousePos_WS_WhenDraggingStarted(0.0f), m_parentTransform(parentTransform)
 {}
+
+const glm::vec2& DraggablePoint::getPos_TS() const { 
+	return m_parentTransform->getInverseMatrix() * DrawingBoard::transform.getInverseMatrix() * glm::vec4(m_pos_WS, 0.0f, 1.0f);
+}
 
 void DraggablePoint::startDragging() {
+	spdlog::warn("start dragging pt!");
 	m_pos_WS_WhenDraggingStarted = getPos_WS();
 	m_mousePos_WS_WhenDraggingStarted = Input::getMousePosition();
 	m_bDragging = true;
@@ -34,8 +39,8 @@ void DraggablePoint::endDragging() {
 }
 
 void DraggablePoint::show(){
-	ImmediateDrawing::setViewProjMatrix(Display::getProjMat() * glm::translate(glm::mat4x4(1.0f), glm::vec3(getPos_WS(), 0.0f)));
-	float scale = DrawingBoard::transform.getScale();
+	ImmediateDrawing::setViewProjMatrix(Display::getProjMat() * m_parentTransform->getMatrix() * glm::translate(glm::mat4x4(1.0f), glm::vec3(getPos_TS(), 0.0f)));
+	float scale = 1.0f;
 	ImmediateDrawing::setColor(0.0f, 0.0f, 0.0f, 0.5f);
 	ImmediateDrawing::ring(getPos_WS().x, getPos_WS().y, 0.0f, Settings::ALT_ORIGIN_RADIUS / scale);
 	ImmediateDrawing::setColor(1.0f, 1.0f, 1.0f, 0.5f);

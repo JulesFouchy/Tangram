@@ -26,6 +26,10 @@ void Uniform::set() {
 	else if (auto myVec2 = std::get_if<glm::vec2>(getValuePointer())) {
 		glUniform2f(getLocation(), myVec2->x, myVec2->y);
 	}
+	else if (auto myDraggablePoint = std::get_if<DraggablePoint>(getValuePointer())) {
+		const glm::vec2& pos = myDraggablePoint->getPos_TS();
+		glUniform2f(getLocation(), pos.x, pos.y);
+	}
 	else if (auto myVec3 = std::get_if<glm::vec3>(getValuePointer())) {
 		glUniform3f(getLocation(), myVec3->x, myVec3->y, myVec3->z);
 	}
@@ -48,6 +52,10 @@ bool Uniform::GuiDragValue() {
 		//return TanGUI::DragPoint(m_pos2D_WS);
 		return ImGui::SliderFloat2(getName().c_str(), glm::value_ptr(*myVec2), std::get<glm::vec2>(m_minValue).x, std::get<glm::vec2>(m_maxValue).x);
 	}
+	else if (auto myDraggablePoint = std::get_if<DraggablePoint>(getValuePointer())) {
+		//return TanGUI::DragPoint(m_pos2D_WS);
+		//return ImGui::SliderFloat2(getName().c_str(), glm::value_ptr(*myVec2), std::get<glm::vec2>(m_minValue).x, std::get<glm::vec2>(m_maxValue).x);
+	}
 	else if (auto myVec3 = std::get_if<glm::vec3>(getValuePointer())) {
 		return ImGui::ColorPicker3(getName().c_str(), glm::value_ptr(*myVec3));
 	}
@@ -60,8 +68,9 @@ bool Uniform::GuiDragValue() {
 }
 
 void Uniform::showDraggablePoints() {
-	if (auto myVec2 = std::get_if<glm::vec2>(getValuePointer())) {
-		TanGUI::DragPoint(m_pos2D_WS);
+	if (auto point = std::get_if<DraggablePoint>(getValuePointer())) {
+		point->show();
+		//TanGUI::DragPoint(m_pos2D_WS);
 		//return ImGui::SliderFloat2(getName().c_str(), glm::value_ptr(*myVec2), std::get<glm::vec2>(m_minValue).x, std::get<glm::vec2>(m_maxValue).x);
 	}
 }
@@ -76,7 +85,7 @@ UniformType Uniform::zero(OpenGLType type) {
 		return 0.0f;
 		break;
 	case Vec2:
-		return glm::vec2(0.0f);
+		return DraggablePoint(0.0f, 0.0f, nullptr);
 		break;
 	case Vec3:
 		return glm::vec3(0.0f);
@@ -100,7 +109,7 @@ UniformType Uniform::one(OpenGLType type) {
 		return 1.0f;
 		break;
 	case Vec2:
-		return glm::vec2(1.0f);
+		return DraggablePoint(1.0f, 1.0f, nullptr);
 		break;
 	case Vec3:
 		return glm::vec3(1.0f);

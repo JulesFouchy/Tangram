@@ -9,9 +9,9 @@
 
 #include "glm/glm.hpp"
 
-#include "UI/GUI_DraggablePoint.hpp"
+#include "transforms/draggablePoint.hpp"
 
-typedef std::variant<int, float, glm::vec2, glm::vec3, glm::vec4> UniformType;
+typedef std::variant<int, float, glm::vec2, DraggablePoint, glm::vec3, glm::vec4> UniformType;
 
 class Uniform {
 public:

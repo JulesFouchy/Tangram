@@ -5,6 +5,8 @@
 #include "transforms/rectTransform.hpp"
 #include "graphics/frameBuffer.hpp"
 
+#include "transforms/draggablePoint.hpp"
+
 #include "helper/ratio.hpp"
 
 class Layer {
@@ -22,6 +24,7 @@ public:
 	void showFrame();
 	virtual void showGUI();
 	virtual void showDraggablePoints();
+	inline virtual DraggablePoint* lookForHoveredDraggablePoint() { return nullptr;	} // nothing by default, until the altOrigin is hooked up to that system
 
 	inline const std::string& getName() { return m_name; }
 

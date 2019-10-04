@@ -15,6 +15,7 @@ public:
 
 	void showGUI() override;
 	void showDraggablePoints() override;
+	DraggablePoint* lookForHoveredDraggablePoint() override;
 
 	inline bool createdSuccessfully() override { return m_shader.createdSuccessfully(); }
 	void reload() override;

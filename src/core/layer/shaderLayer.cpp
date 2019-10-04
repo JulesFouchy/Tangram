@@ -3,6 +3,8 @@
 #include "imgui/imgui.h"
 
 #include "UI/log.hpp"
+#include "UI/input.hpp"
+#include "UI/settings.hpp"
 
 #include "core/drawingBoard.hpp"
 
@@ -41,6 +43,16 @@ void ShaderLayer::showDraggablePoints() {
 		uniform.showDraggablePoints();
 		drawShaderOnPreviewTexture();
 	}
+}
+
+DraggablePoint* ShaderLayer::lookForHoveredDraggablePoint() {
+	for (Uniform& uniform : m_uniforms) {
+		if (auto point = std::get_if<DraggablePoint>(&uniform.getValue())) {
+			if (glm::length(point->getPos_WS() - Input::getMousePosition()) < Settings::ALT_ORIGIN_RADIUS)
+				return (DraggablePoint*) point;
+		}
+	}
+	return nullptr;
 }
 
 void ShaderLayer::showForSaving(RectTransform& transform) {
@@ -118,6 +130,8 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 						}
 					}
 				}
+				if (type == Vec2)
+					std::get<DraggablePoint>(initialValue).setParentTransform(&m_transform);
 				// Add uniform
 				tmpUniforms.push_back(Uniform(m_shader.getID(), s_name, initialValue, minValue, maxValue));
 			}
@@ -160,7 +174,7 @@ UniformType ShaderLayer::readValue_s_(OpenGLType type, const std::string& str, s
 	case Vec2:
 		x = std::stof(String::getNextWord(str, currentPosPtr));
 		y = std::stof(String::getNextWord(str, currentPosPtr));
-		return glm::vec2(x, y);
+		return DraggablePoint(x, y, nullptr);
 		break;
 	case Vec3:
 		x = std::stof(String::getNextWord(str, currentPosPtr));

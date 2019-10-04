@@ -127,7 +127,8 @@ int main(int argc, char* argv[])
 	//DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test3.jpg");
 	//DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test2.png");
 	//DrawingBoard::LayerRegistry().createShaderLayer(4*1000/3, 1000,"res/shaders/fragment/gradient.frag");
-	DrawingBoard::LayerRegistry().createShaderLayer(ceil(DrawingBoard::transform.getAspectRatio()*1000), 1000, "res/shaders/fragment/day2background.frag");
+	DrawingBoard::LayerRegistry().createShaderLayer(ceil(DrawingBoard::transform.getAspectRatio()*1000), 1000, "res/shaders/fragment/gradient.frag");
+	//DrawingBoard::LayerRegistry().createShaderLayer(ceil(DrawingBoard::transform.getAspectRatio() * 1000), 1000, "res/shaders/fragment/wind.frag");
 	//DrawingBoard::LayerRegistry().createShaderLayer(4 * 1000 / 3, 1000, "res/shaders/fragment/shaderLayerTest.frag");
 
 	ImmediateDrawing::Initialize();
@@ -201,8 +202,8 @@ int main(int argc, char* argv[])
 		//DrawingBoard::layers.getActivLayer()->m_transform.rotate(imRot, DrawingBoard::layers.getActivLayer()->m_transform.getAltOriginInDrawingBoardSpace());
 		DrawingBoard::update();
 		DrawingBoard::show();
-		//if(DrawingBoard::LayerRegistry().AliveLayers().selectedLayers.size()>0)
-		//	DrawingBoard::LayerRegistry()[DrawingBoard::LayerRegistry().AliveLayers().selectedLayers[0]]->showDraggablePoints();
+		if(DrawingBoard::LayerRegistry().AliveLayers().selectedLayers.size()>0)
+			DrawingBoard::LayerRegistry()[DrawingBoard::LayerRegistry().AliveLayers().selectedLayers[0]]->showDraggablePoints();
 		DrawingBoard::LayerRegistry().AliveLayers().update();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		//

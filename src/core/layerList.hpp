@@ -7,8 +7,9 @@
 #include <vector>
 
 #include "UI/cursor.hpp"
-
 #include "UI/keys.hpp"
+
+#include "transforms/draggablePoint.hpp"
 
 #include "layerID.hpp"
 
@@ -40,6 +41,7 @@ public:
 
 private:
 	bool mouseIsHoveringAltOrigin();
+	DraggablePoint* lookForHoveredDraggablePoint();
 	bool canDragRotation();
 public:
 	GroupOfLayers layers;
@@ -48,6 +50,7 @@ private:
 	CursorType* usedCursor;
 private:
 	void computeHoveredLayerAndMouseRelPos();
+	DraggablePoint* m_draggedPoint;
 public:
 	//Layer* m_activLayer;
 	LayerID m_hoveredLayer;

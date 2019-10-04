@@ -12,7 +12,7 @@
 #include "graphics/immediateDrawing.hpp"
 
 LayerList::LayerList()
-	: m_hoveredLayer(0), m_mousePosRelToHoveredLayer(OUTSIDE), usedCursor(nullptr)
+	: m_hoveredLayer(0), m_draggedPoint(nullptr), m_mousePosRelToHoveredLayer(OUTSIDE), usedCursor(nullptr)
 {
 }
 
@@ -23,6 +23,8 @@ LayerList::~LayerList() {
 void LayerList::update() {
 	computeHoveredLayerAndMouseRelPos();
 	selectedLayers.checkDragging();
+	if (m_draggedPoint)
+		m_draggedPoint->checkDragging();
 }
 
 void LayerList::show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix) {
@@ -106,6 +108,14 @@ bool LayerList::mustShowAltOrigin() {
 bool LayerList::mouseIsHoveringAltOrigin() {
 	return mustShowAltOrigin() && glm::length(selectedLayers.getAltOriginInWindowSpace() - Input::getMousePosition()) < Settings::ALT_ORIGIN_RADIUS;
 }
+DraggablePoint* LayerList::lookForHoveredDraggablePoint() {
+	DraggablePoint* result = nullptr;
+	for (int i = layers.size() - 1; i >= 0; --i) {
+		if (result = DrawingBoard::LayerRegistry()[layers[i]]->lookForHoveredDraggablePoint())
+			break;
+	}
+	return result;
+}
 bool LayerList::canDragRotation() {
 	if (mustShowAltOrigin()) {
 		float distToAltOrigin = glm::length(selectedLayers.getAltOriginInWindowSpace() - Input::getMousePosition());
@@ -185,13 +195,17 @@ void LayerList::onDoubleLeftClic() {
 }
 
 void LayerList::onLeftClicDown() {
-	//Drag alt origin
+	// Drag alt origin
 	if (mouseIsHoveringAltOrigin()) {
 		selectedLayers.startDraggingAltOrigin();
 	}
-	//Rotate
+	// Rotate
 	else if (canDragRotation()) {
 		selectedLayers.startDraggingRotation();
+	}
+	// Drag draggable points
+	else if (m_draggedPoint = lookForHoveredDraggablePoint()) {
+		m_draggedPoint->startDragging();
 	}
 	else if (m_hoveredLayer)
 	{
@@ -271,6 +285,8 @@ void LayerList::onLeftClicUp() {
 		selectedLayers.pushStateInHistoryAtTheEndOfDragging();
 	selectedLayers.endDragging();
 	usedCursor = nullptr;
+	if (m_draggedPoint)
+		m_draggedPoint->endDragging();
 }
 
 void LayerList::onScroll(float motion) {
