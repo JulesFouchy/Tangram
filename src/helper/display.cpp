@@ -17,8 +17,8 @@ void Display::initialize(SDL_Window* window)
 {
 	s_window = window;
 	s_updateWindowSize();
-	s_minY = -0.5;
-	s_maxY =  0.5;
+	s_minY = -0.5f;
+	s_maxY =  0.5f;
 	s_updateProjectionMatrix();
 }
 
@@ -55,8 +55,8 @@ void Display::s_updateWindowSize() {
 	SDL_GetWindowSize(s_window, &w, &h);
 	s_windowSize = glm::vec2(w, h);
 	s_ratio = s_windowSize.x / s_windowSize.y;
-	s_minX = -0.5 * s_ratio;
-	s_maxX =  0.5 * s_ratio;
+	s_minX = - 0.5f * s_ratio;
+	s_maxX =   0.5f * s_ratio;
 }
 
 void Display::s_updateProjectionMatrix() {

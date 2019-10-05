@@ -27,7 +27,7 @@ void Uniform::set() {
 		glUniform2f(getLocation(), myVec2->x, myVec2->y);
 	}
 	else if (auto myDraggablePoint = std::get_if<DraggablePoint>(getValuePointer())) {
-		const glm::vec2& pos = myDraggablePoint->getPos_TS();
+		const glm::vec2& pos = 2.0f * myDraggablePoint->getPos_TS();
 		glUniform2f(getLocation(), pos.x, pos.y);
 	}
 	else if (auto myVec3 = std::get_if<glm::vec3>(getValuePointer())) {
