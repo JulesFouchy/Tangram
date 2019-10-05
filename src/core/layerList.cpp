@@ -73,7 +73,7 @@ void LayerList::computeHoveredLayerAndMouseRelPos() {
 	m_hoveredLayer = 0;
 	for (int k = layers.size()-1; k >= 0; --k) {
 		Layer* layer = DrawingBoard::LayerRegistry()[layers[k]];
-		if (layer->isVisible() && layer->isMovable()) {
+		if (layer->isVisible()) {
 			// get mouse position
 			glm::vec2 mousePosInNTS = layer->m_transform.getMousePositionInNormalizedTransformSpace();
 			m_mousePosRelToHoveredLayer = layer->m_transform.getRelativePositionFromPositionInNormalizedTransformSpace(mousePosInNTS);
@@ -211,7 +211,7 @@ void LayerList::onLeftClicDown() {
 	{
 		//Change selected layers
 		if (Input::keyIsDown(CTRL)) {
-			if( selectedLayers.contains(m_hoveredLayer))
+			if (selectedLayers.contains(m_hoveredLayer))
 				selectedLayers.removeLayerByRegisterID(m_hoveredLayer);
 			else
 				selectedLayers.addLayer(m_hoveredLayer);
@@ -219,59 +219,61 @@ void LayerList::onLeftClicDown() {
 		else if (!selectedLayers.contains(m_hoveredLayer)) {
 			setSelectedLayer(m_hoveredLayer);
 		}
-		//Translate
-		if (m_mousePosRelToHoveredLayer == INSIDE) {
-			selectedLayers.startDraggingTranslation();
-		}
-		//Drag scale/aspectRatio
-		else {
-			glm::vec2 originInTransformSpace;
-			switch (m_mousePosRelToHoveredLayer)
-			{
-			case OUTSIDE:
-				spdlog::error("[LayerList::onLeftClicDown] shoudn't have entered the switch if we're outside any layer");
-				break;
-				//Drag translation if inside
-			case INSIDE:
-				spdlog::error("[LayerList::onLeftClicDown] shoudn't have entered the switch if we're inside a layer");
-				break;
-				//Scale towards opposite border
-			case RIGHT:
-				originInTransformSpace = glm::vec2(-0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), 0.0f);
-				break;
-			case TOP_RIGHT:
-				originInTransformSpace = glm::vec2(-0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), -0.5f);
-				break;
-			case TOP:
-				originInTransformSpace = glm::vec2(0.0f, -0.5f);
-				break;
-			case TOP_LEFT:
-				originInTransformSpace = glm::vec2(0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), -0.5f);
-				break;
-			case LEFT:
-				originInTransformSpace = glm::vec2(0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), 0.0f);
-				break;
-			case BOT_LEFT:
-				originInTransformSpace = glm::vec2(0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), 0.5f);
-				break;
-			case BOT:
-				originInTransformSpace = glm::vec2(0.0f, 0.5f);
-				break;
-			case BOT_RIGHT:
-				originInTransformSpace = glm::vec2(-0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), 0.5f);
-				break;
-			default:
-				spdlog::error("[LayerList::onLeftClicDown] reached default case");
-				break;
+		else if (DrawingBoard::LayerRegistry()[m_hoveredLayer]->isMovable()) {
+			//Translate
+			if (m_mousePosRelToHoveredLayer == INSIDE) {
+				selectedLayers.startDraggingTranslation();
 			}
-			// Unlock the correct u and/or v aspect ratio in case we switch for dragging ratio
-			bool unlockUForClickedLayer = (originInTransformSpace.x != 0.0f);
-			bool unlockVForClickedLayer = (originInTransformSpace.y != 0.0f);
-			// Start dragging
-			selectedLayers.startDraggingScale(m_hoveredLayer, DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f), DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getUAxis(), DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getVAxis(), unlockUForClickedLayer, unlockVForClickedLayer);
-			//Scale towards alt origin if ALT down
-			if (Input::keyIsDown(ALT)) {
-				selectedLayers.changeDraggingCenterToAltOrigin();
+			//Drag scale/aspectRatio
+			else {
+				glm::vec2 originInTransformSpace;
+				switch (m_mousePosRelToHoveredLayer)
+				{
+				case OUTSIDE:
+					spdlog::error("[LayerList::onLeftClicDown] shoudn't have entered the switch if we're outside any layer");
+					break;
+					//Drag translation if inside
+				case INSIDE:
+					spdlog::error("[LayerList::onLeftClicDown] shoudn't have entered the switch if we're inside a layer");
+					break;
+					//Scale towards opposite border
+				case RIGHT:
+					originInTransformSpace = glm::vec2(-0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), 0.0f);
+					break;
+				case TOP_RIGHT:
+					originInTransformSpace = glm::vec2(-0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), -0.5f);
+					break;
+				case TOP:
+					originInTransformSpace = glm::vec2(0.0f, -0.5f);
+					break;
+				case TOP_LEFT:
+					originInTransformSpace = glm::vec2(0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), -0.5f);
+					break;
+				case LEFT:
+					originInTransformSpace = glm::vec2(0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), 0.0f);
+					break;
+				case BOT_LEFT:
+					originInTransformSpace = glm::vec2(0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), 0.5f);
+					break;
+				case BOT:
+					originInTransformSpace = glm::vec2(0.0f, 0.5f);
+					break;
+				case BOT_RIGHT:
+					originInTransformSpace = glm::vec2(-0.5f * DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getAspectRatio(), 0.5f);
+					break;
+				default:
+					spdlog::error("[LayerList::onLeftClicDown] reached default case");
+					break;
+				}
+				// Unlock the correct u and/or v aspect ratio in case we switch for dragging ratio
+				bool unlockUForClickedLayer = (originInTransformSpace.x != 0.0f);
+				bool unlockVForClickedLayer = (originInTransformSpace.y != 0.0f);
+				// Start dragging
+				selectedLayers.startDraggingScale(m_hoveredLayer, DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getMatrix() * glm::vec4(originInTransformSpace, 0.0f, 1.0f), DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getUAxis(), DrawingBoard::LayerRegistry()[m_hoveredLayer]->m_transform.getVAxis(), unlockUForClickedLayer, unlockVForClickedLayer);
+				//Scale towards alt origin if ALT down
+				if (Input::keyIsDown(ALT)) {
+					selectedLayers.changeDraggingCenterToAltOrigin();
+				}
 			}
 		}
 	}
