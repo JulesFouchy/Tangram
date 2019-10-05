@@ -130,8 +130,10 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 						}
 					}
 				}
-				if (type == Vec2)
+				if (type == Vec2) { // special handling of DraggablePoints
 					std::get<DraggablePoint>(initialValue).setParentTransform(&m_transform);
+					setMovability(false);
+				}
 				// Add uniform
 				tmpUniforms.push_back(Uniform(m_shader.getID(), s_name, initialValue, minValue, maxValue));
 			}
