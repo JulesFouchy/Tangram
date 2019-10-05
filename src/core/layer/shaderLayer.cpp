@@ -41,7 +41,7 @@ void ShaderLayer::showGUI() {
 void ShaderLayer::showDraggablePoints() {
 	for (Uniform& uniform : m_uniforms) {
 		uniform.showDraggablePoints();
-		drawShaderOnPreviewTexture();
+		drawShaderOnPreviewTexture(); // TODO only redraw if the point was dragged
 	}
 }
 
