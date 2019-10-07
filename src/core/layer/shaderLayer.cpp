@@ -56,26 +56,8 @@ void ShaderLayer::showGUI() {
 	for (Uniform& uniform : m_uniforms) {
 		auto [bUniformJustChanged, bDraggingJustEnded] = uniform.GuiDragValue();
 		uniformChanged |= bUniformJustChanged;
-		if (bDraggingJustEnded) {
-			DrawingBoard::history.beginUndoGroup();
-			UniformType prevValue = uniform.getValueWhenDraggingStarted();
-			UniformType newValue = uniform.getValue();
-			DrawingBoard::history.addAction(Action(
-				// DO action
-				[this, &uniform, newValue]()
-			{
-				uniform.setValue(newValue);
-				drawShaderOnPreviewTexture();
-			},
-				// UNDO action
-				[this, &uniform, prevValue]()
-			{
-				uniform.setValue(prevValue);
-				drawShaderOnPreviewTexture();
-			}
-			));
-			DrawingBoard::history.endUndoGroup();
-		}
+		if (bDraggingJustEnded)
+			pushUniformChangeInHistory(uniform);
 	}
 	if (uniformChanged)
 		drawShaderOnPreviewTexture();
