@@ -2,12 +2,13 @@
 
 layout(location = 0) out vec4 fragColor;
 
+uniform vec2 u_Offset; // default 2 -1.147 min -2 -2 max 2 2
 uniform float u_starIntensity; // default 1.058 min 0 max 2
 uniform float u_starIntensityPow; // default 50 min 0 max 40
 uniform float u_noiseScale; // default 33.333 min 0 max 60
 uniform float u_distortInScale; // default 0 min 0 max 60
 uniform float u_distortOutScale; // default 100 min 0 max 60
-uniform vec3 u_SkyColor; // default 0.068 0.081 0.285
+uniform vec3 u_SkyColor; // default 0.004f, 0.008f, 0.070f
 uniform vec3 u_StarColor; // default 1 0.969 0.753
 
 in vec2 v_texCoord;
@@ -84,7 +85,7 @@ float snoise(vec2 v)
 }
 
 void main() {
-	vec2 uv = v_texCoord;
+	vec2 uv = v_texCoord + u_Offset;
 	vec3 color;
 
 	float t = pow(u_starIntensity * snoise(uv * u_noiseScale + u_distortOutScale*snoise(uv*u_distortInScale)), u_starIntensityPow);

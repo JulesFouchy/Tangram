@@ -35,12 +35,15 @@ void DraggablePoint::startDragging() {
 bool DraggablePoint::checkDragging() {
 	if (m_bDragging) {
 		glm::vec2 dl = glm::vec4(Input::getMousePosition() - m_mousePos_WS_WhenDraggingStarted, 0.0f, 0.0f);
-		setPosition_WS(m_pos_WS_WhenDraggingStarted + dl);
-		return true;
+		if (glm::length(getPos_WS() - m_pos_WS_WhenDraggingStarted - dl) > 0.00001f) {
+			setPosition_WS(m_pos_WS_WhenDraggingStarted + dl);
+			return true;
+		}
 	}
 	return false;
 }
 void DraggablePoint::endDragging() {
+	spdlog::warn("end dragging pt!");
 	m_bDragging = false;
 }
 

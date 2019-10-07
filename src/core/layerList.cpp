@@ -23,8 +23,6 @@ LayerList::~LayerList() {
 void LayerList::update() {
 	computeHoveredLayerAndMouseRelPos();
 	selectedLayers.checkDragging();
-	if (m_draggedPoint)
-		m_draggedPoint->checkDragging();
 }
 
 void LayerList::show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix) {

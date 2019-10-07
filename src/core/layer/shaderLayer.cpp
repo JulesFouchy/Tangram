@@ -31,17 +31,17 @@ void ShaderLayer::reload() {
 void ShaderLayer::showGUI() {
 	ImGui::SetNextWindowSize(ImVec2(280, 280), ImGuiCond_FirstUseEver);
 	ImGui::Begin(("Uniforms of " + getName()).c_str());
-	for (Uniform& uniform : m_uniforms) {
-		if (uniform.GuiDragValue())
-			drawShaderOnPreviewTexture();
-	}
+	bool uniformChanged = false;
+	for (Uniform& uniform : m_uniforms) 
+		uniformChanged |= uniform.GuiDragValue();
+	if (uniformChanged)
+		drawShaderOnPreviewTexture();
 	ImGui::End();
 }
 
 void ShaderLayer::showDraggablePoints() {
 	for (Uniform& uniform : m_uniforms) {
 		uniform.showDraggablePoints();
-		drawShaderOnPreviewTexture(); // TODO only redraw if the point was dragged
 	}
 }
 
@@ -68,6 +68,7 @@ void ShaderLayer::shaderBindAndSetFragmentUniforms() {
 }
 
 void ShaderLayer::drawShaderOnPreviewTexture() {
+	spdlog::warn("recomputed shader {}", getName());
 	glDisable(GL_BLEND);
 		shaderBindAndSetFragmentUniforms();
 		m_shader.setUniformMat4f("u_mvp", glm::mat4x4(1.0f));
@@ -85,7 +86,7 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 
 		std::string line;
 		while (std::getline(file, line)) {
-			spdlog::info("NEW LINE");
+			//spdlog::info("NEW LINE");
 			// Parse uniform
 			size_t posBeginUniform = line.find("uniform");
 			size_t posBeginComment = line.find("//");
@@ -94,6 +95,8 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 				size_t posBeginType = String::beginningOfNextWord(line, String::endOfNextWord(line, posBeginUniform) + 1);
 				size_t posEndType = String::endOfNextWord(line, posBeginType);
 				OpenGLType type = stringToOpenGLType(line.substr(posBeginType, posEndType - posBeginType));
+				bool ItsAColor = (type == Vec2 || type == Vec3);
+				bool ItsAPointInTS = false;
 				// Get name
 				size_t posBeginName = String::beginningOfNextWord(line, posEndType);
 				size_t posEndName = String::endOfNextWord(line, posBeginName);
@@ -120,22 +123,28 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 							if (index != -1)
 								initialValue = m_uniforms[index].getValue();
 							else
-								initialValue = readValue_s_(type, line, &currentPos);
+								initialValue = readValue_s_(type, ItsAPointInTS, line, &currentPos);
 						}
 						else if (arg == "min") {
-							minValue = readValue_s_(type, line, &currentPos);
+							minValue = readValue_s_(type, ItsAPointInTS, line, &currentPos);
 						}
 						else if (arg == "max") {
-							maxValue = readValue_s_(type, line, &currentPos);
+							maxValue = readValue_s_(type, ItsAPointInTS, line, &currentPos);
+						}
+						else if (arg == "NOT_A_COLOR" || arg == "NOT_A_COLOUR") {
+							ItsAColor = false;
+						}
+						else if (arg == "POINT2D") {
+							ItsAPointInTS = true;
 						}
 					}
 				}
-				if (type == Vec2) { // special handling of DraggablePoints
+				if (ItsAPointInTS) { // special handling of DraggablePoints
 					std::get<DraggablePoint>(initialValue).setParentTransform(&m_transform);
 					setMovability(false);
 				}
 				// Add uniform
-				tmpUniforms.push_back(Uniform(m_shader.getID(), s_name, initialValue, minValue, maxValue));
+				tmpUniforms.push_back(Uniform(m_shader.getID(), s_name, initialValue, minValue, maxValue, ItsAColor));
 			}
 		}
 		m_uniforms = tmpUniforms;
@@ -163,7 +172,7 @@ OpenGLType ShaderLayer::stringToOpenGLType(const std::string& s_type) {
 	}
 }
 
-UniformType ShaderLayer::readValue_s_(OpenGLType type, const std::string& str, size_t* currentPosPtr) {
+UniformType ShaderLayer::readValue_s_(OpenGLType type, bool itsAPointInTS, const std::string& str, size_t* currentPosPtr) {
 	float x, y, z, w;
 	switch (type)
 	{
@@ -176,7 +185,10 @@ UniformType ShaderLayer::readValue_s_(OpenGLType type, const std::string& str, s
 	case Vec2:
 		x = std::stof(String::getNextWord(str, currentPosPtr));
 		y = std::stof(String::getNextWord(str, currentPosPtr));
-		return DraggablePoint(x, y, nullptr);
+		if (itsAPointInTS)
+			return DraggablePoint(x, y, nullptr);
+		else
+			return glm::vec2(x, y);
 		break;
 	case Vec3:
 		x = std::stof(String::getNextWord(str, currentPosPtr));

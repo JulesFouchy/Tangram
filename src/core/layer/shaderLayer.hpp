@@ -35,5 +35,5 @@ private:
 	// Parsing
 	void parseShader(const std::string& filepath);
 	static OpenGLType stringToOpenGLType(const std::string& s_type);
-	static UniformType readValue_s_(OpenGLType type, const std::string& str, size_t* currentPosPtr);
+	static UniformType readValue_s_(OpenGLType type, bool itsAPointInTS, const std::string& str, size_t* currentPosPtr);
 };

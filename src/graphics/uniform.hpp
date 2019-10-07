@@ -15,7 +15,7 @@ typedef std::variant<int, float, glm::vec2, DraggablePoint, glm::vec3, glm::vec4
 
 class Uniform {
 public:
-	Uniform(GLuint shaderID, const std::string name, UniformType value, UniformType minValue, UniformType maxValue);
+	Uniform(GLuint shaderID, const std::string name, UniformType value, UniformType minValue, UniformType maxValue, bool itsAColor = false);
 	~Uniform() = default;
 
 	void set();
@@ -38,6 +38,8 @@ private:
 	UniformType m_value;
 	UniformType m_minValue;
 	UniformType m_maxValue;
+
+	bool m_bImAColor; // temporary !
 
 	DraggablePoint m_pos2D_WS; // temporary ! only for vec2 uniforms
 };
