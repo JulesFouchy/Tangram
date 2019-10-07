@@ -102,9 +102,9 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 				std::string s_name = line.substr(posBeginName, posEndName - posBeginName);
 				spdlog::info("found uniform {}", s_name);
 				// Get options
-				UniformType initialValue = Uniform::zero(type);
-				UniformType minValue = Uniform::zero(type);
-				UniformType maxValue = Uniform::one(type);
+				UniformType initialValue = Uniform::zero(uniformTypePrecisions);
+				UniformType minValue = Uniform::zero(uniformTypePrecisions);
+				UniformType maxValue = Uniform::zero(uniformTypePrecisions);
 				if (posBeginComment != std::string::npos) {
 					spdlog::info("looking for options");
 					size_t currentPos = String::beginningOfNextWord(line, String::endOfNextWord(line, posBeginComment) + 1);

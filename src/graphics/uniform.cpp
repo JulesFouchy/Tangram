@@ -12,13 +12,13 @@ UniformTypePrecisions::UniformTypePrecisions(OpenGLType openGLType, bool showAsC
 {
 }
 
-Uniform::Uniform(GLuint shaderID, const std::string name, UniformType value, UniformType minValue, UniformType maxValue, const UniformTypePrecisions& typePrecisions)
-	: m_name     ( name ),
-	  m_location ( glGetUniformLocation(shaderID, name.c_str()) ),
-	  m_value    (value),
-	  m_minValue (minValue),
-	  m_maxValue (maxValue),
-	  m_precisions(typePrecisions)
+Uniform::Uniform(GLuint shaderID, const std::string& name, UniformType value, UniformType minValue, UniformType maxValue, const UniformTypePrecisions& typePrecisions)
+	: m_name      ( name ),
+	  m_location  ( glGetUniformLocation(shaderID, name.c_str()) ),
+	  m_value     ( value ),
+	  m_minValue  ( minValue ),
+	  m_maxValue  ( maxValue ),
+	  m_precisions( typePrecisions )
 {
 }
 
@@ -55,12 +55,10 @@ bool Uniform::GuiDragValue() {
 		return ImGui::SliderFloat(getName().c_str(), myFloat, std::get<float>(m_minValue), std::get<float>(m_maxValue));
 	}
 	else if (auto myVec2 = std::get_if<glm::vec2>(getValuePointer())) {
-		//return TanGUI::DragPoint(m_pos2D_WS);
 		return ImGui::SliderFloat2(getName().c_str(), glm::value_ptr(*myVec2), std::get<glm::vec2>(m_minValue).x, std::get<glm::vec2>(m_maxValue).x);
 	}
 	else if (auto myDraggablePoint = std::get_if<DraggablePoint>(getValuePointer())) {
 		return myDraggablePoint->checkDragging();
-		//return ImGui::SliderFloat2(getName().c_str(), glm::value_ptr(*myVec2), std::get<glm::vec2>(m_minValue).x, std::get<glm::vec2>(m_maxValue).x);
 	}
 	else if (auto myVec3 = std::get_if<glm::vec3>(getValuePointer())) {
 		if(m_precisions.shouldShowAsAColor())
@@ -69,7 +67,10 @@ bool Uniform::GuiDragValue() {
 			return ImGui::SliderFloat3(getName().c_str(), glm::value_ptr(*myVec3), std::get<glm::vec3>(m_minValue).x, std::get<glm::vec3>(m_maxValue).x);
 	}
 	else if (auto myVec4 = std::get_if<glm::vec4>(getValuePointer())) {
-		return ImGui::ColorPicker4(getName().c_str(), glm::value_ptr(*myVec4));
+		if (m_precisions.shouldShowAsAColor())
+			return ImGui::ColorPicker4(getName().c_str(), glm::value_ptr(*myVec4));
+		else
+			return ImGui::SliderFloat4(getName().c_str(), glm::value_ptr(*myVec4), std::get<glm::vec4>(m_minValue).x, std::get<glm::vec4>(m_maxValue).x);
 	}
 	else {
 		spdlog::error(" {} : unknown uniform type", getName());

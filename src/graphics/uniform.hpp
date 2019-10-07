@@ -21,6 +21,7 @@ public:
 	inline void setShowAsAColorPicker(bool b) { m_showAsColorPicker = b; }
 	inline void setShowAsDraggable2DPoint(bool b) { m_showAsDraggable2DPoint = b; }
 	inline OpenGLType getOpenGLType() const { return m_openGLType; }
+
 private:
 	OpenGLType m_openGLType;
 	bool m_showAsColorPicker;
@@ -29,7 +30,7 @@ private:
 
 class Uniform {
 public:
-	Uniform(GLuint shaderID, const std::string name, UniformType value, UniformType minValue, UniformType maxValue, const UniformTypePrecisions& typePrecisions);
+	Uniform(GLuint shaderID, const std::string& name, UniformType value, UniformType minValue, UniformType maxValue, const UniformTypePrecisions& typePrecisions);
 	~Uniform() = default;
 
 	void set();
@@ -42,8 +43,7 @@ public:
 
 	void showDraggablePoints();
 	
-public:
-	// Helpers
+public: // Helpers
 	static UniformType zero(const UniformTypePrecisions& type);
 	static UniformType  one(const UniformTypePrecisions& type);
 private:
