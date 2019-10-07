@@ -1,6 +1,8 @@
 #include "uniform.hpp"
 #include <variant>
 
+#include "core/drawingBoard.hpp"
+
 #include "imgui/imgui.h"
 
 #include "glm/gtc/type_ptr.hpp"
@@ -47,34 +49,42 @@ void Uniform::set() {
 	}
 }
 
-bool Uniform::GuiDragValue() {
+std::pair<bool, bool> Uniform::GuiDragValue() {
+	bool wasJusModified = false;
 	if (auto myInt = std::get_if<int>(getValuePointer())) {
-		return ImGui::DragInt(getName().c_str(), myInt);
+		wasJusModified = ImGui::DragInt(getName().c_str(), myInt);
 	}
 	else if (auto myFloat = std::get_if<float>(getValuePointer())) {
-		return ImGui::SliderFloat(getName().c_str(), myFloat, std::get<float>(m_minValue), std::get<float>(m_maxValue));
+		wasJusModified = ImGui::SliderFloat(getName().c_str(), myFloat, std::get<float>(m_minValue), std::get<float>(m_maxValue));
 	}
 	else if (auto myVec2 = std::get_if<glm::vec2>(getValuePointer())) {
-		return ImGui::SliderFloat2(getName().c_str(), glm::value_ptr(*myVec2), std::get<glm::vec2>(m_minValue).x, std::get<glm::vec2>(m_maxValue).x);
+		wasJusModified = ImGui::SliderFloat2(getName().c_str(), glm::value_ptr(*myVec2), std::get<glm::vec2>(m_minValue).x, std::get<glm::vec2>(m_maxValue).x);
 	}
 	else if (auto myDraggablePoint = std::get_if<DraggablePoint>(getValuePointer())) {
-		return myDraggablePoint->checkDragging();
+		wasJusModified = myDraggablePoint->checkDragging();
+		ImGui::Dummy(ImVec2(0,0)); // to make sure that the last item is reset when calling IsItemActivated()
 	}
 	else if (auto myVec3 = std::get_if<glm::vec3>(getValuePointer())) {
 		if(m_precisions.shouldShowAsAColor())
-			return ImGui::ColorPicker3(getName().c_str(), glm::value_ptr(*myVec3));
+			wasJusModified = ImGui::ColorPicker3(getName().c_str(), glm::value_ptr(*myVec3));
 		else
-			return ImGui::SliderFloat3(getName().c_str(), glm::value_ptr(*myVec3), std::get<glm::vec3>(m_minValue).x, std::get<glm::vec3>(m_maxValue).x);
+			wasJusModified = ImGui::SliderFloat3(getName().c_str(), glm::value_ptr(*myVec3), std::get<glm::vec3>(m_minValue).x, std::get<glm::vec3>(m_maxValue).x);
 	}
 	else if (auto myVec4 = std::get_if<glm::vec4>(getValuePointer())) {
 		if (m_precisions.shouldShowAsAColor())
-			return ImGui::ColorPicker4(getName().c_str(), glm::value_ptr(*myVec4));
+			wasJusModified = ImGui::ColorPicker4(getName().c_str(), glm::value_ptr(*myVec4));
 		else
-			return ImGui::SliderFloat4(getName().c_str(), glm::value_ptr(*myVec4), std::get<glm::vec4>(m_minValue).x, std::get<glm::vec4>(m_maxValue).x);
+			wasJusModified = ImGui::SliderFloat4(getName().c_str(), glm::value_ptr(*myVec4), std::get<glm::vec4>(m_minValue).x, std::get<glm::vec4>(m_maxValue).x);
 	}
 	else {
 		spdlog::error(" {} : unknown uniform type", getName());
 	}
+	//
+	if (ImGui::IsItemActivated()) {
+		spdlog::error("activation");
+		m_valueWhenDraggingStarted = getValue();
+	}
+	return std::make_pair(wasJusModified, ImGui::IsItemDeactivatedAfterEdit());
 }
 
 void Uniform::showDraggablePoints() {

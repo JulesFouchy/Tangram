@@ -7,6 +7,8 @@
 
 #include "openGLType.hpp"
 
+#include <tuple>
+
 #include "glm/glm.hpp"
 
 #include "transforms/draggablePoint.hpp"
@@ -38,8 +40,10 @@ public:
 	inline const std::string& getName() const { return m_name; }
 	inline int getLocation() const { return m_location; }
 	const UniformType& getValue() const { return m_value; }
+	const UniformType& getValueWhenDraggingStarted() const { return m_valueWhenDraggingStarted; }
 	UniformType* getValuePointer() { return &m_value; }
-	bool GuiDragValue();
+	inline void setValue(UniformType newValue) { m_value = newValue; }
+	std::pair<bool, bool> GuiDragValue(); // was value modified this frame | did dragging end this frame
 
 	void showDraggablePoints();
 	
@@ -50,6 +54,8 @@ private:
 	std::string m_name;
 	int m_location;
 	UniformType m_value;
+	UniformType m_valueWhenDraggingStarted;
+
 	UniformType m_minValue;
 	UniformType m_maxValue;
 

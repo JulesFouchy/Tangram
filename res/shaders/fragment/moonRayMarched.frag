@@ -17,11 +17,14 @@ uniform float u_ShadowPow; //default 1.688 min 0 max 2
 uniform float u_CrateParam; //default 0.1 min 0 max 2
 uniform float u_CrateRadius; //default 0.1 min 0 max 2
 uniform vec3 u_CrateDir; // NOT_A_COLOR default -0.733 0.467 0.191 min -1 -1 -1 max 1 1 1
-uniform vec3 u_SunDir; // NOT_A_COLOR default -0.733 0.467 0.191 min -1 -1 -1 max 1 1 1
+uniform vec2 u_sunXY; // POINT2D default -0.733 0.467 min -1 -1 max 1 1
+uniform float u_sunZ; // default 0.191 min -1 max 1
+//uniform vec3 u_SunDir; // NOT_A_COLOR default -0.733 0.467 0.191 min -1 -1 -1 max 1 1 1
 uniform vec3 u_MoonColour ;  //default 0.528f, 0.380f, 0.223f
 uniform vec3 u_SunColor ;  //default 1 1 1
 uniform vec3 u_SpaceColour ;  //default 0 0 0
 
+vec3 u_SunDir = vec3(u_sunXY, u_sunZ);
 float smoothMin( float a, float b, float k )
 {//https://www.iquilezles.org/www/articles/smin/smin.htm
     float res = exp2( -k*a ) + exp2( -k*b );

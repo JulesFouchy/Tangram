@@ -6,14 +6,13 @@
 #include "helper/display.hpp"
 #include "UI/settings.hpp"
 
+#include "core/layer/shaderLayer.hpp"
+
 #include "glm/gtc/matrix_transform.hpp"
 
-DraggablePoint::DraggablePoint()
-	: DraggablePoint(0.0f, 0.0f, nullptr)
-{}
-
-DraggablePoint::DraggablePoint(float x, float y, Transform* parentTransform)
-	: m_pos_TS(x, y), m_bDragging(false), m_pos_WS_WhenDraggingStarted(0.0f), m_mousePos_WS_WhenDraggingStarted(0.0f), m_parentTransform(parentTransform)
+DraggablePoint::DraggablePoint(float x, float y, Transform* parentTransform, ShaderLayer* parentShaderLayer)
+	: m_pos_TS(x, y), m_pos_TS_WhenDraggingStarted(0.0f), m_bDragging(false), m_pos_WS_WhenDraggingStarted(0.0f), m_mousePos_WS_WhenDraggingStarted(0.0f), m_parentTransform(parentTransform),
+	  m_parentShaderLayer(parentShaderLayer)
 {}
 
 const glm::vec2 DraggablePoint::getPos_WS() const {
@@ -27,7 +26,7 @@ void DraggablePoint::setPosition_WS(const glm::vec2& newPos_WS) {
 
 
 void DraggablePoint::startDragging() {
-	spdlog::warn("start dragging pt!");
+	m_pos_TS_WhenDraggingStarted = getPos_TS();
 	m_pos_WS_WhenDraggingStarted = getPos_WS();
 	m_mousePos_WS_WhenDraggingStarted = Input::getMousePosition();
 	m_bDragging = true;
@@ -43,8 +42,26 @@ bool DraggablePoint::checkDragging() {
 	return false;
 }
 void DraggablePoint::endDragging() {
-	spdlog::warn("end dragging pt!");
 	m_bDragging = false;
+	// push in history
+	DrawingBoard::history.beginUndoGroup();
+	glm::vec2 prevValue = getPos_TS_WhenDraggingStarted();
+	glm::vec2 newValue = getPos_TS();
+	DrawingBoard::history.addAction(Action(
+		// DO action
+		[this, newValue]()
+	{
+		setPos_TS(newValue);
+		m_parentShaderLayer->drawShaderOnPreviewTexture();
+	},
+		// UNDO action
+		[this, prevValue]()
+	{
+		setPos_TS(prevValue);
+		m_parentShaderLayer->drawShaderOnPreviewTexture();
+	}
+	));
+	DrawingBoard::history.endUndoGroup();
 }
 
 void DraggablePoint::show(){

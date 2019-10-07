@@ -24,7 +24,11 @@ public:
 	void showForSaving(RectTransform& transform) override;
 private:
 	void shaderBindAndSetFragmentUniforms();
+public:
 	void drawShaderOnPreviewTexture();
+private:
+
+	void pushUniformChangeInHistory(Uniform& uniform);
 
 private:
 	Shader m_shader;

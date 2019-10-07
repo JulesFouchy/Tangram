@@ -28,12 +28,55 @@ void ShaderLayer::reload() {
 	drawShaderOnPreviewTexture();
 }
 
+void ShaderLayer::pushUniformChangeInHistory(Uniform& uniform) {
+	DrawingBoard::history.beginUndoGroup();
+	UniformType prevValue = uniform.getValueWhenDraggingStarted();
+	UniformType newValue = uniform.getValue();
+	DrawingBoard::history.addAction(Action(
+		// DO action
+		[this, &uniform, newValue]()
+	{
+		uniform.setValue(newValue);
+		drawShaderOnPreviewTexture();
+	},
+		// UNDO action
+		[this, &uniform, prevValue]()
+	{
+		uniform.setValue(prevValue);
+		drawShaderOnPreviewTexture();
+	}
+	));
+	DrawingBoard::history.endUndoGroup();
+}
+
 void ShaderLayer::showGUI() {
 	ImGui::SetNextWindowSize(ImVec2(280, 280), ImGuiCond_FirstUseEver);
 	ImGui::Begin(("Uniforms of " + getName()).c_str());
 	bool uniformChanged = false;
-	for (Uniform& uniform : m_uniforms) 
-		uniformChanged |= uniform.GuiDragValue();
+	for (Uniform& uniform : m_uniforms) {
+		auto [bUniformJustChanged, bDraggingJustEnded] = uniform.GuiDragValue();
+		uniformChanged |= bUniformJustChanged;
+		if (bDraggingJustEnded) {
+			DrawingBoard::history.beginUndoGroup();
+			UniformType prevValue = uniform.getValueWhenDraggingStarted();
+			UniformType newValue = uniform.getValue();
+			DrawingBoard::history.addAction(Action(
+				// DO action
+				[this, &uniform, newValue]()
+			{
+				uniform.setValue(newValue);
+				drawShaderOnPreviewTexture();
+			},
+				// UNDO action
+				[this, &uniform, prevValue]()
+			{
+				uniform.setValue(prevValue);
+				drawShaderOnPreviewTexture();
+			}
+			));
+			DrawingBoard::history.endUndoGroup();
+		}
+	}
 	if (uniformChanged)
 		drawShaderOnPreviewTexture();
 	ImGui::End();
@@ -138,12 +181,15 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 						}
 					}
 				}
-				if (uniformTypePrecisions.shouldShowAsADraggable2DPoint()) { // special handling of DraggablePoints
-					std::get<DraggablePoint>(initialValue).setParentTransform(&m_transform);
-					setMovability(false);
-				}
 				// Add uniform
 				tmpUniforms.push_back(Uniform(m_shader.getID(), s_name, initialValue, minValue, maxValue, uniformTypePrecisions));
+				// special handling of DraggablePoints
+				if (uniformTypePrecisions.shouldShowAsADraggable2DPoint()) {
+					setMovability(false);
+					DraggablePoint& dragPt = std::get<DraggablePoint>(*tmpUniforms[tmpUniforms.size()-1].getValuePointer());
+					dragPt.setParentTransform(&m_transform);
+					dragPt.setParentShaderLayer(this);
+				}
 			}
 		}
 		m_uniforms = tmpUniforms;
