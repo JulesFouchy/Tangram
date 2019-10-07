@@ -7,13 +7,18 @@
 
 #include "UI/log.hpp"
 
-Uniform::Uniform(GLuint shaderID, const std::string name, UniformType value, UniformType minValue, UniformType maxValue, bool itsAColor)
+UniformTypePrecisions::UniformTypePrecisions(OpenGLType openGLType, bool showAsColorPicker, bool showAsDraggable2DPoint)
+	: m_openGLType(openGLType), m_showAsColorPicker(showAsColorPicker), m_showAsDraggable2DPoint(showAsDraggable2DPoint)
+{
+}
+
+Uniform::Uniform(GLuint shaderID, const std::string name, UniformType value, UniformType minValue, UniformType maxValue, const UniformTypePrecisions& typePrecisions)
 	: m_name     ( name ),
 	  m_location ( glGetUniformLocation(shaderID, name.c_str()) ),
 	  m_value    (value),
 	  m_minValue (minValue),
 	  m_maxValue (maxValue),
-	  m_bImAColor(itsAColor)
+	  m_precisions(typePrecisions)
 {
 }
 
@@ -58,7 +63,7 @@ bool Uniform::GuiDragValue() {
 		//return ImGui::SliderFloat2(getName().c_str(), glm::value_ptr(*myVec2), std::get<glm::vec2>(m_minValue).x, std::get<glm::vec2>(m_maxValue).x);
 	}
 	else if (auto myVec3 = std::get_if<glm::vec3>(getValuePointer())) {
-		if( m_bImAColor)
+		if(m_precisions.shouldShowAsAColor())
 			return ImGui::ColorPicker3(getName().c_str(), glm::value_ptr(*myVec3));
 		else
 			return ImGui::SliderFloat3(getName().c_str(), glm::value_ptr(*myVec3), std::get<glm::vec3>(m_minValue).x, std::get<glm::vec3>(m_maxValue).x);
@@ -79,8 +84,8 @@ void Uniform::showDraggablePoints() {
 	}
 }
 
-UniformType Uniform::zero(OpenGLType type) {
-	switch (type)
+UniformType Uniform::zero(const UniformTypePrecisions& type) {
+	switch (type.getOpenGLType())
 	{
 	case Int:
 		return 0;
@@ -89,8 +94,10 @@ UniformType Uniform::zero(OpenGLType type) {
 		return 0.0f;
 		break;
 	case Vec2:
-		return glm::vec2(0.0f);
-		//return DraggablePoint(0.0f, 0.0f, nullptr);
+		if( type.shouldShowAsADraggable2DPoint())
+			return DraggablePoint(0.0f, 0.0f, nullptr);
+		else
+			return glm::vec2(0.0f);
 		break;
 	case Vec3:
 		return glm::vec3(0.0f);
@@ -104,8 +111,8 @@ UniformType Uniform::zero(OpenGLType type) {
 	}
 }
 
-UniformType Uniform::one(OpenGLType type) {
-	switch (type)
+UniformType Uniform::one(const UniformTypePrecisions& type) {
+	switch (type.getOpenGLType())
 	{
 	case Int:
 		return 1;
@@ -114,8 +121,10 @@ UniformType Uniform::one(OpenGLType type) {
 		return 1.0f;
 		break;
 	case Vec2:
-		return glm::vec2(1.0f);
-		//return DraggablePoint(1.0f, 1.0f, nullptr);
+		if (type.shouldShowAsADraggable2DPoint())
+			return DraggablePoint(1.0f, 1.0f, nullptr);
+		else
+			return glm::vec2(1.0f);
 		break;
 	case Vec3:
 		return glm::vec3(1.0f);

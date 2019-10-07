@@ -13,9 +13,23 @@
 
 typedef std::variant<int, float, glm::vec2, DraggablePoint, glm::vec3, glm::vec4> UniformType;
 
+class UniformTypePrecisions {
+public:
+	UniformTypePrecisions(OpenGLType openGLType, bool showAsColorPicker = true, bool showAsDraggable2DPoint = false);
+	inline bool shouldShowAsAColor() const { return m_showAsColorPicker; }
+	inline bool shouldShowAsADraggable2DPoint() const { return m_showAsDraggable2DPoint; }
+	inline void setShowAsAColorPicker(bool b) { m_showAsColorPicker = b; }
+	inline void setShowAsDraggable2DPoint(bool b) { m_showAsDraggable2DPoint = b; }
+	inline OpenGLType getOpenGLType() const { return m_openGLType; }
+private:
+	OpenGLType m_openGLType;
+	bool m_showAsColorPicker;
+	bool m_showAsDraggable2DPoint;
+};
+
 class Uniform {
 public:
-	Uniform(GLuint shaderID, const std::string name, UniformType value, UniformType minValue, UniformType maxValue, bool itsAColor = false);
+	Uniform(GLuint shaderID, const std::string name, UniformType value, UniformType minValue, UniformType maxValue, const UniformTypePrecisions& typePrecisions);
 	~Uniform() = default;
 
 	void set();
@@ -30,8 +44,8 @@ public:
 	
 public:
 	// Helpers
-	static UniformType zero(OpenGLType type);
-	static UniformType  one(OpenGLType type);
+	static UniformType zero(const UniformTypePrecisions& type);
+	static UniformType  one(const UniformTypePrecisions& type);
 private:
 	std::string m_name;
 	int m_location;
@@ -39,7 +53,5 @@ private:
 	UniformType m_minValue;
 	UniformType m_maxValue;
 
-	bool m_bImAColor; // temporary !
-
-	DraggablePoint m_pos2D_WS; // temporary ! only for vec2 uniforms
+	UniformTypePrecisions m_precisions;
 };

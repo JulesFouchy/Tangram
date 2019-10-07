@@ -95,8 +95,7 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 				size_t posBeginType = String::beginningOfNextWord(line, String::endOfNextWord(line, posBeginUniform) + 1);
 				size_t posEndType = String::endOfNextWord(line, posBeginType);
 				OpenGLType type = stringToOpenGLType(line.substr(posBeginType, posEndType - posBeginType));
-				bool ItsAColor = (type == Vec2 || type == Vec3);
-				bool ItsAPointInTS = false;
+				UniformTypePrecisions uniformTypePrecisions(type);
 				// Get name
 				size_t posBeginName = String::beginningOfNextWord(line, posEndType);
 				size_t posEndName = String::endOfNextWord(line, posBeginName);
@@ -112,7 +111,13 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 					while (currentPos < line.size()) {
 						std::string arg = String::getNextWord(line, &currentPos);
 						spdlog::info("|" + arg + "|");
-						if (arg == "default") {
+						if (arg == "NOT_A_COLOR" || arg == "NOT_A_COLOUR") {
+							uniformTypePrecisions.setShowAsAColorPicker(false);
+						}
+						else if (arg == "POINT2D") {
+							uniformTypePrecisions.setShowAsDraggable2DPoint(true);
+						}
+						else if (arg == "default") {
 							int index = -1;
 							for (int k = 0; k < m_uniforms.size(); ++k) {
 								if (m_uniforms[k].getName() == s_name) {
@@ -123,28 +128,22 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 							if (index != -1)
 								initialValue = m_uniforms[index].getValue();
 							else
-								initialValue = readValue_s_(type, ItsAPointInTS, line, &currentPos);
+								initialValue = readValue_s_(uniformTypePrecisions, line, &currentPos);
 						}
 						else if (arg == "min") {
-							minValue = readValue_s_(type, ItsAPointInTS, line, &currentPos);
+							minValue = readValue_s_(uniformTypePrecisions, line, &currentPos);
 						}
 						else if (arg == "max") {
-							maxValue = readValue_s_(type, ItsAPointInTS, line, &currentPos);
-						}
-						else if (arg == "NOT_A_COLOR" || arg == "NOT_A_COLOUR") {
-							ItsAColor = false;
-						}
-						else if (arg == "POINT2D") {
-							ItsAPointInTS = true;
+							maxValue = readValue_s_(uniformTypePrecisions, line, &currentPos);
 						}
 					}
 				}
-				if (ItsAPointInTS) { // special handling of DraggablePoints
+				if (uniformTypePrecisions.shouldShowAsADraggable2DPoint()) { // special handling of DraggablePoints
 					std::get<DraggablePoint>(initialValue).setParentTransform(&m_transform);
 					setMovability(false);
 				}
 				// Add uniform
-				tmpUniforms.push_back(Uniform(m_shader.getID(), s_name, initialValue, minValue, maxValue, ItsAColor));
+				tmpUniforms.push_back(Uniform(m_shader.getID(), s_name, initialValue, minValue, maxValue, uniformTypePrecisions));
 			}
 		}
 		m_uniforms = tmpUniforms;
@@ -172,9 +171,9 @@ OpenGLType ShaderLayer::stringToOpenGLType(const std::string& s_type) {
 	}
 }
 
-UniformType ShaderLayer::readValue_s_(OpenGLType type, bool itsAPointInTS, const std::string& str, size_t* currentPosPtr) {
+UniformType ShaderLayer::readValue_s_(const UniformTypePrecisions& typePrecisions, const std::string& str, size_t* currentPosPtr) {
 	float x, y, z, w;
-	switch (type)
+	switch (typePrecisions.getOpenGLType())
 	{
 	case Int:
 		return std::stoi(String::getNextWord(str, currentPosPtr));
@@ -185,7 +184,7 @@ UniformType ShaderLayer::readValue_s_(OpenGLType type, bool itsAPointInTS, const
 	case Vec2:
 		x = std::stof(String::getNextWord(str, currentPosPtr));
 		y = std::stof(String::getNextWord(str, currentPosPtr));
-		if (itsAPointInTS)
+		if (typePrecisions.shouldShowAsADraggable2DPoint())
 			return DraggablePoint(x, y, nullptr);
 		else
 			return glm::vec2(x, y);
