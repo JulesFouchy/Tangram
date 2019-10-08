@@ -18,6 +18,7 @@ Uniform::Uniform(GLuint shaderID, const std::string& name, UniformType value, Un
 	: m_name      ( name ),
 	  m_location  ( glGetUniformLocation(shaderID, name.c_str()) ),
 	  m_value     ( value ),
+	  m_valueWhenDraggingStarted (value),
 	  m_minValue  ( minValue ),
 	  m_maxValue  ( maxValue ),
 	  m_precisions( typePrecisions )
@@ -49,7 +50,7 @@ void Uniform::set() {
 	}
 }
 
-std::pair<bool, bool> Uniform::GuiDragValue() {
+std::tuple<bool, bool, bool> Uniform::GuiDragValue() {
 	bool wasJusModified = false;
 	if (auto myInt = std::get_if<int>(getValuePointer())) {
 		wasJusModified = ImGui::DragInt(getName().c_str(), myInt);
@@ -80,11 +81,7 @@ std::pair<bool, bool> Uniform::GuiDragValue() {
 		spdlog::error(" {} : unknown uniform type", getName());
 	}
 	//
-	if (ImGui::IsItemActivated()) {
-		spdlog::error("activation");
-		m_valueWhenDraggingStarted = getValue();
-	}
-	return std::make_pair(wasJusModified, ImGui::IsItemDeactivatedAfterEdit());
+	return std::make_tuple(wasJusModified, ImGui::IsItemActivated(), ImGui::IsItemDeactivatedAfterEdit());
 }
 
 void Uniform::showDraggablePoints() {

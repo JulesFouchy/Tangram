@@ -43,7 +43,8 @@ public:
 	const UniformType& getValueWhenDraggingStarted() const { return m_valueWhenDraggingStarted; }
 	UniformType* getValuePointer() { return &m_value; }
 	inline void setValue(UniformType newValue) { m_value = newValue; }
-	std::pair<bool, bool> GuiDragValue(); // was value modified this frame | did dragging end this frame
+	inline void setValueWhenDraggingStarted(UniformType newValue) { m_valueWhenDraggingStarted = newValue; }
+	std::tuple<bool, bool, bool> GuiDragValue(); // was value modified this frame | did dragging start this frame | did dragging end this frame
 
 	void showDraggablePoints();
 	

@@ -54,8 +54,11 @@ void ShaderLayer::showGUI() {
 	ImGui::Begin(("Uniforms of " + getName()).c_str());
 	bool uniformChanged = false;
 	for (Uniform& uniform : m_uniforms) {
-		auto [bUniformJustChanged, bDraggingJustEnded] = uniform.GuiDragValue();
+		UniformType tmpValue = uniform.getValue();
+		auto [bUniformJustChanged, bDraggingJustStarted, bDraggingJustEnded] = uniform.GuiDragValue();
 		uniformChanged |= bUniformJustChanged;
+		if (bDraggingJustStarted)
+			uniform.setValueWhenDraggingStarted(tmpValue);
 		if (bDraggingJustEnded)
 			pushUniformChangeInHistory(uniform);
 	}
