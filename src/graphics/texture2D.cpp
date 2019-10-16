@@ -9,9 +9,10 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 Shader Texture2D::standardShader = Shader("res/shaders/vertex/texture.vert", "res/shaders/fragment/texture_standard.frag", false);
+std::vector<bool> Texture2D::isSlotUsed;
 
 Texture2D::Texture2D()
-	: m_width(0), m_height(0), m_aspectRatio(1.0f), m_pixelFormat(RGBA), m_textureID(0), m_rectVertexArray(), m_BPP(0)
+	: m_width(0), m_height(0), m_aspectRatio(1.0f), m_pixelFormat(RGBA), m_textureID(0), m_textureSlot(-1), m_rectVertexArray(), m_BPP(0)
 {
 	// Gen texture
 	glGenTextures(1, &m_textureID);
@@ -37,6 +38,8 @@ void Texture2D::Initialize(int width, int height, int BPP, unsigned char* pixels
 }
 
 void Texture2D::ClassInitialization() {
+	for (int i = 0; i < MAX_NB_TEXTURES; ++i)
+		isSlotUsed.push_back(false);
 	//Shaders must be compiled after openGl was initialized
 	standardShader.compile();
 }
@@ -50,11 +53,13 @@ void Texture2D::show(glm::mat4x4 transform, glm::mat4x4 projection) {
 	bind();
 	// Shader
 	standardShader.bind();
-	standardShader.setUniform1i("u_textureSlot", 0);
+	standardShader.setUniform1i("u_textureSlot", getSlot());
 	glm::mat4x4 mvp = projection * transform;
 	standardShader.setUniformMat4f("u_mvp", mvp);
 	// Vertex array
 	m_rectVertexArray.binddrawunbind();
+	// Unbind texture
+	unbind();
 }
 
 void Texture2D::show(glm::mat4x4 transform) {
@@ -62,7 +67,32 @@ void Texture2D::show(glm::mat4x4 transform) {
 }
 
 void Texture2D::bind() {
+	// find slot to bind to
+	if (m_textureSlot == -1) {
+		auto it = std::find(isSlotUsed.cbegin(), isSlotUsed.cend(), false);
+		if (it == isSlotUsed.cend())
+			spdlog::error("[Texture2D::bind] no empty slot found !");
+		else
+			m_textureSlot = std::distance(isSlotUsed.cbegin(), it);
+	}
+	else {
+		spdlog::error("[Texture2D::bind] not correctly unbound");
+	}
+	isSlotUsed[m_textureSlot] = true;
+	spdlog::warn("binding to slot {}", m_textureSlot);
+	// select slot
+	glActiveTexture(GL_TEXTURE0 + m_textureSlot);
+	// bind
 	glBindTexture(GL_TEXTURE_2D, m_textureID);
+}
+
+void Texture2D::unbind() {
+	spdlog::warn("unbinding slot {}", m_textureSlot);
+	isSlotUsed[m_textureSlot] = false;
+	m_textureSlot = -1;
+	//
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 unsigned int Texture2D::bytesPerPixel(PixelFormat format) {
