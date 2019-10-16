@@ -77,9 +77,6 @@ void GUI_LayerCreation::Window_ShaderLayerCreation() {
 
 void GUI_LayerCreation::Window_EffectLayerCreation() {
 	ImGui::Begin("Creating an EffectLayer", &m_bWindow_EffectLayerCreation);
-	// get width and height
-	ImGuiChoose_Ratio_Width_Height();
-	ImGui::Separator();
 
 	// get filepath
 	ImGui::Text("Fragment file path : "); ImGui::SameLine();
@@ -88,7 +85,9 @@ void GUI_LayerCreation::Window_EffectLayerCreation() {
 
 	// creation	
 	if (ImGui::Button("OK !")) {
-		DrawingBoard::LayerRegistry().createEffectLayer(m_width, m_height, m_filepath, m_targetLayerID);
+		unsigned int previewWidth = DrawingBoard::LayerRegistry()[m_targetLayerID]->getTexture().getWidth();
+		unsigned int previewHeight = DrawingBoard::LayerRegistry()[m_targetLayerID]->getTexture().getHeight();
+		DrawingBoard::LayerRegistry().createEffectLayer(previewWidth, previewHeight, m_filepath, m_targetLayerID);
 		m_bWindow_EffectLayerCreation = false;
 	}
 	ImGui::End();
