@@ -121,13 +121,13 @@ int main(int argc, char* argv[])
 	Log::Initialize();
 
 	Texture2D::ClassInitialization();
-	DrawingBoard::Initialize(Ratio(16,9));
+	DrawingBoard::Initialize(Ratio(4,3));
 	DrawingBoard::transform.setScale(0.9f);
 
 	//DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test3.jpg");
 	//DrawingBoard::getLayerList().createLoadedImageLayer("data/img/test2.png");
 	//DrawingBoard::LayerRegistry().createShaderLayer(4*1000/3, 1000,"res/shaders/fragment/gradient.frag");
-	DrawingBoard::LayerRegistry().createShaderLayer(ceil(1000), 1000, "C:/Dev/Tangram/res/shaders/fragment/disk.frag");
+	//DrawingBoard::LayerRegistry().createShaderLayer(ceil(DrawingBoard::transform.getAspectRatio()*1000), 1000, "C:/Dev/Tangram/res/shaders/fragment/plant.frag");
 	//DrawingBoard::LayerRegistry().createShaderLayer(ceil(DrawingBoard::transform.getAspectRatio() * 1000), 1000, "res/shaders/fragment/wind.frag");
 	//DrawingBoard::LayerRegistry().createShaderLayer(4 * 1000 / 3, 1000, "res/shaders/fragment/shaderLayerTest.frag");
 

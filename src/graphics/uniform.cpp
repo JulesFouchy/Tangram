@@ -53,7 +53,7 @@ void Uniform::set() {
 std::tuple<bool, bool, bool> Uniform::GuiDragValue() {
 	bool wasJusModified = false;
 	if (auto myInt = std::get_if<int>(getValuePointer())) {
-		wasJusModified = ImGui::DragInt(getName().c_str(), myInt);
+		wasJusModified = ImGui::SliderInt(getName().c_str(), myInt, std::get<int>(m_minValue), std::get<int>(m_maxValue));
 	}
 	else if (auto myFloat = std::get_if<float>(getValuePointer())) {
 		wasJusModified = ImGui::SliderFloat(getName().c_str(), myFloat, std::get<float>(m_minValue), std::get<float>(m_maxValue));
