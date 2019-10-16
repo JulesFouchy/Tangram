@@ -11,13 +11,13 @@
 #include <fstream>
 #include "helper/string.hpp"
 
-ShaderLayer::ShaderLayer(int previewWidth, int previewHeight, const std::string& fragmentFilePath)
+ShaderLayer::ShaderLayer(int previewWidth, int previewHeight, const std::string& fragmentFilePath, CoordinateSystem coordSystem)
 	: Layer((float) previewWidth / previewHeight, fragmentFilePath), m_shader("C:/Dev/Tangram/res/shaders/vertex/shaderLayer.vert", fragmentFilePath),
 	  m_uniforms(), m_rectVAO()
 {
 	parseShader(fragmentFilePath);
 	// Initialize members
-	m_rectVAO.Initialize(-1.0f, 1.0f, -1.0f, 1.0f, m_transform.getInitialAspectRatio(), MINUS_RATIO_TO_RATIO__MINUS_ONE_TO_ONE);
+	m_rectVAO.Initialize(-1.0f, 1.0f, -1.0f, 1.0f, m_transform.getInitialAspectRatio(), coordSystem);
 	m_renderBuffer.getTexture().Initialize(previewWidth, previewHeight, Texture2D::bytesPerPixel(RGBA), nullptr);
 	drawShaderOnPreviewTexture();
 }
@@ -83,9 +83,13 @@ DraggablePoint* ShaderLayer::lookForHoveredDraggablePoint() {
 	return nullptr;
 }
 
+void ShaderLayer::setUniformsThatAreNotParametersOfTheFragShader_ForSaving(RectTransform& transform) {
+	m_shader.setUniformMat4f("u_mvp", DrawingBoard::transform.getProjectionMatrix() * transform.getMatrix() * glm::inverse(transform.getProjectionMatrix()));
+}
+
 void ShaderLayer::showForSaving(RectTransform& transform) {
 	shaderBindAndSetFragmentUniforms();
-	m_shader.setUniformMat4f("u_mvp", DrawingBoard::transform.getProjectionMatrix() * transform.getMatrix() * glm::inverse(transform.getProjectionMatrix()));
+	setUniformsThatAreNotParametersOfTheFragShader_ForSaving(transform);
 	m_rectVAO.binddrawunbind();
 }
 
@@ -95,11 +99,15 @@ void ShaderLayer::shaderBindAndSetFragmentUniforms() {
 		uniform.set();
 }
 
+void ShaderLayer::setUniformsThatAreNotParametersOfTheFragShader_ForPreview() {
+	m_shader.setUniformMat4f("u_mvp", glm::mat4x4(1.0f));
+}
+
 void ShaderLayer::drawShaderOnPreviewTexture() {
 	spdlog::warn("recomputed shader {}", getName());
 	glDisable(GL_BLEND);
 		shaderBindAndSetFragmentUniforms();
-		m_shader.setUniformMat4f("u_mvp", glm::mat4x4(1.0f));
+		setUniformsThatAreNotParametersOfTheFragShader_ForPreview();
 		m_renderBuffer.bind();
 		m_renderBuffer.clear();
 		m_rectVAO.binddrawunbind();
@@ -123,57 +131,59 @@ void ShaderLayer::parseShader(const std::string& filepath) {
 				size_t posBeginType = String::beginningOfNextWord(line, String::endOfNextWord(line, posBeginUniform) + 1);
 				size_t posEndType = String::endOfNextWord(line, posBeginType);
 				OpenGLType type = stringToOpenGLType(line.substr(posBeginType, posEndType - posBeginType));
-				UniformTypePrecisions uniformTypePrecisions(type);
-				// Get name
-				size_t posBeginName = String::beginningOfNextWord(line, posEndType);
-				size_t posEndName = String::endOfNextWord(line, posBeginName);
-				std::string s_name = line.substr(posBeginName, posEndName - posBeginName);
-				spdlog::info("found uniform {}", s_name);
-				// Get options
-				UniformType initialValue = Uniform::zero(uniformTypePrecisions);
-				UniformType minValue = Uniform::zero(uniformTypePrecisions);
-				UniformType maxValue = Uniform::zero(uniformTypePrecisions);
-				if (posBeginComment != std::string::npos) {
-					spdlog::info("looking for options");
-					size_t currentPos = String::beginningOfNextWord(line, String::endOfNextWord(line, posBeginComment) + 1);
-					while (currentPos < line.size()) {
-						std::string arg = String::getNextWord(line, &currentPos);
-						spdlog::info("|" + arg + "|");
-						if (arg == "NOT_A_COLOR" || arg == "NOT_A_COLOUR") {
-							uniformTypePrecisions.setShowAsAColorPicker(false);
-						}
-						else if (arg == "POINT2D") {
-							uniformTypePrecisions.setShowAsDraggable2DPoint(true);
-						}
-						else if (arg == "default") {
-							int index = -1;
-							for (int k = 0; k < m_uniforms.size(); ++k) {
-								if (m_uniforms[k].getName() == s_name) {
-									index = k;
-									break;
-								}
+				if (thisTypeOfUniformIsAParameter(type)) {
+					UniformTypePrecisions uniformTypePrecisions(type);
+					// Get name
+					size_t posBeginName = String::beginningOfNextWord(line, posEndType);
+					size_t posEndName = String::endOfNextWord(line, posBeginName);
+					std::string s_name = line.substr(posBeginName, posEndName - posBeginName);
+					spdlog::info("found uniform {}", s_name);
+					// Get options
+					UniformType initialValue = Uniform::zero(uniformTypePrecisions);
+					UniformType minValue = Uniform::zero(uniformTypePrecisions);
+					UniformType maxValue = Uniform::zero(uniformTypePrecisions);
+					if (posBeginComment != std::string::npos) {
+						spdlog::info("looking for options");
+						size_t currentPos = String::beginningOfNextWord(line, String::endOfNextWord(line, posBeginComment) + 1);
+						while (currentPos < line.size()) {
+							std::string arg = String::getNextWord(line, &currentPos);
+							spdlog::info("|" + arg + "|");
+							if (arg == "NOT_A_COLOR" || arg == "NOT_A_COLOUR") {
+								uniformTypePrecisions.setShowAsAColorPicker(false);
 							}
-							if (index != -1)
-								initialValue = m_uniforms[index].getValue();
-							else
-								initialValue = readValue_s_(uniformTypePrecisions, line, &currentPos);
-						}
-						else if (arg == "min") {
-							minValue = readValue_s_(uniformTypePrecisions, line, &currentPos);
-						}
-						else if (arg == "max") {
-							maxValue = readValue_s_(uniformTypePrecisions, line, &currentPos);
+							else if (arg == "POINT2D") {
+								uniformTypePrecisions.setShowAsDraggable2DPoint(true);
+							}
+							else if (arg == "default") {
+								int index = -1;
+								for (int k = 0; k < m_uniforms.size(); ++k) {
+									if (m_uniforms[k].getName() == s_name) {
+										index = k;
+										break;
+									}
+								}
+								if (index != -1)
+									initialValue = m_uniforms[index].getValue();
+								else
+									initialValue = readValue_s_(uniformTypePrecisions, line, &currentPos);
+							}
+							else if (arg == "min") {
+								minValue = readValue_s_(uniformTypePrecisions, line, &currentPos);
+							}
+							else if (arg == "max") {
+								maxValue = readValue_s_(uniformTypePrecisions, line, &currentPos);
+							}
 						}
 					}
-				}
-				// Add uniform
-				tmpUniforms.push_back(Uniform(m_shader.getID(), s_name, initialValue, minValue, maxValue, uniformTypePrecisions));
-				// special handling of DraggablePoints
-				if (uniformTypePrecisions.shouldShowAsADraggable2DPoint()) {
-					setMovability(false);
-					DraggablePoint& dragPt = std::get<DraggablePoint>(*tmpUniforms[tmpUniforms.size()-1].getValuePointer());
-					dragPt.setParentTransform(&m_transform);
-					dragPt.setParentShaderLayer(this);
+					// Add uniform
+					tmpUniforms.push_back(Uniform(m_shader.getID(), s_name, initialValue, minValue, maxValue, uniformTypePrecisions));
+					// special handling of DraggablePoints
+					if (uniformTypePrecisions.shouldShowAsADraggable2DPoint()) {
+						setMovability(false);
+						DraggablePoint& dragPt = std::get<DraggablePoint>(*tmpUniforms[tmpUniforms.size() - 1].getValuePointer());
+						dragPt.setParentTransform(&m_transform);
+						dragPt.setParentShaderLayer(this);
+					}
 				}
 			}
 		}
@@ -197,9 +207,16 @@ OpenGLType ShaderLayer::stringToOpenGLType(const std::string& s_type) {
 	else if (s_type == "vec4") {
 		return Vec4;
 	}
+	else if (s_type == "sampler2D") {
+		return Sampler2D;
+	}
 	else {
 		spdlog::error("[stringToOpenGLType] unknown type : {}", s_type);
 	}
+}
+
+bool ShaderLayer::thisTypeOfUniformIsAParameter(OpenGLType type) {
+	return type != Sampler2D;
 }
 
 UniformType ShaderLayer::readValue_s_(const UniformTypePrecisions& typePrecisions, const std::string& str, size_t* currentPosPtr) {

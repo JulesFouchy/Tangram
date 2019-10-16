@@ -79,7 +79,7 @@ void Texture2D::bind() {
 		spdlog::error("[Texture2D::bind] not correctly unbound");
 	}
 	isSlotUsed[m_textureSlot] = true;
-	spdlog::warn("binding to slot {}", m_textureSlot);
+	//spdlog::warn("binding to slot {}", m_textureSlot);
 	// select slot
 	glActiveTexture(GL_TEXTURE0 + m_textureSlot);
 	// bind
@@ -87,7 +87,7 @@ void Texture2D::bind() {
 }
 
 void Texture2D::unbind() {
-	spdlog::warn("unbinding slot {}", m_textureSlot);
+	//spdlog::warn("unbinding slot {}", m_textureSlot);
 	isSlotUsed[m_textureSlot] = false;
 	m_textureSlot = -1;
 	//

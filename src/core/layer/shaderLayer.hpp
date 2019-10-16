@@ -10,7 +10,7 @@
 
 class ShaderLayer : public Layer {
 public:
-	ShaderLayer(int previewWidth, int previewHeight, const std::string& fragmentFilePath);
+	ShaderLayer(int previewWidth, int previewHeight, const std::string& fragmentFilePath, CoordinateSystem coordSystem = MINUS_RATIO_TO_RATIO__MINUS_ONE_TO_ONE);
 	~ShaderLayer() = default;
 
 	void showGUI() override;
@@ -22,22 +22,25 @@ public:
 	void createACopy() override;
 
 	void showForSaving(RectTransform& transform) override;
+	virtual void drawShaderOnPreviewTexture();
+
+protected:
+	virtual void setUniformsThatAreNotParametersOfTheFragShader_ForPreview();
+	virtual void setUniformsThatAreNotParametersOfTheFragShader_ForSaving(RectTransform& transform);
+
 private:
 	void shaderBindAndSetFragmentUniforms();
-public:
-	void drawShaderOnPreviewTexture();
-private:
-
 	void pushUniformChangeInHistory(Uniform& uniform);
-
-private:
-	Shader m_shader;
-	std::vector<Uniform> m_uniforms;
-	RectVAO m_rectVAO;
 
 private:
 	// Parsing
 	void parseShader(const std::string& filepath);
 	static OpenGLType stringToOpenGLType(const std::string& s_type);
+	static bool thisTypeOfUniformIsAParameter(OpenGLType type);
 	static UniformType readValue_s_(const UniformTypePrecisions& typePrecisions, const std::string& str, size_t* currentPosPtr);
+
+protected:
+	Shader m_shader;
+	std::vector<Uniform> m_uniforms;
+	RectVAO m_rectVAO;
 };

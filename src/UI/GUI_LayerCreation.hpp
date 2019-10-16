@@ -4,6 +4,8 @@
 
 #include <string>
 
+#include "core/layerID.hpp"
+
 enum WidthOrHeight {
 	Width,
 	Height
@@ -13,9 +15,11 @@ class GUI_LayerCreation {
 public:
 	static void Show();
 	static void OpenCreateShaderLayerWindow();
+	static void OpenCreateEffectLayerWindow(LayerID targetLayerID);
 	static void OpenSaveDrawingBoardWindow();
 private:
 	static void Window_ShaderLayerCreation();
+	static void Window_EffectLayerCreation();
 	static void Window_DrawingBoardSaving();
 
 	static void ImGuiChoose_Width_Height();
@@ -25,6 +29,7 @@ private:
 
 private:
 	static bool m_bWindow_ShaderLayerCreation;
+	static bool m_bWindow_EffectLayerCreation;
 	static bool m_bWindow_DrawingBoardSaving;
 	inline static bool isBusy() { return m_bWindow_ShaderLayerCreation || m_bWindow_DrawingBoardSaving; }
 
@@ -36,6 +41,8 @@ private:
 
 	static std::string m_filepath;
 	static int m_fileExtensionIndex;
+
+	static LayerID m_targetLayerID;
 
 private:
 	GUI_LayerCreation() = default;

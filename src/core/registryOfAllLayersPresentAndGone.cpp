@@ -3,6 +3,7 @@
 #include "layer/loadedImageLayer.hpp"
 #include "layer/copyLayer.hpp"
 #include "layer/shaderLayer.hpp"
+#include "layer/effectLayer.hpp"
 
 RegistryOfAllLayersPresentAndGone::RegistryOfAllLayersPresentAndGone() {
 	m_registry.push_back(nullptr);
@@ -32,6 +33,14 @@ void RegistryOfAllLayersPresentAndGone::createCopyLayer(LayerID childLayerID, La
 
 void RegistryOfAllLayersPresentAndGone::createShaderLayer(unsigned int previewWidth, unsigned int previewHeight, const std::string& fragmentShaderFilepath, LayerID registryID) {
 	Layer* layer = new ShaderLayer(previewWidth, previewHeight, fragmentShaderFilepath);
+	if (layer->createdSuccessfully())
+		addLayer(layer, registryID);
+	else
+		delete layer;
+}
+
+void RegistryOfAllLayersPresentAndGone::createEffectLayer(unsigned int previewWidth, unsigned int previewHeight, const std::string& fragmentShaderFilepath, LayerID targetLayerID, LayerID registryID) {
+	Layer* layer = new EffectLayer(previewWidth, previewHeight, fragmentShaderFilepath, targetLayerID);
 	if (layer->createdSuccessfully())
 		addLayer(layer, registryID);
 	else

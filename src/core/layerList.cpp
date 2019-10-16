@@ -5,7 +5,7 @@
 #include "UI/log.hpp"
 
 #include "UI/input.hpp"
-
+#include "ui/GUI_LayerCreation.hpp"
 #include "UI/settings.hpp"
 
 #include "helper/display.hpp"
@@ -155,6 +155,11 @@ void LayerList::onKeyDown(Key key) {
 			case 'c':
 				for (int k = 0; k < selectedLayers.size(); ++k) {
 					DrawingBoard::LayerRegistry()[selectedLayers[k]]->createACopy();
+				}
+				break;
+			case 'e':
+				for (int k = 0; k < selectedLayers.size(); ++k) {
+					GUI_LayerCreation::OpenCreateEffectLayerWindow(selectedLayers[k]);
 				}
 				break;
 			default:

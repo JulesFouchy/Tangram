@@ -10,18 +10,22 @@
 #include "imgui/misc/cpp/imgui_stdlib.h"
 
 bool GUI_LayerCreation::m_bWindow_ShaderLayerCreation = false;
+bool GUI_LayerCreation::m_bWindow_EffectLayerCreation = false;
 bool GUI_LayerCreation::m_bWindow_DrawingBoardSaving = false;
 Ratio GUI_LayerCreation::m_aspectRatio(1, 1);
 unsigned int GUI_LayerCreation::m_width = 1000;
 unsigned int GUI_LayerCreation::m_height = 1000;
 WidthOrHeight GUI_LayerCreation::m_lastModified = Height;
 int GUI_LayerCreation::m_fileExtensionIndex = 0;
+LayerID GUI_LayerCreation::m_targetLayerID = 0;
 
 std::string GUI_LayerCreation::m_filepath = "";
 
 void GUI_LayerCreation::Show() {
 	if (m_bWindow_ShaderLayerCreation)
 		Window_ShaderLayerCreation();
+	if (m_bWindow_EffectLayerCreation)
+		Window_EffectLayerCreation();
 	if (m_bWindow_DrawingBoardSaving)
 		Window_DrawingBoardSaving();
 }
@@ -29,6 +33,15 @@ void GUI_LayerCreation::Show() {
 void GUI_LayerCreation::OpenCreateShaderLayerWindow() {
 	if (!isBusy()) { // can only open one window at a time because they share member variables
 		m_bWindow_ShaderLayerCreation = true;
+		m_aspectRatio = DrawingBoard::transform.getAspectRatio();
+		updateWidthOrHeight();
+	}
+}
+
+void GUI_LayerCreation::OpenCreateEffectLayerWindow(LayerID targetLayerID) {
+	m_targetLayerID = targetLayerID;
+	if (!isBusy()) { // can only open one window at a time because they share member variables
+		m_bWindow_EffectLayerCreation = true;
 		m_aspectRatio = DrawingBoard::transform.getAspectRatio();
 		updateWidthOrHeight();
 	}
@@ -56,8 +69,27 @@ void GUI_LayerCreation::Window_ShaderLayerCreation() {
 
 	// creation	
 	if (ImGui::Button("OK !")) {
-		DrawingBoard::LayerRegistry().createShaderLayer(m_width, m_height, m_filepath);
+		DrawingBoard::LayerRegistry().createShaderLayer(m_width, m_height, m_filepath, m_targetLayerID);
 		m_bWindow_ShaderLayerCreation = false;
+	}
+	ImGui::End();
+}
+
+void GUI_LayerCreation::Window_EffectLayerCreation() {
+	ImGui::Begin("Creating an EffectLayer", &m_bWindow_EffectLayerCreation);
+	// get width and height
+	ImGuiChoose_Ratio_Width_Height();
+	ImGui::Separator();
+
+	// get filepath
+	ImGui::Text("Fragment file path : "); ImGui::SameLine();
+	ImGuiOpenFileButton("Fragment shader (*.frag; *.fragment)\0*.frag;*.fragment\0All Files (*.*)\0*.*\0");
+	ImGui::Separator();
+
+	// creation	
+	if (ImGui::Button("OK !")) {
+		DrawingBoard::LayerRegistry().createEffectLayer(m_width, m_height, m_filepath, m_targetLayerID);
+		m_bWindow_EffectLayerCreation = false;
 	}
 	ImGui::End();
 }
