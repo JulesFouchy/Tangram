@@ -33,5 +33,8 @@ void EffectLayer::setUniformsThatAreNotParametersOfTheFragShader_ForPreview() {
 
 void EffectLayer::setUniformsThatAreNotParametersOfTheFragShader_ForSaving(RectTransform& transform) {
 	ShaderLayer::setUniformsThatAreNotParametersOfTheFragShader_ForSaving(transform);
-	spdlog::error("[EffectLayer::setUniformsThatAreNotParametersOfTheFragShader_ForSaving] code not written yet !");
+	//
+	Texture2D& targetTexture = DrawingBoard::LayerRegistry()[m_targetLayerID]->getSaveTexture();
+	targetTexture.bind();
+	m_shader.setUniform1i("u_textureSlot", targetTexture.getSlot());
 }

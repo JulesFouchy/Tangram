@@ -42,6 +42,7 @@ public:
 
 	virtual inline Texture2D& getTexture() { return m_renderBuffer.getTexture(); }
 	virtual inline FrameBuffer& getFrameBuffer() { return m_renderBuffer; }
+	virtual inline Texture2D& getSaveTexture() { return m_renderBuffer.getTexture(); }
 
 private:
 	bool m_bVisible;
