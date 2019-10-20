@@ -3,6 +3,7 @@
 #include "stb_image/stb_image.h"
 
 #include "core/drawingBoard.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 LoadedImageLayer::LoadedImageLayer(const std::string& imgFilePath)
 	: Layer(0.1f, imgFilePath), m_filePath(imgFilePath)
@@ -15,9 +16,10 @@ LoadedImageLayer::LoadedImageLayer(const std::string& imgFilePath)
 	unsigned char* pixels = stbi_load(imgFilePath.c_str(), &width, &height, &BPP, Texture2D::bytesPerPixel(RGBA));
 	Log::separationLine();
 	// Initialize members
-	m_bMustRecomputeSaveBuffer = false; // permanently false for a loaded image layer
-	m_previewBuffer.getTexture().Initialize(width, height, BPP, pixels); // TODO if image is too big, only put low-res texture here for the sake of previex speed
-	m_saveBuffer.getTexture().Initialize(width, height, BPP, pixels);
+	//m_bMustRecomputeSaveBuffer = false; // permanently false for a loaded image layer
+	m_fullImageData.Initialize(width, height, BPP, pixels);
+	m_previewBuffer.setTextureSize(width, height);
+	onChange();
 	m_transform = RectTransform((float) width / height);
 	// Free pixels CPU-side
 	if (pixels)
@@ -44,7 +46,8 @@ void LoadedImageLayer::drawOnFrameBuffer_Save(FrameBuffer& frameBuffer, int draw
 	glDisable(GL_BLEND);
 		frameBuffer.bind();
 		frameBuffer.clear();
-		getTexture_Save().show(glm::mat4x4(1.0f));
+		float aspectRatio = frameBuffer.getTexture().getAspectRatio();
+		m_fullImageData.show(glm::mat4x4(1.0f), glm::ortho(-0.5f * aspectRatio, 0.5f * aspectRatio, -0.5f, 0.5f));
 		frameBuffer.unbind();
 	glEnable(GL_BLEND);
 }

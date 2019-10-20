@@ -10,9 +10,8 @@ public:
 
 	void drawOnFrameBuffer_Preview(FrameBuffer& frameBuffer) override;
 	void drawOnFrameBuffer_Save(FrameBuffer& frameBuffer, int drawingBoardHeight) override;
-	inline void computePreviewBuffer() override {};
-	inline void computeSaveBuffer(int drawingBoardHeight, RectTransform& transform) override {};
 
 private:
 	std::string m_filePath;
+	Texture2D m_fullImageData;
 };

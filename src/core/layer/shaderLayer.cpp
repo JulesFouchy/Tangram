@@ -101,17 +101,6 @@ void ShaderLayer::setUniformsThatAreNotParametersOfTheFragShader_Save(int drawin
 	m_rectVAO.binddrawunbind();
 }*/
 
-void ShaderLayer::computePreviewBuffer() {
-	drawOnFrameBuffer_Preview(m_previewBuffer);
-}
-
-void ShaderLayer::computeSaveBuffer(int drawingBoardHeight, RectTransform& transform) {
-	int w = ceil( drawingBoardHeight * transform.getScale() * transform.getAspectRatio() );
-	int h = ceil( drawingBoardHeight * transform.getScale() );
-	m_saveBuffer.setTextureSize(w, h);
-	drawOnFrameBuffer_Save(m_saveBuffer, drawingBoardHeight);
-}
-
 void ShaderLayer::shaderBindAndSetFragmentUniforms() {
 	m_shader.bind();
 	for (Uniform& uniform : m_uniforms)

@@ -31,13 +31,6 @@ void CopyLayer::drawOnFrameBuffer_Save(FrameBuffer& frameBuffer, int drawingBoar
 	DrawingBoard::LayerRegistry()[m_childLayerID]->drawOnFrameBuffer_Save(m_saveBuffer, drawingBoardHeight);
 }
 
-void CopyLayer::computeSaveBuffer(int drawingBoardHeight, RectTransform& transform) {
-	int w = ceil(drawingBoardHeight * transform.getScale() * transform.getAspectRatio());
-	int h = ceil(drawingBoardHeight * transform.getScale());
-	m_saveBuffer.setTextureSize(w, h);
-	drawOnFrameBuffer_Save(m_saveBuffer, drawingBoardHeight);
-}
-
 /*void CopyLayer::showForSaving(RectTransform& transform) {
 	DrawingBoard::LayerRegistry()[m_childLayerID]->showForSaving(transform);
 }*/

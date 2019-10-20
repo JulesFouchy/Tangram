@@ -25,8 +25,6 @@ public:
 	void onChange() override;
 
 protected:
-	void computePreviewBuffer() override;
-	void computeSaveBuffer(int drawingBoardHeight, RectTransform& transform) override;
 	void drawOnFrameBuffer_Preview(FrameBuffer& frameBuffer) override;
 	void drawOnFrameBuffer_Save(FrameBuffer& frameBuffer, int drawingBoardHeight) override;
 

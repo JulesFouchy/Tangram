@@ -38,6 +38,17 @@ void Layer::showFrame() {
 	ImmediateDrawing::rectOutline(0.0f, 0.0f, m_transform.getAspectRatio(), 1.0f, 0.002f);
 }
 
+void Layer::computePreviewBuffer() {
+	drawOnFrameBuffer_Preview(m_previewBuffer);
+}
+
+void Layer::computeSaveBuffer(int drawingBoardHeight, RectTransform& transform) {
+	int w = ceil(drawingBoardHeight * transform.getScale() * transform.getAspectRatio());
+	int h = ceil(drawingBoardHeight * transform.getScale());
+	m_saveBuffer.setTextureSize(w, h);
+	drawOnFrameBuffer_Save(m_saveBuffer, drawingBoardHeight);
+}
+
 void Layer::showGUI() {
 	// nothing by default !
 }

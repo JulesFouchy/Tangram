@@ -19,8 +19,6 @@ public:
 
 	void drawOnFrameBuffer_Preview(FrameBuffer& frameBuffer) override;
 	void drawOnFrameBuffer_Save(FrameBuffer& frameBuffer, int drawingBoardHeight) override;
-	inline void computePreviewBuffer() {};
-	void computeSaveBuffer(int drawingBoardHeight, RectTransform& transform) override;
 private:
 	LayerID m_childLayerID;
 };

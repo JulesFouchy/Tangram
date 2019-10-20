@@ -45,8 +45,8 @@ public:
 
 	virtual void drawOnFrameBuffer_Preview(FrameBuffer& frameBuffer) = 0;
 	virtual void drawOnFrameBuffer_Save(FrameBuffer& frameBuffer, int drawingBoardHeight) = 0;
-	virtual void computePreviewBuffer() = 0;
-	virtual void computeSaveBuffer(int drawingBoardHeight, RectTransform& transform) = 0;
+	void computePreviewBuffer();
+	virtual void computeSaveBuffer(int drawingBoardHeight, RectTransform& transform);
 
 protected:
 	virtual void onChange();
