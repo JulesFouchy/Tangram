@@ -52,13 +52,13 @@ void DraggablePoint::endDragging() {
 		[this, newValue]()
 	{
 		setPos_TS(newValue);
-		m_parentShaderLayer->drawShaderOnPreviewTexture();
+		m_parentShaderLayer->onChange();
 	},
 		// UNDO action
 		[this, prevValue]()
 	{
 		setPos_TS(prevValue);
-		m_parentShaderLayer->drawShaderOnPreviewTexture();
+		m_parentShaderLayer->onChange();
 	}
 	));
 	DrawingBoard::history.endUndoGroup();

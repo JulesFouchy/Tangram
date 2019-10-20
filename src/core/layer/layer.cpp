@@ -12,7 +12,7 @@
 #include "graphics/immediateDrawing.hpp"
 
 Layer::Layer(Ratio aspectRatio, const std::string& layerName)
-	: m_bVisible(true), m_bMovable(true), m_name(layerName), m_renderBuffer(), m_transform(aspectRatio)
+	: m_bVisible(true), m_bMovable(true), m_name(layerName), m_previewBuffer(), m_saveBuffer(), m_bMustRecomputeSaveBuffer(true), m_transform(aspectRatio)
 {
 }
 
@@ -21,15 +21,15 @@ Layer::~Layer() {
 }
 
 void Layer::show(const glm::mat4x4& modelMatrix, const glm::mat4x4& viewMatrix, const glm::mat4x4& projMatrix) {
-	getTexture().show(viewMatrix * modelMatrix, projMatrix);
+	getTexture_Preview().show(viewMatrix * modelMatrix, projMatrix);
 }
 
 void Layer::show(const glm::mat4x4& viewMatrix, const glm::mat4x4& projMatrix) {
 	show(glm::scale(m_transform.getMatrix(), glm::vec3(m_transform.getAspectRatio() / m_transform.getInitialAspectRatio(), 1.0f, 1.0f)), viewMatrix, projMatrix);
 }
 
-void Layer::showForSaving() {
-	showForSaving(m_transform);
+void Layer::showSaveTexture(){ 
+	getTexture_Save().show(m_transform.getMatrix(), DrawingBoard::transform.getProjectionMatrix());
 }
 
 void Layer::showFrame() {
@@ -44,4 +44,9 @@ void Layer::showGUI() {
 
 void Layer::showDraggablePoints() {
 	// nothing by default !
+}
+
+void Layer::onChange() {
+	computePreviewBuffer();
+	m_bMustRecomputeSaveBuffer = true;
 }

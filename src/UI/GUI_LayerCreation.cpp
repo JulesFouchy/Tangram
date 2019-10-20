@@ -85,8 +85,8 @@ void GUI_LayerCreation::Window_EffectLayerCreation() {
 
 	// creation	
 	if (ImGui::Button("OK !")) {
-		unsigned int previewWidth = DrawingBoard::LayerRegistry()[m_targetLayerID]->getTexture().getWidth();
-		unsigned int previewHeight = DrawingBoard::LayerRegistry()[m_targetLayerID]->getTexture().getHeight();
+		unsigned int previewWidth = DrawingBoard::LayerRegistry()[m_targetLayerID]->getTexture_Preview().getWidth();
+		unsigned int previewHeight = DrawingBoard::LayerRegistry()[m_targetLayerID]->getTexture_Preview().getHeight();
 		DrawingBoard::LayerRegistry().createEffectLayer(previewWidth, previewHeight, m_filepath, m_targetLayerID);
 		m_bWindow_EffectLayerCreation = false;
 	}

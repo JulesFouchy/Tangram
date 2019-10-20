@@ -18,14 +18,14 @@ ShaderLayer::ShaderLayer(int previewWidth, int previewHeight, const std::string&
 	parseShader(fragmentFilePath);
 	// Initialize members
 	m_rectVAO.Initialize(-1.0f, 1.0f, -1.0f, 1.0f, m_transform.getInitialAspectRatio(), coordSystem);
-	m_renderBuffer.getTexture().Initialize(previewWidth, previewHeight, Texture2D::bytesPerPixel(RGBA), nullptr);
-	drawShaderOnPreviewTexture();
+	m_previewBuffer.getTexture().Initialize(previewWidth, previewHeight, Texture2D::bytesPerPixel(RGBA), nullptr);
+	onChange();
 }
 
 void ShaderLayer::reload() {
 	m_shader.compile();
 	parseShader(m_shader.getFragmentFilepath());
-	drawShaderOnPreviewTexture();
+	onChange();
 }
 
 void ShaderLayer::pushUniformChangeInHistory(Uniform& uniform) {
@@ -37,13 +37,13 @@ void ShaderLayer::pushUniformChangeInHistory(Uniform& uniform) {
 		[this, &uniform, newValue]()
 	{
 		uniform.setValue(newValue);
-		drawShaderOnPreviewTexture();
+		onChange();
 	},
 		// UNDO action
 		[this, &uniform, prevValue]()
 	{
 		uniform.setValue(prevValue);
-		drawShaderOnPreviewTexture();
+		onChange();
 	}
 	));
 	DrawingBoard::history.endUndoGroup();
@@ -63,7 +63,7 @@ void ShaderLayer::showGUI() {
 			pushUniformChangeInHistory(uniform);
 	}
 	if (uniformChanged)
-		drawShaderOnPreviewTexture();
+		onChange();
 	ImGui::End();
 }
 
@@ -83,14 +83,33 @@ DraggablePoint* ShaderLayer::lookForHoveredDraggablePoint() {
 	return nullptr;
 }
 
-void ShaderLayer::setUniformsThatAreNotParametersOfTheFragShader_ForSaving(RectTransform& transform) {
-	m_shader.setUniformMat4f("u_mvp", DrawingBoard::transform.getProjectionMatrix() * transform.getMatrix() * glm::inverse(transform.getProjectionMatrix()));
+void ShaderLayer::setUniformsThatAreNotParametersOfTheFragShader_Preview() {
+	m_shader.setUniformMat4f("u_mvp", glm::mat4x4(1.0f));
 }
 
-void ShaderLayer::showForSaving(RectTransform& transform) {
+void ShaderLayer::setUniformsThatAreNotParametersOfTheFragShader_Save(int drawingBoardHeight) {
+	setUniformsThatAreNotParametersOfTheFragShader_Preview();
+}
+
+/*void ShaderLayer::setUniformsThatAreNotParametersOfTheFragShader_ForSaving() {
+	m_shader.setUniformMat4f("u_mvp", DrawingBoard::transform.getProjectionMatrix());
+}*/
+
+/*void ShaderLayer::showForSaving(RectTransform& transform) {
 	shaderBindAndSetFragmentUniforms();
 	setUniformsThatAreNotParametersOfTheFragShader_ForSaving(transform);
 	m_rectVAO.binddrawunbind();
+}*/
+
+void ShaderLayer::computePreviewBuffer() {
+	drawOnFrameBuffer_Preview(m_previewBuffer);
+}
+
+void ShaderLayer::computeSaveBuffer(int drawingBoardHeight, RectTransform& transform) {
+	int w = ceil( drawingBoardHeight * transform.getScale() * transform.getAspectRatio() );
+	int h = ceil( drawingBoardHeight * transform.getScale() );
+	m_saveBuffer.setTextureSize(w, h);
+	drawOnFrameBuffer_Save(m_saveBuffer, drawingBoardHeight);
 }
 
 void ShaderLayer::shaderBindAndSetFragmentUniforms() {
@@ -99,20 +118,32 @@ void ShaderLayer::shaderBindAndSetFragmentUniforms() {
 		uniform.set();
 }
 
-void ShaderLayer::setUniformsThatAreNotParametersOfTheFragShader_ForPreview() {
-	m_shader.setUniformMat4f("u_mvp", glm::mat4x4(1.0f));
-}
-
-void ShaderLayer::drawShaderOnPreviewTexture() {
+void ShaderLayer::drawOnFrameBuffer_Preview(FrameBuffer& frameBuffer) {
 	spdlog::warn("recomputed shader {}", getName());
 	glDisable(GL_BLEND);
 		shaderBindAndSetFragmentUniforms();
-		setUniformsThatAreNotParametersOfTheFragShader_ForPreview();
-		m_renderBuffer.bind();
-		m_renderBuffer.clear();
+		setUniformsThatAreNotParametersOfTheFragShader_Preview();
+		frameBuffer.bind();
+		frameBuffer.clear();
 		m_rectVAO.binddrawunbind();
-		m_renderBuffer.unbind(); 
+		frameBuffer.unbind();
 	glEnable(GL_BLEND);
+}
+
+void ShaderLayer::drawOnFrameBuffer_Save(FrameBuffer& frameBuffer, int drawingBoardHeight) {
+	spdlog::warn("recomputed shader {}", getName());
+	glDisable(GL_BLEND);
+	shaderBindAndSetFragmentUniforms();
+	setUniformsThatAreNotParametersOfTheFragShader_Save(drawingBoardHeight);
+	frameBuffer.bind();
+	frameBuffer.clear();
+	m_rectVAO.binddrawunbind();
+	frameBuffer.unbind();
+	glEnable(GL_BLEND);
+}
+
+void ShaderLayer::onChange() {
+	Layer::onChange(); // must be called after all changes have been applied to the layer; bc Layer::onChange() updates the layers observing this one
 }
 
 void ShaderLayer::parseShader(const std::string& filepath) {
@@ -257,9 +288,9 @@ UniformType ShaderLayer::readValue_s_(const UniformTypePrecisions& typePrecision
 }
 
 void ShaderLayer::createACopy() {
-	ShaderLayer* newLayer = new ShaderLayer(getTexture().getWidth(), getTexture().getHeight(), m_shader.getFragmentFilepath());
+	ShaderLayer* newLayer = new ShaderLayer(getTexture_Preview().getWidth(), getTexture_Preview().getHeight(), m_shader.getFragmentFilepath());
 	newLayer->setTransform(m_transform);
 	newLayer->m_uniforms = m_uniforms;
-	newLayer->drawShaderOnPreviewTexture();
+	newLayer->onChange();
 	DrawingBoard::LayerRegistry().addLayer(newLayer);
 }

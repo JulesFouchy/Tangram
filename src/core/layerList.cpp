@@ -32,10 +32,18 @@ void LayerList::show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix) {
 	}
 }
 
-void LayerList::showForSaving() {
+void LayerList::computeSaveBuffers(int drawingBoardHeight) {
+	for (int k = 0; k < layers.size(); ++k) {
+		Layer* layer = DrawingBoard::LayerRegistry()[layers[k]];
+		if (layer->isVisible())
+			layer->computeSaveBuffer(drawingBoardHeight, layer->m_transform);
+	}
+}
+
+void LayerList::showSaveTextures() {
 	for (int k = 0; k < layers.size(); ++k) {
 		if (DrawingBoard::LayerRegistry()[layers[k]]->isVisible())
-			DrawingBoard::LayerRegistry()[layers[k]]->showForSaving();
+			DrawingBoard::LayerRegistry()[layers[k]]->showSaveTexture();
 	}
 }
 

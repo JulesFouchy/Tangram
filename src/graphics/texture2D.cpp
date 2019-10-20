@@ -87,12 +87,17 @@ void Texture2D::bind() {
 }
 
 void Texture2D::unbind() {
-	//spdlog::warn("unbinding slot {}", m_textureSlot);
-	isSlotUsed[m_textureSlot] = false;
-	m_textureSlot = -1;
-	//
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	if (m_textureSlot > -1) {
+		//spdlog::warn("unbinding slot {}", m_textureSlot);
+		isSlotUsed[m_textureSlot] = false;
+		m_textureSlot = -1;
+		//
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	else {
+		spdlog::warn("[Texture2D::unbind] trying to unbind a texture that wasn't bound");
+	}
 }
 
 unsigned int Texture2D::bytesPerPixel(PixelFormat format) {

@@ -21,7 +21,8 @@ public:
 	void update();
 
 	void show(glm::mat4x4 viewMatrix, glm::mat4x4 projMatrix);
-	void showForSaving();
+	void computeSaveBuffers(int drawingBoardHeight);
+	void showSaveTextures();
 	void showSelectedLayerGUI();
 
 	//Layer* getLayer(int index);

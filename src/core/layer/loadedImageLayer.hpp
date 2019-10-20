@@ -8,7 +8,11 @@ public:
 
 	void createACopy() override;
 
-	void showForSaving(RectTransform& transform) override;
+	void drawOnFrameBuffer_Preview(FrameBuffer& frameBuffer) override;
+	void drawOnFrameBuffer_Save(FrameBuffer& frameBuffer, int drawingBoardHeight) override;
+	inline void computePreviewBuffer() override {};
+	inline void computeSaveBuffer(int drawingBoardHeight, RectTransform& transform) override {};
+
 private:
 	std::string m_filePath;
 };

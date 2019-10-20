@@ -91,12 +91,14 @@ void DrawingBoard::save(unsigned int height, const std::string& filePath) {
 		std::string fileExtension = String::getFileExtension(filePath);
 		spdlog::info("|{}|", fileExtension);
 		unsigned int width = transform.getAspectRatio() * height;
+		// Prepare save textures
+		LayerRegistry().AliveLayers().computeSaveBuffers(height);
 		// Bind frameBuffer
 		FrameBuffer saveBuffer(width, height);
 		saveBuffer.bind();
 		saveBuffer.clear();
 		// Draw
-		LayerRegistry().AliveLayers().showForSaving();
+		LayerRegistry().AliveLayers().showSaveTextures();
 		// Get pixels and Save
 		unsigned char* data = new unsigned char[4 * width * height];
 		glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);

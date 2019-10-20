@@ -24,6 +24,10 @@ FrameBuffer::FrameBuffer()
 FrameBuffer::FrameBuffer(int width, int height)
 	: FrameBuffer()
 {
+	setTextureSize(width, height);
+}
+
+void FrameBuffer::setTextureSize(int width, int height) {
 	m_texture.Initialize(width, height, 4);
 	// Check for completeness
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)

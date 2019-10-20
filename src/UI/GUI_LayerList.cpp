@@ -75,7 +75,7 @@ void GUI_LayerList::dragDropSourceReorderLayer(LayerID layerID) {
 	{
 		Layer* layer = DrawingBoard::LayerRegistry()[layerID];
 		ImGui::SetDragDropPayload("Reordering layer", &layerID, sizeof(LayerID));
-		ImGui::Image((ImTextureID)layer->getTexture().getID(), ImVec2(50 * layer->getTexture().getAspectRatio(), 50), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
+		ImGui::Image((ImTextureID)layer->getTexture_Preview().getID(), ImVec2(50 * layer->getTexture_Preview().getAspectRatio(), 50), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
 		ImGui::EndDragDropSource();
 	}
 }
@@ -94,7 +94,7 @@ void GUI_LayerList::dragDropTargetReorderLayer(int layerIndex) {
 }
 
 void GUI_LayerList::ImGuiShowTexture(Layer* layer, unsigned int previewHeight) {
-	ImGui::Image((ImTextureID)layer->getTexture().getID(), ImVec2(previewHeight * layer->getTexture().getAspectRatio(), previewHeight), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
+	ImGui::Image((ImTextureID)layer->getTexture_Preview().getID(), ImVec2(previewHeight * layer->getTexture_Preview().getAspectRatio(), previewHeight), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
 }
 
 

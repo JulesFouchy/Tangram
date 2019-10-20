@@ -21,14 +21,20 @@ public:
 	void reload() override;
 	void createACopy() override;
 
-	void showForSaving(RectTransform& transform) override;
-	virtual void drawShaderOnPreviewTexture();
+	//void showForSaving(RectTransform& transform) override;
+	void onChange() override;
 
 protected:
-	virtual void setUniformsThatAreNotParametersOfTheFragShader_ForPreview();
-	virtual void setUniformsThatAreNotParametersOfTheFragShader_ForSaving(RectTransform& transform);
+	void computePreviewBuffer() override;
+	void computeSaveBuffer(int drawingBoardHeight, RectTransform& transform) override;
+	void drawOnFrameBuffer_Preview(FrameBuffer& frameBuffer) override;
+	void drawOnFrameBuffer_Save(FrameBuffer& frameBuffer, int drawingBoardHeight) override;
+
+	virtual void setUniformsThatAreNotParametersOfTheFragShader_Preview();
+	virtual void setUniformsThatAreNotParametersOfTheFragShader_Save(int drawingBoardHeight);
 
 private:
+
 	void shaderBindAndSetFragmentUniforms();
 	void pushUniformChangeInHistory(Uniform& uniform);
 

@@ -24,6 +24,20 @@ void CopyLayer::show(const glm::mat4x4& viewMatrix, const glm::mat4x4& projMatri
 	DrawingBoard::LayerRegistry()[m_childLayerID]->show(glm::scale(m_transform.getMatrix(), glm::vec3(m_transform.getAspectRatio() / m_transform.getInitialAspectRatio(), 1.0f, 1.0f)), viewMatrix, projMatrix);
 }
 
-void CopyLayer::showForSaving(RectTransform& transform) {
-	DrawingBoard::LayerRegistry()[m_childLayerID]->showForSaving(transform);
+void CopyLayer::drawOnFrameBuffer_Preview(FrameBuffer& frameBuffer) {
+
 }
+void CopyLayer::drawOnFrameBuffer_Save(FrameBuffer& frameBuffer, int drawingBoardHeight) {
+	DrawingBoard::LayerRegistry()[m_childLayerID]->drawOnFrameBuffer_Save(m_saveBuffer, drawingBoardHeight);
+}
+
+void CopyLayer::computeSaveBuffer(int drawingBoardHeight, RectTransform& transform) {
+	int w = ceil(drawingBoardHeight * transform.getScale() * transform.getAspectRatio());
+	int h = ceil(drawingBoardHeight * transform.getScale());
+	m_saveBuffer.setTextureSize(w, h);
+	drawOnFrameBuffer_Save(m_saveBuffer, drawingBoardHeight);
+}
+
+/*void CopyLayer::showForSaving(RectTransform& transform) {
+	DrawingBoard::LayerRegistry()[m_childLayerID]->showForSaving(transform);
+}*/

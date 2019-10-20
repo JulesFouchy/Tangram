@@ -19,8 +19,7 @@ public:
 
 	void show(const glm::mat4x4& modelMatrix, const glm::mat4x4& viewMatrix, const glm::mat4x4& projMatrix); // used by copy layer to use it's own modelMatrix
 	virtual void show(const glm::mat4x4& viewMatrix, const glm::mat4x4& projMatrix);
-	void showForSaving();
-	virtual void showForSaving(RectTransform& transform) = 0; // allows copy layer to draw it with its own transform
+	void showSaveTexture();
 	void showFrame();
 	virtual void showGUI();
 	virtual void showDraggablePoints();
@@ -40,9 +39,17 @@ public:
 	inline bool* getIsVisiblePointer() { return &m_bVisible; } //For ImGui
 	inline bool* getIsMovablePointer() { return &m_bMovable; } //For ImGui
 
-	virtual inline Texture2D& getTexture() { return m_renderBuffer.getTexture(); }
-	virtual inline FrameBuffer& getFrameBuffer() { return m_renderBuffer; }
-	virtual inline Texture2D& getSaveTexture() { return m_renderBuffer.getTexture(); }
+	virtual inline FrameBuffer& getFrameBuffer() { return m_previewBuffer; }
+	virtual inline Texture2D& getTexture_Preview() { return m_previewBuffer.getTexture(); }
+	inline Texture2D& getTexture_Save() { return m_saveBuffer.getTexture(); }
+
+	virtual void drawOnFrameBuffer_Preview(FrameBuffer& frameBuffer) = 0;
+	virtual void drawOnFrameBuffer_Save(FrameBuffer& frameBuffer, int drawingBoardHeight) = 0;
+	virtual void computePreviewBuffer() = 0;
+	virtual void computeSaveBuffer(int drawingBoardHeight, RectTransform& transform) = 0;
+
+protected:
+	virtual void onChange();
 
 private:
 	bool m_bVisible;
@@ -50,7 +57,9 @@ private:
 protected:
 	std::string m_name;
 protected:
-	FrameBuffer m_renderBuffer;
+	FrameBuffer m_previewBuffer;
+	FrameBuffer m_saveBuffer;
+	bool m_bMustRecomputeSaveBuffer;
 public:
 	RectTransform m_transform;
 protected:

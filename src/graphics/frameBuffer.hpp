@@ -6,7 +6,7 @@ class FrameBuffer {
 public: 
 	FrameBuffer();
 	FrameBuffer(int width, int height);
-	void Initialize(int width, int height);
+	void setTextureSize(int width, int height);
 	~FrameBuffer();
 
 	void bind();
