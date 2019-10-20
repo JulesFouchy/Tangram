@@ -26,10 +26,10 @@ float computeHue(vec3 col){
 
 void main() {
 	vec4 texColor = texture(u_textureSlot, v_texCoord);
-	vec3 color = texColor.bgr;
+	vec3 color = texColor.rgb;
 	//float hue = computeHue(color);
 	//float hueToRemove = computeHue(u_ColorToRemove);
-	float alpha = texColor.a;//smoothstep(u_Thresh-u_Margin, u_Thresh + u_Margin, length(texColor.rgb - u_ColorToRemove));
+	float alpha = texColor.a * smoothstep(u_Thresh-u_Margin, u_Thresh + u_Margin, length(texColor.rgb - u_ColorToRemove));
 	//color = vec3(texColor.r+texColor.g+texColor.b)/3.;
 	FragColor = vec4(color, alpha);
 }

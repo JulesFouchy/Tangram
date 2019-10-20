@@ -5,8 +5,10 @@
 #include "core/drawingBoard.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
+#include "helper/string.hpp"
+
 LoadedImageLayer::LoadedImageLayer(const std::string& imgFilePath)
-	: Layer(0.1f, imgFilePath), m_filePath(imgFilePath)
+	: Layer(0.1f, String::RemoveFolderHierarchy(imgFilePath)), m_filePath(imgFilePath)
 	 //      î dummy initialization of Layer's aspectRatio because we need to read image to know it
 {
 	spdlog::info("[Opening image] " + imgFilePath);

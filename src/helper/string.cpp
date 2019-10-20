@@ -33,3 +33,8 @@ void String::replaceAll(std::string& str, const std::string& from, const std::st
 std::string String::getFileExtension(const std::string& myString) {
 	return myString.substr(myString.find_last_of(".")+1);
 }
+
+std::string String::RemoveFolderHierarchy(const std::string& myString) {
+	auto pos = myString.find_last_of("/\\") + 1;
+	return myString.substr(pos, myString.size() - pos);
+}

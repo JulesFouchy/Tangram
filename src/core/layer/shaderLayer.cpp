@@ -12,7 +12,7 @@
 #include "helper/string.hpp"
 
 ShaderLayer::ShaderLayer(int previewWidth, int previewHeight, const std::string& fragmentFilePath, CoordinateSystem coordSystem)
-	: Layer((float) previewWidth / previewHeight, fragmentFilePath), m_shader("C:/Dev/Tangram/res/shaders/vertex/shaderLayer.vert", fragmentFilePath),
+	: Layer((float) previewWidth / previewHeight, String::RemoveFolderHierarchy(fragmentFilePath)), m_shader("C:/Dev/Tangram/res/shaders/vertex/shaderLayer.vert", fragmentFilePath),
 	  m_uniforms(), m_rectVAO()
 {
 	parseShader(fragmentFilePath);
