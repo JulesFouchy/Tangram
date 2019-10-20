@@ -8,3 +8,7 @@ bool Controls::isRotationSegmented() {
 bool Controls::draggingScaleRespectsAspectRatio() {
 	return !Input::keyIsDown(SHIFT);
 }
+
+bool Controls::dragTranslationAlongOnlyOneAxis() {
+	return Input::keyIsDown(SHIFT);
+}
