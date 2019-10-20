@@ -6,13 +6,15 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
+#include "UI/settings.hpp"
+
 unsigned int ImmediateDrawing::m_fullQuadVBid;
 unsigned int ImmediateDrawing::m_fullQuadIBOid;
 glm::mat4x4 ImmediateDrawing::m_viewProjMatrix;
 glm::vec4 ImmediateDrawing::m_color(0.0f, 0.0f, 0.0f, 1.0f);
-Shader ImmediateDrawing::m_flatColorShader("res/shaders/vertex/standard.vert", "res/shaders/fragment/flatColor.frag", false);
-Shader ImmediateDrawing::m_ringShader("res/shaders/vertex/texture.vert", "res/shaders/fragment/ring.frag", false);
-Shader ImmediateDrawing::m_windowMinusARectangleShader("res/shaders/vertex/texture.vert", "res/shaders/fragment/windowMinusARectangle.frag", false);
+Shader ImmediateDrawing::m_flatColorShader(Settings::EXECUTABLE_FILEPATH() + "res/shaders/vertex/standard.vert", Settings::EXECUTABLE_FILEPATH() + "res/shaders/fragment/internal/flatColor.frag", false);
+Shader ImmediateDrawing::m_ringShader(Settings::EXECUTABLE_FILEPATH() + "res/shaders/vertex/texture.vert", Settings::EXECUTABLE_FILEPATH() + "res/shaders/fragment/internal/ring.frag", false);
+Shader ImmediateDrawing::m_windowMinusARectangleShader(Settings::EXECUTABLE_FILEPATH() + "res/shaders/vertex/texture.vert", Settings::EXECUTABLE_FILEPATH() + "res/shaders/fragment/internal/windowMinusARectangle.frag", false);
 
 void ImmediateDrawing::genBuffers() {
 	//Gen vertex buffer for full quad

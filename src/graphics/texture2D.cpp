@@ -6,9 +6,10 @@
 #include "helper/maths.hpp"
 
 #include "UI/log.hpp"
+#include "UI/settings.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-Shader Texture2D::standardShader = Shader("res/shaders/vertex/texture.vert", "res/shaders/fragment/texture_standard.frag", false);
+Shader Texture2D::standardShader = Shader(Settings::EXECUTABLE_FILEPATH()+"res/shaders/vertex/texture.vert", Settings::EXECUTABLE_FILEPATH()+"res/shaders/fragment/internal/texture_standard.frag", false);
 std::vector<bool> Texture2D::isSlotUsed;
 
 Texture2D::Texture2D()

@@ -10,3 +10,5 @@ float Settings::ZOOM_FACTOR = 0.8f;
 unsigned char Settings::MIN_ALPHA_TO_GRAB_LAYER = 10;
 
 bool Settings::SAVE_ALT_ORIGIN_TRANSLATION_IN_HISTORY = false;
+
+std::string Settings::m_EXECUTABLE_FILEPATH = "C:/Dev/Tangram/";

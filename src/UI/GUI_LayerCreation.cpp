@@ -2,6 +2,7 @@
 #include "core/drawingBoard.hpp"
 
 #include "UI/fileBrowser.hpp"
+#include "UI/settings.hpp"
 #include "helper/string.hpp"
 
 #include "UI/log.hpp"
@@ -35,6 +36,7 @@ void GUI_LayerCreation::OpenCreateShaderLayerWindow() {
 		m_bWindow_ShaderLayerCreation = true;
 		m_aspectRatio = DrawingBoard::transform.getAspectRatio();
 		updateWidthOrHeight();
+		m_filepath = Settings::EXECUTABLE_FILEPATH() + "res/shaders/fragment/fragmentLayer/";
 	}
 }
 

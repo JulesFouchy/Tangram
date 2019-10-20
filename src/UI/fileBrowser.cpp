@@ -4,7 +4,7 @@
 
 // Returns an empty string if dialog is canceled
 std::string FileBrowser::openfilename(const char* filter, HWND owner ) {
-	OPENFILENAME ofn;
+	tagOFNA ofn;
 	char fileName[MAX_PATH] = "";
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(OPENFILENAME);
@@ -15,7 +15,7 @@ std::string FileBrowser::openfilename(const char* filter, HWND owner ) {
 	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
 	ofn.lpstrDefExt = "";
 	std::string fileNameStr;
-	if (GetOpenFileName(&ofn))
+	if (GetOpenFileNameA(&ofn))
 		fileNameStr = fileName;
 	return fileNameStr;
 }
