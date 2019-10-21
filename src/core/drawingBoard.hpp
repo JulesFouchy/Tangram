@@ -18,6 +18,7 @@
 #include "GUI/Window/DrawingBoardSize.hpp"
 #include "GUI/Window/ShaderLayerCreation.hpp"
 #include "GUI/Window/EffectLayerCreation.hpp"
+#include "GUI/Window/ExportImage.hpp"
 
 #include "UI/keys.hpp"
 
@@ -56,6 +57,7 @@ public:
 	static GUIwindow_DrawingBoardSize GUI_DrawingBoardSize;
 	static GUIwindow_ShaderLayerCreation GUI_ShaderLayerCreation;
 	static GUIwindow_EffectLayerCreation GUI_EffectLayerCreation;
+	static GUIwindow_ExportImage GUI_ExportImage;
 private:
 	static void showFrame();
 private:

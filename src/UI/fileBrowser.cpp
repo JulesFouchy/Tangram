@@ -21,7 +21,7 @@ std::string FileBrowser::openfilename(const char* filter, HWND owner ) {
 }
 
 // Returns an empty string if dialog is canceled
-std::tuple<std::string, int> FileBrowser::savefilename(const char* filter, HWND owner) {
+std::string FileBrowser::savefilename(const char* filter, HWND owner) {
 	OPENFILENAME ofn;
 	char fileName[MAX_PATH] = "";
 	ZeroMemory(&ofn, sizeof(ofn));
@@ -35,5 +35,5 @@ std::tuple<std::string, int> FileBrowser::savefilename(const char* filter, HWND 
 	std::string fileNameStr;
 	if (GetSaveFileNameA(&ofn))
 		fileNameStr = fileName;
-	return std::tuple<std::string, int>(fileNameStr, ofn.nFilterIndex);
+	return fileNameStr;
 }

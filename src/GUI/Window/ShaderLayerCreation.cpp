@@ -30,7 +30,7 @@ void GUIwindow_ShaderLayerCreation::Show() {
 		ImGui::Separator();
 		//
 		ImGui::Text("Fragment file path : "); ImGui::SameLine();
-		m_filepathPicker.Show();
+		m_filepathPicker.ShowOpenfilename();
 		//
 		ImGui::Separator();
 	ConfirmationButton();

@@ -10,5 +10,5 @@
 
 namespace FileBrowser {
 	std::string openfilename(const char* filter = "All Files (*.*)\0*.*\0", HWND owner = NULL);
-	std::tuple<std::string, int> savefilename(const char* filter = "All Files (*.*)\0*.*\0", HWND owner = NULL);
+	std::string savefilename(const char* filter = "All Files (*.*)\0*.*\0", HWND owner = NULL);
 }

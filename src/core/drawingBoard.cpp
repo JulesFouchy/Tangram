@@ -31,6 +31,7 @@ FrameBuffer* DrawingBoard::renderBuffer;
 GUIwindow_DrawingBoardSize DrawingBoard::GUI_DrawingBoardSize;
 GUIwindow_ShaderLayerCreation DrawingBoard::GUI_ShaderLayerCreation;
 GUIwindow_EffectLayerCreation DrawingBoard::GUI_EffectLayerCreation;
+GUIwindow_ExportImage DrawingBoard::GUI_ExportImage;
 
 void DrawingBoard::Initialize(Ratio aspectRatio) 
 {
@@ -77,6 +78,7 @@ void DrawingBoard::ShowImGui() {
 	GUI_DrawingBoardSize.Show_IfOpen();
 	GUI_ShaderLayerCreation.Show_IfOpen();
 	GUI_EffectLayerCreation.Show_IfOpen();
+	GUI_ExportImage.Show_IfOpen();
 }
 
 void DrawingBoard::showFrame() {
@@ -220,7 +222,7 @@ void DrawingBoard::onKeyDown(Key key) {
 			break;
 		case 's':
 			if (Input::keyIsDown(CTRL) && !LayerRegistry().AliveLayers().isBusy()) {
-				//GUI_LayerCreation::OpenSaveDrawingBoardWindow();
+				GUI_ExportImage.Open();
 			}
 			else
 				LayerRegistry().AliveLayers().onKeyDown(key);
