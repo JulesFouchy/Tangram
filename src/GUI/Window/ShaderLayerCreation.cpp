@@ -19,7 +19,6 @@ GUIwindow_ShaderLayerCreation::GUIwindow_ShaderLayerCreation()
 void GUIwindow_ShaderLayerCreation::Open() {
 	GUIwindow::Open();
 	m_WidthHeightRatioPicker.setRatio(DrawingBoard::transform.getAspectRatio());
-	m_WidthHeightRatioPicker.updateWidthOrHeight();
 }
 
 void GUIwindow_ShaderLayerCreation::Show() {

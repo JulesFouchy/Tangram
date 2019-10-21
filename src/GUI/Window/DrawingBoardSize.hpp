@@ -9,6 +9,8 @@ public:
 	GUIwindow_DrawingBoardSize();
 	~GUIwindow_DrawingBoardSize() = default;
 
+	void Open() override;
+
 private:
 	void Show() override;
 private:

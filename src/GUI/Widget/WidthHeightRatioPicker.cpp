@@ -7,7 +7,7 @@ GUIwidget_WidthHeightRatioPicker::GUIwidget_WidthHeightRatioPicker(Ratio initial
 	  m_onUpdate(onUpdate),
 	  m_height(1000), m_lastModified(Height)
 {
-	onUpdate();
+	m_ratioPicker.onUpdate();
 }
 
 void GUIwidget_WidthHeightRatioPicker::ShowWidthHeight() {
@@ -16,8 +16,7 @@ void GUIwidget_WidthHeightRatioPicker::ShowWidthHeight() {
 	ImGui::PushID(2);
 	if (ImGui::InputScalar("", ImGuiDataType_U32, &m_width, NULL, NULL, "%u")) {
 		m_lastModified = Width;
-		updateWidthOrHeight();
-		m_onUpdate();
+		m_ratioPicker.onUpdate();
 	}
 	ImGui::SameLine();
 	ImGui::PopID();
@@ -25,8 +24,7 @@ void GUIwidget_WidthHeightRatioPicker::ShowWidthHeight() {
 	ImGui::PushID(3);
 	if (ImGui::InputScalar("", ImGuiDataType_U32, &m_height, NULL, NULL, "%u")) {
 		m_lastModified = Height;
-		updateWidthOrHeight();
-		m_onUpdate();
+		m_ratioPicker.onUpdate();
 	}
 	ImGui::PopID();
 	ImGui::PopItemWidth();

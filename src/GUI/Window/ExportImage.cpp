@@ -22,7 +22,6 @@ void GUIwindow_ExportImage::Open() {
 	GUIwindow::Open();
 	m_FilepathPicker.setFilepath(Settings::EXECUTABLE_FILEPATH() + "data/out/test.png");
 	m_WidthHeightRatioPicker.setRatio(DrawingBoard::transform.getAspectRatio());
-	m_WidthHeightRatioPicker.updateWidthOrHeight();
 }
 
 void GUIwindow_ExportImage::Show() {

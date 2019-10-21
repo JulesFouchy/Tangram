@@ -14,25 +14,27 @@ void GUIwidget_RatioPicker::Show() {
 	ImGui::Text("Ratio : "); ImGui::SameLine();
 	ImGui::PushID(0);
 	if (ImGui::InputScalar("", ImGuiDataType_U32, m_ratio.getNumeratorPtr(), NULL, NULL, "%u")) {
-		m_onUpdate();
+		onUpdate();
 	}
 	ImGui::SameLine();
 	ImGui::PopID();
 	ImGui::Text("/"); ImGui::SameLine();
 	ImGui::PushID(1);
 	if (ImGui::InputScalar("", ImGuiDataType_U32, m_ratio.getDenominatorPtr(), NULL, NULL, "%u")) {
-		m_onUpdate();
+		onUpdate();
 	}
 	ImGui::PopID();
 	ImGui::SameLine();
 	if (ImGui::Button("Square")) {
-		m_ratio.set(1, 1);
-		m_onUpdate();
+		setRatio(Ratio(1, 1));
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Same as DrawingBoard's")) {
-		m_ratio = DrawingBoard::transform.getAspectRatio();
-		m_onUpdate();
+		setRatio(DrawingBoard::transform.getAspectRatio());
 	}
 	ImGui::PopItemWidth();
+}
+
+void GUIwidget_RatioPicker::onUpdate() {
+	m_onUpdate();
 }

@@ -23,6 +23,7 @@ public:
 	inline unsigned int getWidth() const { return m_width; }
 	inline unsigned int getHeight() const { return m_height; }
 
+private:
 	void updateWidthOrHeight();
 
 private:

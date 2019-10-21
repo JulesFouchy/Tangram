@@ -20,7 +20,6 @@ void GUIwindow_EffectLayerCreation::Open(LayerID targetLayerID) {
 	GUIwindow::Open();
 	m_targetLayerID = targetLayerID;
 	m_WidthHeightRatioPicker.setRatio(DrawingBoard::LayerRegistry()[targetLayerID]->m_transform.getAspectRatio());
-	m_WidthHeightRatioPicker.updateWidthOrHeight();
 }
 
 void GUIwindow_EffectLayerCreation::Show() {
