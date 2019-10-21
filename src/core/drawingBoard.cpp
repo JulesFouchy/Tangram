@@ -24,7 +24,7 @@ glm::vec4 DrawingBoard::outsideColor;
 bool DrawingBoard::m_bIsHandlingAnInput;
 CursorType* DrawingBoard::m_currentCursor;
 History DrawingBoard::history;
-DrawingBoardTransform DrawingBoard::transform(1.0f);
+DrawingBoardTransform DrawingBoard::transform(Ratio(1,1));
 RegistryOfAllLayersPresentAndGone DrawingBoard::m_LayerRegistry;
 FrameBuffer* DrawingBoard::renderBuffer;
 
