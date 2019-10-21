@@ -8,7 +8,7 @@
 
 GUIwindow_EffectLayerCreation::GUIwindow_EffectLayerCreation()
 	: GUIwindow("Creating an EffectLayer", [this]() {
-		DrawingBoard::LayerRegistry().createEffectLayer(m_WidthHeightRatioPicker.getWidth(), m_WidthHeightRatioPicker.getHeight(), m_filepathPicker.getFilepath(), m_targetLayerID);
+		DrawingBoard::LayerRegistry().createEffectLayer(m_WidthHeightRatioPicker.getRatio(), m_WidthHeightRatioPicker.getHeight(), m_filepathPicker.getFilepath(), m_targetLayerID);
 	  }),
 	  m_targetLayerID(0),
 	  m_WidthHeightRatioPicker(),

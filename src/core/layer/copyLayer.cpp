@@ -3,7 +3,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 CopyLayer::CopyLayer(LayerID childLayerID)
-	: Layer(0.0f, "Copy of " + DrawingBoard::LayerRegistry()[childLayerID]->getName()), m_childLayerID(childLayerID)
+	: Layer(Ratio(1,1), "Copy of " + DrawingBoard::LayerRegistry()[childLayerID]->getName()), m_childLayerID(childLayerID)
 {
 	//Texture2D& childTexture = childLayer->getTexture();
 	//m_displayTexture.Initialize(childTexture.getWidth(), childTexture.getHeight(), childTexture.getBPP(), childTexture.getPixels());

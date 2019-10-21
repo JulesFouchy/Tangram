@@ -11,14 +11,14 @@
 #include <fstream>
 #include "helper/string.hpp"
 
-ShaderLayer::ShaderLayer(int previewWidth, int previewHeight, const std::string& fragmentFilePath, CoordinateSystem coordSystem)
-	: Layer((float) previewWidth / previewHeight, String::RemoveFolderHierarchy(fragmentFilePath)), m_shader("C:/Dev/Tangram/res/shaders/vertex/shaderLayer.vert", fragmentFilePath),
+ShaderLayer::ShaderLayer(const Ratio& ratio, int previewHeight, const std::string& fragmentFilePath, CoordinateSystem coordSystem)
+	: Layer(ratio, String::RemoveFolderHierarchy(fragmentFilePath)), m_shader("C:/Dev/Tangram/res/shaders/vertex/shaderLayer.vert", fragmentFilePath),
 	  m_uniforms(), m_rectVAO()
 {
 	parseShader(fragmentFilePath);
 	// Initialize members
 	m_rectVAO.Initialize(-1.0f, 1.0f, -1.0f, 1.0f, m_transform.getInitialAspectRatio(), coordSystem);
-	m_previewBuffer.getTexture().Initialize(previewWidth, previewHeight, Texture2D::bytesPerPixel(RGBA), nullptr);
+	m_previewBuffer.getTexture().Initialize(previewHeight * (float)ratio, previewHeight, Texture2D::bytesPerPixel(RGBA), nullptr);
 	onChange();
 }
 

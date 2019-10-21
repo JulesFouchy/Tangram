@@ -5,7 +5,7 @@
 
 class EffectLayer : public ShaderLayer {
 public:
-	EffectLayer(int previewWidth, int previewHeight, const std::string& fragmentFilePath, LayerID targetLayerID);
+	EffectLayer(const Ratio& ratio, int previewHeight, const std::string& fragmentFilePath, LayerID targetLayerID);
 	void createACopy() override;
 	void computeSaveBuffer(int drawingBoardHeight, RectTransform& transform) override;
 	void drawOnFrameBuffer_Preview(FrameBuffer& frameBuffer) override;

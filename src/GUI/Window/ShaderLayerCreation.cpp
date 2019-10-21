@@ -8,7 +8,7 @@
 
 GUIwindow_ShaderLayerCreation::GUIwindow_ShaderLayerCreation()
 	: GUIwindow("Creating a ShaderLayer", [this]() {
-			DrawingBoard::LayerRegistry().createShaderLayer(m_WidthHeightRatioPicker.getWidth(), m_WidthHeightRatioPicker.getHeight(), m_filepathPicker.getFilepath());
+			DrawingBoard::LayerRegistry().createShaderLayer(m_WidthHeightRatioPicker.getRatio(), m_WidthHeightRatioPicker.getHeight(), m_filepathPicker.getFilepath());
 	  }),
 	  m_WidthHeightRatioPicker(),
 	  m_filepathPicker("Fragment shader (*.frag; *.fragment)\0*.frag;*.fragment\0All Files (*.*)\0*.*\0")

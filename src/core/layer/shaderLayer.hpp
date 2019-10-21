@@ -10,7 +10,7 @@
 
 class ShaderLayer : public Layer {
 public:
-	ShaderLayer(int previewWidth, int previewHeight, const std::string& fragmentFilePath, CoordinateSystem coordSystem = MINUS_RATIO_TO_RATIO__MINUS_ONE_TO_ONE);
+	ShaderLayer(const Ratio& ratio, int previewHeight, const std::string& fragmentFilePath, CoordinateSystem coordSystem = MINUS_RATIO_TO_RATIO__MINUS_ONE_TO_ONE);
 	~ShaderLayer() = default;
 
 	void showGUI() override;

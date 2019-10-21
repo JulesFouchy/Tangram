@@ -8,7 +8,7 @@
 #include "helper/string.hpp"
 
 LoadedImageLayer::LoadedImageLayer(const std::string& imgFilePath)
-	: Layer(0.1f, String::RemoveFolderHierarchy(imgFilePath)), m_filePath(imgFilePath)
+	: Layer(Ratio(1,1), String::RemoveFolderHierarchy(imgFilePath)), m_filePath(imgFilePath)
 	 //      î dummy initialization of Layer's aspectRatio because we need to read image to know it
 {
 	spdlog::info("[Opening image] " + imgFilePath);

@@ -2,8 +2,8 @@
 
 #include "core/drawingBoard.hpp"
 
-EffectLayer::EffectLayer(int previewWidth, int previewHeight, const std::string& fragmentFilePath, LayerID targetLayerID)
-	: ShaderLayer(previewWidth, previewHeight, fragmentFilePath, ZERO_TO_ONE__ZERO_TO_ONE), m_targetLayerID(targetLayerID)
+EffectLayer::EffectLayer(const Ratio& ratio, int previewHeight, const std::string& fragmentFilePath, LayerID targetLayerID)
+	: ShaderLayer(ratio, previewHeight, fragmentFilePath, ZERO_TO_ONE__ZERO_TO_ONE), m_targetLayerID(targetLayerID)
 {
 	drawOnFrameBuffer_Preview(m_previewBuffer);
 }
