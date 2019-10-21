@@ -76,7 +76,7 @@ void GUI::showMainMenuBar() {
 		if (ImGui::BeginMenu("New"))
 		{
 			if (ImGui::MenuItem("Shader Layer", "CTRL + F")) {
-				GUI_LayerCreation::OpenCreateShaderLayerWindow();
+				DrawingBoard::GUI_ShaderLayerCreation.Open();
 			}
 			if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
 			ImGui::Separator();

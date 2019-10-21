@@ -7,7 +7,7 @@ public:
 	GUIwindow(const std::string& windowName, std::function<void(void)> OnConfirmation = []() {});
 	~GUIwindow() = default;
 
-	void Open();
+	virtual void Open();
 	void Show_IfOpen();
 protected:
 	virtual void Show() = 0;

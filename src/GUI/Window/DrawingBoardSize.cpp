@@ -1,4 +1,4 @@
-#include "GUIwindow_DrawingBoardSize.hpp"
+#include "DrawingBoardSize.hpp"
 
 #include "core/drawingBoard.hpp"
 

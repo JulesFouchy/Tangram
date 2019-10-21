@@ -16,7 +16,7 @@ bool GUI_LayerCreation::m_bWindow_DrawingBoardSaving = false;
 Ratio GUI_LayerCreation::m_aspectRatio(1, 1);
 unsigned int GUI_LayerCreation::m_width = 1000;
 unsigned int GUI_LayerCreation::m_height = 1000;
-WidthOrHeight GUI_LayerCreation::m_lastModified = Height;
+//WidthOrHeight GUI_LayerCreation::m_lastModified = Height;
 int GUI_LayerCreation::m_fileExtensionIndex = 0;
 LayerID GUI_LayerCreation::m_targetLayerID = 0;
 
@@ -116,23 +116,14 @@ void GUI_LayerCreation::Window_DrawingBoardSaving() {
 }
 
 void GUI_LayerCreation::updateWidthOrHeight() {
-	switch (m_lastModified) {
-	case Width:
 		m_height = ceil(m_width / m_aspectRatio);
-		break;
-	case Height:
-		m_width = ceil(m_height * m_aspectRatio);
-		break;
-	default:
-		break;
-	}
 }
 void GUI_LayerCreation::ImGuiChoose_Width_Height() {
 	ImGui::PushItemWidth(100.f);
 	ImGui::Text("Width : "); ImGui::SameLine();
 	ImGui::PushID(2);
 	if (ImGui::InputScalar("", ImGuiDataType_U32, &m_width, NULL, NULL, "%u")) {
-		m_lastModified = Width;
+		//m_lastModified = Width;
 		updateWidthOrHeight();
 	}
 	ImGui::SameLine();
@@ -140,7 +131,7 @@ void GUI_LayerCreation::ImGuiChoose_Width_Height() {
 	ImGui::Text("Height : "); ImGui::SameLine();
 	ImGui::PushID(3);
 	if (ImGui::InputScalar("", ImGuiDataType_U32, &m_height, NULL, NULL, "%u")) {
-		m_lastModified = Height;
+		//m_lastModified = Height;
 		updateWidthOrHeight();
 	}
 	ImGui::PopID();

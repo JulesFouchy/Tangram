@@ -1,4 +1,4 @@
-#include "GUIwidget_RatioPicker.hpp"
+#include "GUI/Widget/RatioPicker.hpp"
 
 #include "imgui/imgui.h"
 

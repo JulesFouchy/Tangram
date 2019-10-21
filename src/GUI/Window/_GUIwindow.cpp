@@ -1,4 +1,4 @@
-#include "GUIwindow.hpp"
+#include "_GUIwindow.hpp"
 
 #include "UI/log.hpp"
 

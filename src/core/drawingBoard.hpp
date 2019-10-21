@@ -15,7 +15,8 @@
 
 #include "UI/cursor.hpp"
 
-#include "UI/GUIwindow_DrawingBoardSize.hpp"
+#include "GUI/Window/DrawingBoardSize.hpp"
+#include "GUI/Window/ShaderLayerCreation.hpp"
 
 #include "UI/keys.hpp"
 
@@ -52,6 +53,7 @@ public:
 	static DrawingBoardTransform transform;
 
 	static GUIwindow_DrawingBoardSize GUI_DrawingBoardSize;
+	static GUIwindow_ShaderLayerCreation GUI_ShaderLayerCreation;
 private:
 	static void showFrame();
 private:

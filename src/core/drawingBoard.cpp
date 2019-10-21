@@ -29,6 +29,7 @@ RegistryOfAllLayersPresentAndGone DrawingBoard::m_LayerRegistry;
 FrameBuffer* DrawingBoard::renderBuffer;
 
 GUIwindow_DrawingBoardSize DrawingBoard::GUI_DrawingBoardSize;
+GUIwindow_ShaderLayerCreation DrawingBoard::GUI_ShaderLayerCreation;
 
 void DrawingBoard::Initialize(Ratio aspectRatio) 
 {
@@ -73,6 +74,7 @@ void DrawingBoard::show() {
 
 void DrawingBoard::ShowImGui() {
 	GUI_DrawingBoardSize.Show_IfOpen();
+	GUI_ShaderLayerCreation.Show_IfOpen();
 }
 
 void DrawingBoard::showFrame() {
@@ -223,7 +225,7 @@ void DrawingBoard::onKeyDown(Key key) {
 			break;
 		case 'f':
 			if (Input::keyIsDown(CTRL) && !LayerRegistry().AliveLayers().isBusy())
-				GUI_LayerCreation::OpenCreateShaderLayerWindow();
+				GUI_ShaderLayerCreation.Open();
 			else
 				LayerRegistry().AliveLayers().onKeyDown(key);
 			break;

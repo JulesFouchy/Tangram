@@ -10,6 +10,7 @@ public:
 
 	void Show();
 	inline Ratio getRatio() const { return m_ratio; }
+	inline void setRatio(const Ratio& ratio) { m_ratio = ratio; }
 private:
 	Ratio m_ratio;
 	std::function<void(void)> m_onUpdate;

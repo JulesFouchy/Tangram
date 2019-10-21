@@ -6,11 +6,6 @@
 
 #include "core/layerID.hpp"
 
-enum WidthOrHeight {
-	Width,
-	Height
-};
-
 class GUI_LayerCreation {
 public:
 	static void Show();
@@ -36,7 +31,7 @@ private:
 	static Ratio m_aspectRatio;
 	static unsigned int m_width;
 	static unsigned int m_height;
-	static WidthOrHeight m_lastModified;
+	//static WidthOrHeight m_lastModified;
 	static void updateWidthOrHeight();
 
 	static std::string m_filepath;

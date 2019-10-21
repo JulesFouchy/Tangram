@@ -1,8 +1,8 @@
 #pragma once
 
-#include "GUIwindow.hpp"
+#include "_GUIwindow.hpp"
 
-#include "GUIwidget_RatioPicker.hpp"
+#include "GUI/Widget/RatioPicker.hpp"
 
 class GUIwindow_DrawingBoardSize : public GUIwindow {
 public:
