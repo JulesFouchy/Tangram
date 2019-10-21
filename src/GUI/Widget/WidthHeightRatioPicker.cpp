@@ -2,8 +2,8 @@
 
 #include "imgui/imgui.h"
 
-GUIwidget_WidthHeightRatioPicker::GUIwidget_WidthHeightRatioPicker(Ratio initialRatio, std::function<void(void)> onUpdate)
-	: m_ratioPicker(initialRatio, [this, onUpdate]() {updateWidthOrHeight(); onUpdate(); }),
+GUIwidget_WidthHeightRatioPicker::GUIwidget_WidthHeightRatioPicker(int buttonFlags, Ratio initialRatio, std::function<void(void)> onUpdate)
+	: m_ratioPicker(buttonFlags, initialRatio, [this, onUpdate]() {updateWidthOrHeight(); onUpdate(); }),
 	  m_onUpdate(onUpdate),
 	  m_height(1000), m_lastModified(Height)
 {

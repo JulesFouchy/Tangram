@@ -6,7 +6,7 @@
 
 GUIwindow_DrawingBoardSize::GUIwindow_DrawingBoardSize()
 	: GUIwindow("DrawingBoard's AspectRatio"),
-	  m_RatioPicker(Ratio(1,1),
+	  m_RatioPicker(ButtonFlag_Square, Ratio(1,1),
 		[this]() {
 			DrawingBoard::transform.setAspectRatio(m_RatioPicker.getRatio());
 		}

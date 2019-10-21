@@ -12,7 +12,7 @@ enum WidthOrHeight {
 
 class GUIwidget_WidthHeightRatioPicker {
 public:
-	GUIwidget_WidthHeightRatioPicker(Ratio initialRatio = Ratio(1, 1), std::function<void(void)> onUpdate = []() {});
+	GUIwidget_WidthHeightRatioPicker(int buttonFlags = ButtonFlag_Square & ButtonFlag_SameAsDrawingBoard, Ratio initialRatio = Ratio(1, 1), std::function<void(void)> onUpdate = []() {});
 	~GUIwidget_WidthHeightRatioPicker() = default;
 
 	inline void ShowRatio() { m_ratioPicker.Show(); }

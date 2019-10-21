@@ -4,8 +4,8 @@
 
 #include "core/drawingBoard.hpp"
 
-GUIwidget_RatioPicker::GUIwidget_RatioPicker(Ratio initialRatio, std::function<void(void)> onUpdate)
-	: m_ratio(initialRatio), m_onUpdate(onUpdate)
+GUIwidget_RatioPicker::GUIwidget_RatioPicker(int buttonFlags, Ratio initialRatio, std::function<void(void)> onUpdate)
+	: m_ratio(initialRatio), m_buttonFlags(buttonFlags), m_onUpdate(onUpdate)
 {}
 
 void GUIwidget_RatioPicker::Show() {
@@ -25,12 +25,16 @@ void GUIwidget_RatioPicker::Show() {
 	}
 	ImGui::PopID();
 	ImGui::SameLine();
-	if (ImGui::Button("Square")) {
-		setRatio(Ratio(1,1));
+	if (m_buttonFlags & ButtonFlag_Square) {
+		if (ImGui::Button("Square")) {
+			setRatio(Ratio(1, 1));
+		}
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("Same as DrawingBoard's")) {
-		setRatio(DrawingBoard::transform.getAspectRatio());
+	if (m_buttonFlags & ButtonFlag_SameAsDrawingBoard) {
+		ImGui::SameLine();
+		if (ImGui::Button("Same as DrawingBoard's")) {
+			setRatio(DrawingBoard::transform.getAspectRatio());
+		}
 	}
 	ImGui::PopItemWidth();
 }
