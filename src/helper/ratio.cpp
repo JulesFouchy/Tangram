@@ -78,11 +78,15 @@ unsigned int Ratio::denominator() {
 }
 
 unsigned int* Ratio::getNumeratorPtr() {
+	if (m_bMustRecomputeNumAndDenom)
+		recomputeNumAndDenom();
 	m_bMustRecomputeAspectRatio = true;
 	return &m_numerator;
 }
 
 unsigned int* Ratio::getDenominatorPtr() {
+	if (m_bMustRecomputeNumAndDenom)
+		recomputeNumAndDenom();
 	m_bMustRecomputeAspectRatio = true;
 	return &m_denominator;
 }
