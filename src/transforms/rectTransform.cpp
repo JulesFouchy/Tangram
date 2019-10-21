@@ -34,7 +34,7 @@ const glm::mat4x4& RectTransform::getProjectionMatrix() {
 	return m_projectionMatrix;
 }
 
-void RectTransform::setAspectRatio(float newAspectRatio, bool bPushChangeInHistory) {
+void RectTransform::setAspectRatio(const Ratio& newAspectRatio, bool bPushChangeInHistory) {
 	setAltOrigin(glm::vec2(getAltOriginInTransformSpace().x / m_aspectRatio * newAspectRatio, getAltOriginInTransformSpace().y), bPushChangeInHistory);
 	if (bPushChangeInHistory) {
 		// Get initial value

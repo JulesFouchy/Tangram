@@ -28,7 +28,7 @@ public:
 
 	inline const Ratio& getAspectRatio() const { return m_aspectRatio; }
 	inline float getInitialAspectRatio() { return m_initialAspectRatio; }
-	void setAspectRatio(float newAspectRatio, bool bPushChangeInHistory = false);
+	void setAspectRatio(const Ratio& newAspectRatio, bool bPushChangeInHistory = false);
 
 	inline bool isBusy() override { return Transform::isBusy() || bDraggingAspectRatio; }
 
