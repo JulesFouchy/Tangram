@@ -42,7 +42,7 @@ void EffectLayer::setUniformsThatAreNotParametersOfTheFragShader_Preview() {
 	//
 	Texture2D& targetTexture = DrawingBoard::LayerRegistry()[m_targetLayerID]->getTexture_Preview();
 	targetTexture.bind();
-	m_shader.setUniform1i("u_textureSlot", targetTexture.getSlot());
+	m_shader.setUniform1i("TNGu_textureSlot", targetTexture.getSlot());
 }
 
 void EffectLayer::setUniformsThatAreNotParametersOfTheFragShader_Save(int drawingBoardHeight) {

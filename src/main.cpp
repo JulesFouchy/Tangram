@@ -147,6 +147,7 @@ int main(int argc, char* argv[])
 		GUI_LayerList::show();
 		GUI::showMainMenuBar();
 		GUI_LayerCreation::Show();
+		DrawingBoard::ShowImGui();
 		DrawingBoard::LayerRegistry().AliveLayers().showSelectedLayerGUI();
 
 		// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).

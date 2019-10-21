@@ -28,6 +28,8 @@ DrawingBoardTransform DrawingBoard::transform(1.0f);
 RegistryOfAllLayersPresentAndGone DrawingBoard::m_LayerRegistry;
 FrameBuffer* DrawingBoard::renderBuffer;
 
+GUIwindow_DrawingBoardSize DrawingBoard::GUI_DrawingBoardSize;
+
 void DrawingBoard::Initialize(Ratio aspectRatio) 
 {
 	m_currentCursor = nullptr;
@@ -67,6 +69,10 @@ void DrawingBoard::show() {
 	if (LayerRegistry().AliveLayers().mustShowAltOrigin()) {
 		LayerRegistry().AliveLayers().selectedLayers.showAltOrigin();
 	}
+}
+
+void DrawingBoard::ShowImGui() {
+	GUI_DrawingBoardSize.Show_IfOpen();
 }
 
 void DrawingBoard::showFrame() {

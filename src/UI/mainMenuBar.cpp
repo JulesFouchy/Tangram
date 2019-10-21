@@ -2,6 +2,8 @@
 
 #include "imgui/imgui.h"
 
+#include "core/drawingBoard.hpp"
+
 #include "UI/GUI_LayerCreation.hpp"
 
 void GUI::showMainMenuBar() {
@@ -81,6 +83,12 @@ void GUI::showMainMenuBar() {
 			if (ImGui::MenuItem("Cut", "CTRL+X")) {}
 			if (ImGui::MenuItem("Copy", "CTRL+C")) {}
 			if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("DrawingBoard")) {
+			if (ImGui::MenuItem("Ratio")) {
+				DrawingBoard::GUI_DrawingBoardSize.Open();
+			}
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();

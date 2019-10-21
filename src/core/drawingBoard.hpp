@@ -15,6 +15,8 @@
 
 #include "UI/cursor.hpp"
 
+#include "UI/GUIwindow_DrawingBoardSize.hpp"
+
 #include "UI/keys.hpp"
 
 class DrawingBoard {
@@ -22,6 +24,7 @@ public:
 	static void Initialize(Ratio aspectRatio);
 
 	static void show();
+	static void ShowImGui();
 	static void save(unsigned int height, const std::string& filePath);
 
 	static void update();
@@ -46,13 +49,13 @@ private:
 	static CursorType* m_currentCursor;
 public:
 	static History history;
-public:
 	static DrawingBoardTransform transform;
+
+	static GUIwindow_DrawingBoardSize GUI_DrawingBoardSize;
 private:
 	static void showFrame();
 private:
 	static RegistryOfAllLayersPresentAndGone m_LayerRegistry;
-private:
 	static FrameBuffer* renderBuffer;
 private:
 	DrawingBoard() = default;
