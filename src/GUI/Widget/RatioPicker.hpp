@@ -10,7 +10,7 @@ public:
 	~GUIwidget_RatioPicker() = default;
 
 	void Show();
-	inline Ratio getRatio() const { return m_ratio; }
+	inline const Ratio& getRatio() const { return m_ratio; }
 	inline void setRatio(const Ratio& ratio) { m_ratio = ratio; onUpdate(); }
 
 private:
