@@ -26,7 +26,7 @@ public:
 
 	const glm::mat4x4& getProjectionMatrix();
 
-	inline Ratio getAspectRatio() { return m_aspectRatio; }
+	inline const Ratio& getAspectRatio() const { return m_aspectRatio; }
 	inline float getInitialAspectRatio() { return m_initialAspectRatio; }
 	void setAspectRatio(float newAspectRatio, bool bPushChangeInHistory = false);
 

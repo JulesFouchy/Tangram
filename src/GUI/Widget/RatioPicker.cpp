@@ -26,7 +26,7 @@ void GUIwidget_RatioPicker::Show() {
 	ImGui::PopID();
 	ImGui::SameLine();
 	if (ImGui::Button("Square")) {
-		setRatio(Ratio(1, 1));
+		setRatio(Ratio(1,1));
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Same as DrawingBoard's")) {

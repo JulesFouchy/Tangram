@@ -16,12 +16,6 @@ Ratio::Ratio(float fRatio)
 	recomputeNumAndDenom();
 }
 
-Ratio::operator float() {
-	if (m_bMustRecomputeAspectRatio)
-		recomputeAspectRatio();
-	return m_ratio;
-}
-
 void Ratio::set(float newRatio) {
 	m_ratio = newRatio;
 	m_bMustRecomputeNumAndDenom = true;
@@ -33,12 +27,55 @@ void Ratio::set(unsigned int num, unsigned int denom) {
 	m_bMustRecomputeAspectRatio = true;
 }
 
-void Ratio::recomputeAspectRatio() {
-	m_ratio = (float)m_numerator / m_denominator;
+void Ratio::set(const Ratio& ratio) {
+	m_numerator = ratio.numerator();
+	m_denominator = ratio.denominator();
+	m_ratio = (float)ratio;
 	m_bMustRecomputeAspectRatio = false;
+	m_bMustRecomputeNumAndDenom = false;
 }
 
-void Ratio::recomputeNumAndDenom() {
+void Ratio::operator =(const Ratio& ratio) {
+	set(ratio);
+}
+
+Ratio::operator float() const {
+	if (m_bMustRecomputeAspectRatio)
+		recomputeAspectRatio();
+	return m_ratio;
+}
+
+unsigned int Ratio::numerator() const {
+	if (m_bMustRecomputeNumAndDenom)
+		recomputeNumAndDenom();
+	return m_numerator;
+}
+unsigned int Ratio::denominator() const {
+	if (m_bMustRecomputeNumAndDenom)
+		recomputeNumAndDenom();
+	return m_denominator;
+}
+
+unsigned int* Ratio::getNumeratorPtr() {
+	if (m_bMustRecomputeNumAndDenom)
+		recomputeNumAndDenom();
+	m_bMustRecomputeAspectRatio = true;
+	return &m_numerator;
+}
+
+unsigned int* Ratio::getDenominatorPtr() {
+	if (m_bMustRecomputeNumAndDenom)
+		recomputeNumAndDenom();
+	m_bMustRecomputeAspectRatio = true;
+	return &m_denominator;
+}
+
+void Ratio::recomputeAspectRatio() const {
+	*(float*)& m_ratio = (float)m_numerator / m_denominator; // we need to mark this method as const so that getNumerator() etc. can be marked as const, and therefore be used when a ratio is passed by const reference
+	*(bool*)& m_bMustRecomputeAspectRatio = false;
+}
+
+void Ratio::recomputeNumAndDenom() const {// we need to mark this method as const so that getNumerator() etc. can be marked as const, and therefore be used when a ratio is passed by const reference
 	// following this article : https://begriffs.com/pdf/dec2frac.pdf
 	float precision = 0.00001f;
 	float n = 1;
@@ -60,33 +97,8 @@ void Ratio::recomputeNumAndDenom() {
 			break;
 		}
 	}
-	m_numerator = N_n;
-	m_denominator = D_n;
-	m_bMustRecomputeNumAndDenom = false;
+	*(unsigned int*)& m_numerator = N_n;
+	*(unsigned int*)& m_denominator = D_n;
+	*(bool*)& m_bMustRecomputeNumAndDenom = false;
 	spdlog::info("{} is approx {} / {}", m_ratio, m_numerator, m_denominator);
-}
-
-unsigned int Ratio::numerator() {
-	if (m_bMustRecomputeNumAndDenom)
-		recomputeNumAndDenom();
-	return m_numerator;
-}
-unsigned int Ratio::denominator() {
-	if (m_bMustRecomputeNumAndDenom)
-		recomputeNumAndDenom();
-	return m_denominator;
-}
-
-unsigned int* Ratio::getNumeratorPtr() {
-	if (m_bMustRecomputeNumAndDenom)
-		recomputeNumAndDenom();
-	m_bMustRecomputeAspectRatio = true;
-	return &m_numerator;
-}
-
-unsigned int* Ratio::getDenominatorPtr() {
-	if (m_bMustRecomputeNumAndDenom)
-		recomputeNumAndDenom();
-	m_bMustRecomputeAspectRatio = true;
-	return &m_denominator;
 }
