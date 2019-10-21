@@ -146,7 +146,6 @@ int main(int argc, char* argv[])
 
 		GUI_LayerList::show();
 		GUI::showMainMenuBar();
-		GUI_LayerCreation::Show();
 		DrawingBoard::ShowImGui();
 		DrawingBoard::LayerRegistry().AliveLayers().showSelectedLayerGUI();
 

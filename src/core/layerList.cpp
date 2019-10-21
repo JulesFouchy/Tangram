@@ -167,7 +167,7 @@ void LayerList::onKeyDown(Key key) {
 				break;
 			case 'e':
 				for (int k = 0; k < selectedLayers.size(); ++k) {
-					GUI_LayerCreation::OpenCreateEffectLayerWindow(selectedLayers[k]);
+					DrawingBoard::GUI_EffectLayerCreation.Open(selectedLayers[k]);
 				}
 				break;
 			default:

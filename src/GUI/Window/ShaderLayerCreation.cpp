@@ -25,7 +25,8 @@ void GUIwindow_ShaderLayerCreation::Open() {
 void GUIwindow_ShaderLayerCreation::Show() {
 	BeginWindow();
 		//
-		m_WidthHeightRatioPicker.Show();
+		m_WidthHeightRatioPicker.ShowRatio();
+		m_WidthHeightRatioPicker.ShowWidthHeight();
 		ImGui::Separator();
 		//
 		ImGui::Text("Fragment file path : "); ImGui::SameLine();

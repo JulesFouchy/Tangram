@@ -10,7 +10,7 @@
 #include "imgui/imgui.h"
 #include "imgui/misc/cpp/imgui_stdlib.h"
 
-bool GUI_LayerCreation::m_bWindow_ShaderLayerCreation = false;
+/*bool GUI_LayerCreation::m_bWindow_ShaderLayerCreation = false;
 bool GUI_LayerCreation::m_bWindow_EffectLayerCreation = false;
 bool GUI_LayerCreation::m_bWindow_DrawingBoardSaving = false;
 Ratio GUI_LayerCreation::m_aspectRatio(1, 1);
@@ -185,4 +185,4 @@ void GUI_LayerCreation::ImGuiSaveFileNameButton(const char* filter) {
 		m_filepath = tmp_filepath;
 		m_fileExtensionIndex = tmp_fileExtensionIndex;
 	}
-}
+}*/

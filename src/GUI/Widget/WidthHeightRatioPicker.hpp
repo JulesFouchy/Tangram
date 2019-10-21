@@ -15,7 +15,9 @@ public:
 	GUIwidget_WidthHeightRatioPicker(Ratio initialRatio = Ratio(1, 1), std::function<void(void)> onUpdate = []() {});
 	~GUIwidget_WidthHeightRatioPicker() = default;
 
-	void Show();
+	inline void ShowRatio() { m_ratioPicker.Show(); }
+	void ShowWidthHeight();
+
 	inline Ratio getRatio() const { return m_ratioPicker.getRatio(); }
 	inline void setRatio(const Ratio& ratio) { m_ratioPicker.setRatio(ratio); }
 	inline unsigned int getWidth() const { return m_width; }

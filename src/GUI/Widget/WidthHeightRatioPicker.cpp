@@ -10,9 +10,7 @@ GUIwidget_WidthHeightRatioPicker::GUIwidget_WidthHeightRatioPicker(Ratio initial
 	onUpdate();
 }
 
-void GUIwidget_WidthHeightRatioPicker::Show() {
-	m_ratioPicker.Show();
-	//
+void GUIwidget_WidthHeightRatioPicker::ShowWidthHeight() {
 	ImGui::PushItemWidth(100.f);
 	ImGui::Text("Width : "); ImGui::SameLine();
 	ImGui::PushID(2);
