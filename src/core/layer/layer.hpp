@@ -63,5 +63,5 @@ protected:
 public:
 	RectTransform m_transform;
 protected:
-	Layer(Ratio aspectRatio, const std::string& layerName = "New layer"); //Each derived class should initialize aspectRatio and Name in their own way
+	Layer(const Ratio& aspectRatio, const std::string& layerName = "New layer"); //Each derived class should initialize aspectRatio and Name in their own way
 };

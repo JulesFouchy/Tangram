@@ -21,13 +21,13 @@ enum MousePositionRelativeToRect {
 
 class RectTransform : public Transform {
 public:
-	RectTransform(Ratio aspectRatio);
+	RectTransform(const Ratio& aspectRatio);
 	virtual ~RectTransform();
 
 	const glm::mat4x4& getProjectionMatrix();
 
 	inline const Ratio& getAspectRatio() const { return m_aspectRatio; }
-	inline float getInitialAspectRatio() { return m_initialAspectRatio; }
+	inline const Ratio& getInitialAspectRatio() { return m_initialAspectRatio; }
 	void setAspectRatio(const Ratio& newAspectRatio, bool bPushChangeInHistory = false);
 
 	inline bool isBusy() override { return Transform::isBusy() || bDraggingAspectRatio; }

@@ -11,7 +11,7 @@
 
 #include "graphics/immediateDrawing.hpp"
 
-Layer::Layer(Ratio aspectRatio, const std::string& layerName)
+Layer::Layer(const Ratio& aspectRatio, const std::string& layerName)
 	: m_bVisible(true), m_bMovable(true), m_name(layerName), m_previewBuffer(), m_saveBuffer(), m_bMustRecomputeSaveBuffer(true), m_transform(aspectRatio)
 {
 }

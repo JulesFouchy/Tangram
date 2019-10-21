@@ -16,7 +16,7 @@
 
 #include "glm/gtc/matrix_inverse.hpp"
 
-RectTransform::RectTransform(Ratio aspectRatio)
+RectTransform::RectTransform(const Ratio& aspectRatio)
 	: m_aspectRatio(aspectRatio), m_initialAspectRatio(aspectRatio), m_projectionMatrix(glm::ortho(-0.5f * m_aspectRatio, 0.5f * m_aspectRatio, -0.5f, 0.5f)),
 	bMustRecomputeProjMat(false),
 	m_aspectRatioWhenDraggingStarted(aspectRatio), m_aspectRatioDraggingInfo(),
